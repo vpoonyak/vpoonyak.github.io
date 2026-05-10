@@ -380,6 +380,19 @@
 
     .hero:hover .hero-rule::before { width: 200px; }
 
+    .hero-positioning {
+      max-width: 760px;
+      font-size: clamp(1rem, 1.8vw, 1.35rem);
+      font-weight: 600;
+      line-height: 1.55;
+      color: var(--text-secondary);
+      margin-top: 1.75rem;
+    }
+
+    .hero-positioning .accent-word {
+      color: var(--accent-heading);
+    }
+
     .hero-meta {
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
@@ -610,6 +623,23 @@
       font-size: 0.6875rem;
       font-weight: 700;
       color: var(--accent-heading);
+    }
+
+    .timeline-chip {
+      display: inline-flex;
+      align-items: center;
+      margin-left: 8px;
+      padding: 1px 7px;
+      border: 1px solid var(--accent-border);
+      border-radius: 999px;
+      background: var(--accent-muted);
+      color: var(--accent-heading);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.5625rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      vertical-align: middle;
     }
 
     .timeline-header {
@@ -1114,6 +1144,16 @@
       min-width: 0;
     }
 
+    .column-kicker {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6875rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      margin-bottom: 0.875rem;
+    }
+
     .skills-category {
       margin: 0;
       border: none;
@@ -1226,16 +1266,31 @@
       line-height: 1.65;
     }
 
+    .training-proof {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6875rem;
+      color: var(--text-tertiary);
+      margin-top: 6px;
+      line-height: 1.5;
+    }
+
+    .training-proof strong {
+      color: var(--accent-heading);
+      font-weight: 700;
+    }
+
     .hackathon-grid {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 1rem;
+      gap: clamp(2rem, 5vw, 4rem);
       border-top: 1px solid var(--border-light);
       border-bottom: 1px solid var(--border-light);
+      padding: 1.1rem 0 1.25rem;
     }
 
     .hackathon-grid .challenge-item {
       border-bottom: none;
+      min-width: 0;
     }
 
     .cert-category {
@@ -1380,7 +1435,7 @@
       .hackathon-section { margin-top: 2rem; }
       .training-highlight { grid-template-columns: 1fr; gap: 1rem; margin-top: 2rem; }
       .training-logo { width: 48px; height: 48px; }
-      .hackathon-grid { grid-template-columns: 1fr; gap: 0; }
+      .hackathon-grid { grid-template-columns: 1fr; gap: 0; padding: 0; }
       .hackathon-grid .challenge-item { border-bottom: 1px solid var(--border-light); }
       .hackathon-grid .challenge-item:last-child { border-bottom: none; }
       .cert-item { gap: 10px; padding: 0.65rem 0; }
@@ -1645,6 +1700,12 @@
     .hero-name .name-line:nth-child(1) { animation-delay: 0.15s; }
     .hero-name .name-line:nth-child(2) { animation-delay: 0.3s; }
 
+    .hero-positioning {
+      opacity: 0;
+      transform: translateY(12px);
+      animation: metaIn 0.5s ease-out 0.55s forwards;
+    }
+
     @keyframes heroIn {
       to { opacity: 1; transform: translateY(0); }
     }
@@ -1756,6 +1817,7 @@
       <span class="t-hero name-line">Poonyakanok</span>
     </div>
     <div class="hero-rule"></div>
+    <p class="hero-positioning">Physician building <span class="accent-word">clinical AI</span>, travel medicine tools, and public health data systems.</p>
     <div class="hero-meta">
       <div class="hero-meta-item">
         <span class="t-label">Specialty</span>
@@ -1854,7 +1916,7 @@
           <div class="exp-category-label">Clinical &amp; Research</div>
           <div class="timeline">
             <div class="timeline-item">
-              <div class="timeline-year">2024 — Present</div>
+              <div class="timeline-year">2024 — Present <span class="timeline-chip">Current</span></div>
               <div class="timeline-header">
                   <div class="timeline-logo-wrap">
                       <img src="experience/ipm.png" alt="IPM" class="timeline-logo">
@@ -1868,7 +1930,7 @@
               </div>
             </div>
             <div class="timeline-item">
-              <div class="timeline-year">Nov 2024 — Present</div>
+              <div class="timeline-year">Nov 2024 — Present <span class="timeline-chip">Current</span></div>
               <div class="timeline-header">
                 <div class="timeline-logo-wrap">
                     <img src="experience/pty.png" alt="Pattayarak" class="timeline-logo">
@@ -1929,7 +1991,7 @@
           <div class="exp-category-label">Education</div>
           <div class="timeline">
             <div class="timeline-item">
-              <div class="timeline-year">Aug 2026 — Incoming</div>
+              <div class="timeline-year">Aug 2026 <span class="timeline-chip">Incoming</span></div>
               <div class="timeline-header">
                 <div class="timeline-logo-wrap">
                     <img src="experience/cmu.png" alt="CMU" class="timeline-logo">
@@ -2042,7 +2104,7 @@
       </div>
       <div class="featured-project-carousel fade-in delay-1" id="projectCarousel" aria-label="Featured projects">
         <div class="featured-project-header">
-          <span class="t-label">Featured Project</span>
+          <span class="t-label">Featured Work</span>
           <div class="featured-project-controls">
             <button type="button" class="carousel-btn" id="projectPrev" aria-label="Previous featured project">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
@@ -2197,6 +2259,7 @@
       <div class="skills-certs-grid">
         <!-- LEFT: Skills -->
         <div class="skills-column fade-in delay-1">
+          <div class="column-kicker">Technical Stack</div>
           <div class="skills-category">
             <div class="skills-category-title">Core Languages</div>
             <div class="skills-badges">
@@ -2271,6 +2334,7 @@
 
         <!-- RIGHT: Certifications -->
         <div class="certifications-column fade-in delay-2">
+          <div class="column-kicker">Credential Library</div>
           <div class="cert-category">
             <div class="cert-category-title">Data Science &amp; AI</div>
             <div class="cert-items">
@@ -2385,6 +2449,7 @@
           <div class="exp-category-label" style="margin-bottom:0.75rem;padding-bottom:0;border-bottom:none;">AI Training &amp; Selection</div>
           <div class="training-title">Super AI Engineer Season 6 · Advanced AI Level 2 Participant</div>
           <div class="training-meta">AIAT · Apr-Jun 2026 · Selected 150 from 10,000+ applicants</div>
+          <div class="training-proof">Selection note: <strong>150</strong> participants selected from <strong>10,000+</strong> applicants.</div>
           <p class="training-desc">Selected for AIAT's applied AI training and real-world project incubation program, covering image processing, signal processing, natural language processing, big data analytics, IoT, and robotics through workshops and hackathons.</p>
         </div>
       </div>
@@ -2395,18 +2460,18 @@
         <div class="hackathon-grid">
           <div class="challenge-item">
             <div class="challenge-name">From Data to Insight</div>
-            <div class="challenge-meta">Super AI Engineer Season 6 · Hack 1 · AIAT · Cert ID 610147BE</div>
-            <a href="https://mysuperai.aiat.or.th/certificate/hack1/600013" target="_blank" class="cert-verify" rel="noopener noreferrer">Verify</a>
+            <div class="challenge-meta">Super AI Engineer Season 6 · Level 1 · Hack 1 · AIAT · Cert ID 610147BE</div>
+            <a href="cert/certificate-hack1-600013.png" target="_blank" class="cert-verify" rel="noopener noreferrer">View</a>
           </div>
           <div class="challenge-item">
             <div class="challenge-name">Agentic Pipeline Hackathon: 2026 Thai Election OCR Challenge</div>
-            <div class="challenge-meta">Super AI Engineer Season 6 · Hack 2 · AIAT · Cert ID 7E3E221B</div>
-            <a href="https://mysuperai.aiat.or.th/certificate/hack2/600013" target="_blank" class="cert-verify" rel="noopener noreferrer">Verify</a>
+            <div class="challenge-meta">Super AI Engineer Season 6 · Level 1 · Hack 2 · AIAT · Cert ID 7E3E221B</div>
+            <a href="cert/certificate-hack2-600013.png" target="_blank" class="cert-verify" rel="noopener noreferrer">View</a>
           </div>
           <div class="challenge-item">
             <div class="challenge-name">FahMai RAG Hackathon</div>
-            <div class="challenge-meta">Super AI Engineer Season 6 · Hack 3 · AIAT · Cert ID BED316AA</div>
-            <a href="https://mysuperai.aiat.or.th/certificate/hack3/600013" target="_blank" class="cert-verify" rel="noopener noreferrer">Verify</a>
+            <div class="challenge-meta">Super AI Engineer Season 6 · Level 1 · Hack 3 · AIAT · Cert ID BED316AA</div>
+            <a href="cert/certificate-hack3-600013.png" target="_blank" class="cert-verify" rel="noopener noreferrer">View</a>
           </div>
         </div>
       </div>
@@ -2628,6 +2693,7 @@
       const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       let activeProjectSlide = 0;
       let projectTimer = null;
+      let projectCarouselInView = false;
 
       function showProjectSlide(index) {
         activeProjectSlide = (index + projectSlides.length) % projectSlides.length;
@@ -2652,7 +2718,7 @@
       }
 
       function startProjectCarousel() {
-        if (reduceMotion || projectTimer) return;
+        if (reduceMotion || projectTimer || !projectCarouselInView) return;
         projectTimer = window.setInterval(nextProjectSlide, 3500);
       }
 
@@ -2692,7 +2758,26 @@
       projectCarousel.addEventListener('focusout', startProjectCarousel);
 
       showProjectSlide(0);
-      startProjectCarousel();
+
+      if ('IntersectionObserver' in window) {
+        const projectCarouselObserver = new IntersectionObserver(function(entries) {
+          entries.forEach(function(entry) {
+            projectCarouselInView = entry.isIntersecting;
+
+            if (projectCarouselInView) {
+              showProjectSlide(0);
+              startProjectCarousel();
+            } else {
+              stopProjectCarousel();
+            }
+          });
+        }, { threshold: 0.35 });
+
+        projectCarouselObserver.observe(projectCarousel);
+      } else {
+        projectCarouselInView = true;
+        startProjectCarousel();
+      }
     }
 
     // ── Bangkok Time ──
