@@ -742,6 +742,138 @@
        ═══════════════════════════════════════════════ */
     .project-list { display: flex; flex-direction: column; }
 
+    .featured-project-carousel {
+      margin-bottom: 2rem;
+      border-top: 1px solid var(--border-light);
+      border-bottom: 1px solid var(--border-light);
+      padding: 1.5rem 0;
+    }
+
+    .featured-project-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .featured-project-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .carousel-btn {
+      width: 34px;
+      height: 34px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--bg-card);
+      color: var(--text-secondary);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+
+    .carousel-btn:hover,
+    .carousel-btn:focus-visible {
+      border-color: var(--accent);
+      color: var(--accent-heading);
+      background: var(--accent-muted);
+      outline: none;
+    }
+
+    .featured-project-slide {
+      display: none;
+      grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.9fr);
+      gap: 1.5rem;
+      align-items: center;
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .featured-project-slide.active {
+      display: grid;
+    }
+
+    .featured-project-slide:hover {
+      text-decoration: none;
+    }
+
+    .featured-project-media {
+      aspect-ratio: 16 / 10;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      background: var(--bg-code);
+      box-shadow: var(--shadow-card);
+    }
+
+    .featured-project-media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top center;
+      display: block;
+      transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .featured-project-slide:hover .featured-project-media img {
+      transform: scale(1.025);
+    }
+
+    .featured-project-kicker {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6875rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent-heading);
+      margin-bottom: 0.5rem;
+    }
+
+    .featured-project-title {
+      font-size: clamp(1.25rem, 2.4vw, 1.75rem);
+      font-weight: 800;
+      line-height: 1.2;
+      color: var(--text-primary);
+      transition: color 0.2s ease;
+    }
+
+    .featured-project-slide:hover .featured-project-title {
+      color: var(--accent-heading);
+    }
+
+    .featured-project-desc {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin-top: 0.75rem;
+    }
+
+    .carousel-dots {
+      display: flex;
+      gap: 6px;
+      margin-top: 1.25rem;
+    }
+
+    .carousel-dot {
+      width: 28px;
+      height: 4px;
+      border: 0;
+      border-radius: 999px;
+      background: var(--border);
+      cursor: pointer;
+      transition: background 0.2s ease, width 0.2s ease;
+    }
+
+    .carousel-dot[aria-current="true"] {
+      width: 42px;
+      background: var(--accent);
+    }
+
     .project-item {
       display: block;
       padding: 1.25rem 0;
@@ -755,6 +887,10 @@
     .project-item:hover { padding-left: 8px; text-decoration: none; }
 
     @media (max-width: 768px) {
+      .featured-project-carousel { padding: 1.25rem 0; }
+      .featured-project-slide { grid-template-columns: 1fr; gap: 1rem; }
+      .featured-project-header { align-items: flex-start; }
+      .featured-project-media { aspect-ratio: 4 / 3; }
       .project-item { padding: 1rem 0; }
     }
 
@@ -1040,6 +1176,56 @@
       margin-top: 3rem;
     }
 
+    .training-highlight {
+      margin-top: 3rem;
+      border-top: 1px solid var(--border-light);
+      border-bottom: 1px solid var(--border-light);
+      padding: 1.25rem 0;
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: 1.25rem;
+      align-items: center;
+    }
+
+    .training-logo-stack {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .training-logo {
+      width: 54px;
+      height: 54px;
+      object-fit: contain;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--bg-card);
+      padding: 5px;
+    }
+
+    .training-title {
+      font-size: 0.9375rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.4;
+    }
+
+    .training-meta {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6875rem;
+      color: var(--accent-heading);
+      margin-top: 4px;
+      line-height: 1.5;
+    }
+
+    .training-desc {
+      font-size: 0.8125rem;
+      color: var(--text-secondary);
+      margin-top: 8px;
+      line-height: 1.65;
+    }
+
     .hackathon-grid {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1114,7 +1300,8 @@
     /* Fix for white logos in light mode */
     [data-theme="light"] .app-icon-box,
     [data-theme="light"] .timeline-logo,
-    [data-theme="light"] .cert-icon {
+    [data-theme="light"] .cert-icon,
+    [data-theme="light"] .training-logo {
       background: #161b22;
       border-color: #30363d;
     }
@@ -1191,6 +1378,8 @@
       .challenge-name { font-size: 0.78125rem; }
       .challenge-meta { font-size: 0.5625rem; }
       .hackathon-section { margin-top: 2rem; }
+      .training-highlight { grid-template-columns: 1fr; gap: 1rem; margin-top: 2rem; }
+      .training-logo { width: 48px; height: 48px; }
       .hackathon-grid { grid-template-columns: 1fr; gap: 0; }
       .hackathon-grid .challenge-item { border-bottom: 1px solid var(--border-light); }
       .hackathon-grid .challenge-item:last-child { border-bottom: none; }
@@ -1630,19 +1819,19 @@
         </div>
         <div class="about-stats fade-in delay-2">
           <div class="stat-item">
-            <span class="stat-number"><span class="count-up" data-target="6">0</span>+</span>
+            <span class="stat-number">6+</span>
             <span class="stat-label">Years Clinical Practice</span>
           </div>
           <div class="stat-item">
-            <span class="stat-number"><span class="count-up" data-target="4">0</span>+</span>
+            <span class="stat-number">4+</span>
             <span class="stat-label">Years Data Analysis</span>
           </div>
           <div class="stat-item">
-            <span class="stat-number"><span class="count-up" data-target="2">0</span></span>
+            <span class="stat-number">2</span>
             <span class="stat-label">Publications</span>
           </div>
           <div class="stat-item">
-            <span class="stat-number"><span class="count-up" data-target="21">0</span>+</span>
+            <span class="stat-number">21+</span>
             <span class="stat-label">Certifications</span>
           </div>
         </div>
@@ -1851,39 +2040,70 @@
           <div class="section-header-rule"></div>
         </div>
       </div>
+      <div class="featured-project-carousel fade-in delay-1" id="projectCarousel" aria-label="Featured projects">
+        <div class="featured-project-header">
+          <span class="t-label">Featured Project</span>
+          <div class="featured-project-controls">
+            <button type="button" class="carousel-btn" id="projectPrev" aria-label="Previous featured project">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+            </button>
+            <button type="button" class="carousel-btn" id="projectNext" aria-label="Next featured project">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+          </div>
+        </div>
+        <a href="https://altit.app/" target="_blank" class="featured-project-slide active" rel="noopener noreferrer" aria-hidden="false">
+          <div class="featured-project-media">
+            <img src="project/altit1-thumb.webp" alt="Altitude Itinerary Analyzer interface preview" loading="eager" width="1100" height="657">
+          </div>
+          <div>
+            <div class="featured-project-kicker">AI Clinical Decision Support</div>
+            <div class="featured-project-title">Altitude Itinerary Analyzer</div>
+            <p class="featured-project-desc">AI-assisted travel medicine tool for extracting and analyzing complex itineraries for high-altitude risk assessment.</p>
+            <div class="project-tags"><span class="project-tag">Live App</span><span class="project-tag">AI/CDS</span><span class="project-tag">Travel Medicine</span></div>
+          </div>
+        </a>
+        <a href="https://public.tableau.com/app/profile/vitchakorn.poonyakanok/viz/yf_malaria/CDC" target="_blank" class="featured-project-slide" rel="noopener noreferrer" aria-hidden="true">
+          <div class="featured-project-media">
+            <img src="project/yfmalaria-thumb.webp" alt="Yellow fever and malaria dashboard preview" loading="lazy" width="1100" height="846">
+          </div>
+          <div>
+            <div class="featured-project-kicker">Clinical Dashboard</div>
+            <div class="featured-project-title">Yellow Fever Vaccine &amp; Malaria Prevention Dashboard</div>
+            <p class="featured-project-desc">Country-specific Tableau dashboard for immunization and prophylaxis guidance based on CDC Yellow Book travel health data.</p>
+            <div class="project-tags"><span class="project-tag">Dashboard</span><span class="project-tag">Tableau</span><span class="project-tag">CDC Yellow Book</span></div>
+          </div>
+        </a>
+        <a href="https://hoscode.vercel.app/" target="_blank" class="featured-project-slide" rel="noopener noreferrer" aria-hidden="true">
+          <div class="featured-project-media">
+            <img src="project/hospcode-thumb.webp" alt="Thai HospSearch application preview" loading="lazy" width="1100" height="901">
+          </div>
+          <div>
+            <div class="featured-project-kicker">Health Data Tool</div>
+            <div class="featured-project-title">Thai HospSearch</div>
+            <p class="featured-project-desc">Navigator for Thai healthcare administrative hierarchy and facility code lookup from region to subdistrict.</p>
+            <div class="project-tags"><span class="project-tag">Live App</span><span class="project-tag">Health Data</span><span class="project-tag">Public Health</span></div>
+          </div>
+        </a>
+        <a href="https://hajj-period-planner.vercel.app/" target="_blank" class="featured-project-slide" rel="noopener noreferrer" aria-hidden="true">
+          <div class="featured-project-media">
+            <img src="project/hajjmens-thumb.webp" alt="Hajj Menstrual Delay Planner application preview" loading="lazy" width="1100" height="846">
+          </div>
+          <div>
+            <div class="featured-project-kicker">Clinical Planning Utility</div>
+            <div class="featured-project-title">Hajj Menstrual Delay Planner</div>
+            <p class="featured-project-desc">Web utility for visualizing cycles and supporting menstrual delay or suppression planning for pilgrimage travel.</p>
+            <div class="project-tags"><span class="project-tag">Live App</span><span class="project-tag">Clinical Tool</span><span class="project-tag">Travel Medicine</span></div>
+          </div>
+        </a>
+        <div class="carousel-dots" aria-label="Featured project selector">
+          <button type="button" class="carousel-dot" data-project-slide="0" aria-label="Show Altitude Itinerary Analyzer" aria-current="true"></button>
+          <button type="button" class="carousel-dot" data-project-slide="1" aria-label="Show Yellow Fever Vaccine and Malaria Prevention Dashboard" aria-current="false"></button>
+          <button type="button" class="carousel-dot" data-project-slide="2" aria-label="Show Thai HospSearch" aria-current="false"></button>
+          <button type="button" class="carousel-dot" data-project-slide="3" aria-label="Show Hajj Menstrual Delay Planner" aria-current="false"></button>
+        </div>
+      </div>
       <div class="project-list">
-        <a href="https://altit.app/" target="_blank" class="project-item fade-in delay-1" rel="noopener noreferrer">
-          <div>
-            <div class="project-title">Altitude Itinerary Analyzer</div>
-            <span class="project-link">altit.app</span>
-            <p class="project-desc">Full-stack AI clinical decision support application to autonomously extract &amp; analyze multi-modal travel itineraries for high-altitude risk assessment.</p>
-            <div class="project-tags"><span class="project-tag">AI/CDS</span><span class="project-tag">Full-Stack</span><span class="project-tag">Travel Medicine</span></div>
-          </div>
-        </a>
-        <a href="https://public.tableau.com/app/profile/vitchakorn.poonyakanok/viz/yf_malaria/CDC" target="_blank" class="project-item fade-in delay-2" rel="noopener noreferrer">
-          <div>
-            <div class="project-title">Yellow Fever Vaccine & Malaria Prevention Dashboard</div>
-            <span class="project-link">CDC Yellow Book 2026 Data · Tableau</span>
-            <p class="project-desc">Interactive clinical dashboard providing country-specific immunization and prophylaxis requirements based on the latest CDC global health standards.</p>
-            <div class="project-tags"><span class="project-tag">Data Viz</span><span class="project-tag">Travel Medicine</span><span class="project-tag">CDC Yellow Book</span></div>
-          </div>
-        </a>
-        <a href="https://hoscode.vercel.app/" target="_blank" class="project-item fade-in delay-3" rel="noopener noreferrer">
-          <div>
-            <div class="project-title">Thai HospSearch</div>
-            <span class="project-link">hoscode.vercel.app</span>
-            <p class="project-desc">Interactive navigator for Thai healthcare administrative hierarchy (Region to Subdistrict) with direct code lookup.</p>
-            <div class="project-tags"><span class="project-tag">Health Data</span><span class="project-tag">Public Health</span></div>
-          </div>
-        </a>
-        <a href="https://hajj-period-planner.vercel.app/" target="_blank" class="project-item fade-in" rel="noopener noreferrer">
-          <div>
-            <div class="project-title">Hajj Menstrual Delay Planner</div>
-            <span class="project-link">hajj-period-planner.vercel.app</span>
-            <p class="project-desc">Web utility for calculating and visualizing menstrual cycles and planning for menstrual delay/suppression for pilgrims.</p>
-            <div class="project-tags"><span class="project-tag">Clinical Tool</span><span class="project-tag">Travel Medicine</span></div>
-          </div>
-        </a>
         <div class="project-show-more" id="moreProjects">
           <a href="https://public.tableau.com/app/profile/vitchakorn.poonyakanok" target="_blank" class="project-item" rel="noopener noreferrer">
             <div>
@@ -1919,7 +2139,7 @@
           </a>
         </div>
         <button class="toggle-projects-btn" id="toggleProjects">
-          <span>View All Projects</span>
+          <span>View Other Projects</span>
           <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
         </button>
       </div>
@@ -2155,6 +2375,20 @@
         </div>
       </div>
 
+      <!-- AI Training -->
+      <div class="training-highlight fade-in">
+        <div class="training-logo-stack" aria-label="AIAT and Super AI Engineer logos">
+          <img src="experience/AIAT-logo-01.jpg" alt="Artificial Intelligence Association of Thailand" class="training-logo" loading="lazy" width="54" height="54">
+          <img src="experience/superai.png" alt="Super AI Engineer Season 6" class="training-logo" loading="lazy" width="54" height="54">
+        </div>
+        <div>
+          <div class="exp-category-label" style="margin-bottom:0.75rem;padding-bottom:0;border-bottom:none;">AI Training &amp; Selection</div>
+          <div class="training-title">Super AI Engineer Season 6 · Advanced AI Level 2 Participant</div>
+          <div class="training-meta">AIAT · Apr-Jun 2026 · Selected 150 from 10,000+ applicants</div>
+          <p class="training-desc">Selected for AIAT's applied AI training and real-world project incubation program, covering image processing, signal processing, natural language processing, big data analytics, IoT, and robotics through workshops and hackathons.</p>
+        </div>
+      </div>
+
       <!-- Hackathons -->
       <div class="hackathon-section fade-in">
         <div class="exp-category-label" style="margin-bottom:1.25rem;">Hackathons</div>
@@ -2362,10 +2596,10 @@
     const moreProjects = document.getElementById('moreProjects');
 
     if (toggleBtn && moreProjects) {
-      toggleBtn.addEventListener('click', () => {
-        const isActive = moreProjects.classList.toggle('active');
-        toggleBtn.classList.toggle('active');
-        toggleBtn.querySelector('span').textContent = isActive ? 'Show Less' : 'View All Projects';
+        toggleBtn.addEventListener('click', () => {
+          const isActive = moreProjects.classList.toggle('active');
+          toggleBtn.classList.toggle('active');
+          toggleBtn.querySelector('span').textContent = isActive ? 'Hide Other Projects' : 'View Other Projects';
         
         if (isActive) {
           // Trigger fade-in for newly visible items
@@ -2383,36 +2617,83 @@
     window.addEventListener('scroll', updateActiveNav, { passive: true });
     updateActiveNav();
 
-    // ── Count Up Animation ──
-    var countElements = document.querySelectorAll('.count-up');
-    var countAnimated = false;
+    // ── Featured Project Carousel ──
+    const projectCarousel = document.getElementById('projectCarousel');
 
-    function startCountUp() {
-      if (countAnimated) return;
-      var statsSection = document.querySelector('.about-stats');
-      if (!statsSection) return;
-      var rect = statsSection.getBoundingClientRect();
-      if (rect.top < window.innerHeight - 100) {
-        countAnimated = true;
-        countElements.forEach(function(el) {
-          var target = parseInt(el.getAttribute('data-target'));
-          var duration = 1800;
-          var start = performance.now();
-          function update(now) {
-            var elapsed = now - start;
-            var progress = Math.min(elapsed / duration, 1);
-            var eased = 1 - Math.pow(1 - progress, 3);
-            el.textContent = Math.floor(eased * target).toLocaleString();
-            if (progress < 1) requestAnimationFrame(update);
-            else el.textContent = target.toLocaleString();
-          }
-          requestAnimationFrame(update);
+    if (projectCarousel) {
+      const projectSlides = projectCarousel.querySelectorAll('.featured-project-slide');
+      const projectDots = projectCarousel.querySelectorAll('.carousel-dot');
+      const projectPrev = document.getElementById('projectPrev');
+      const projectNext = document.getElementById('projectNext');
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      let activeProjectSlide = 0;
+      let projectTimer = null;
+
+      function showProjectSlide(index) {
+        activeProjectSlide = (index + projectSlides.length) % projectSlides.length;
+
+        projectSlides.forEach(function(slide, slideIndex) {
+          const isActive = slideIndex === activeProjectSlide;
+          slide.classList.toggle('active', isActive);
+          slide.setAttribute('aria-hidden', isActive ? 'false' : 'true');
+        });
+
+        projectDots.forEach(function(dot, dotIndex) {
+          dot.setAttribute('aria-current', dotIndex === activeProjectSlide ? 'true' : 'false');
         });
       }
-    }
 
-    window.addEventListener('scroll', startCountUp, { passive: true });
-    startCountUp();
+      function nextProjectSlide() {
+        showProjectSlide(activeProjectSlide + 1);
+      }
+
+      function previousProjectSlide() {
+        showProjectSlide(activeProjectSlide - 1);
+      }
+
+      function startProjectCarousel() {
+        if (reduceMotion || projectTimer) return;
+        projectTimer = window.setInterval(nextProjectSlide, 3500);
+      }
+
+      function stopProjectCarousel() {
+        if (!projectTimer) return;
+        window.clearInterval(projectTimer);
+        projectTimer = null;
+      }
+
+      if (projectPrev) {
+        projectPrev.addEventListener('click', function() {
+          stopProjectCarousel();
+          previousProjectSlide();
+          startProjectCarousel();
+        });
+      }
+
+      if (projectNext) {
+        projectNext.addEventListener('click', function() {
+          stopProjectCarousel();
+          nextProjectSlide();
+          startProjectCarousel();
+        });
+      }
+
+      projectDots.forEach(function(dot) {
+        dot.addEventListener('click', function() {
+          stopProjectCarousel();
+          showProjectSlide(parseInt(dot.getAttribute('data-project-slide'), 10));
+          startProjectCarousel();
+        });
+      });
+
+      projectCarousel.addEventListener('mouseenter', stopProjectCarousel);
+      projectCarousel.addEventListener('mouseleave', startProjectCarousel);
+      projectCarousel.addEventListener('focusin', stopProjectCarousel);
+      projectCarousel.addEventListener('focusout', startProjectCarousel);
+
+      showProjectSlide(0);
+      startProjectCarousel();
+    }
 
     // ── Bangkok Time ──
     function updateTime() {
