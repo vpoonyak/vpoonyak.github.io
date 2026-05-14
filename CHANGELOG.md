@@ -2,12 +2,25 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2026-05-15] - Mobile Navigation and Project Carousel Refinement
+
+### Added
+- **Mobile Project Swipe**: Added touch swipe support for the Featured Work carousel on mobile.
+- **Stable Mobile Carousel Controls**: Added a mobile-only carousel control row directly below the active project thumbnail so controls stay stable regardless of caption length.
+
+### Changed
+- **Mobile Section Navigation**: Replaced the previous/current/next moving section indicator with a horizontally scrollable all-section navigation strip that keeps the current section styled like the desktop active state.
+- **Featured Project Markup**: Split each featured project slide into separate clickable thumbnail and caption links so mobile controls can sit between the media and text without invalid nested interactive elements.
+
+### Fixed
+- **Project Carousel Mobile Rhythm**: Prevented long project titles and descriptions from moving the carousel navigation in mobile view.
+
 ## [2026-05-14] - Portfolio IA, Training, and Skills Refresh
 
 ### Added
 - **Standalone Training Section**: Moved Super AI Engineer Season 6 content into its own `Training` section with AIAT/Super AI logos, Foundation AI certificate, The Scamper housing team link, Level 1 minihack Colab/certificate/Kaggle links, and Level 2 Parasite Eggs rank.
 - **Languages Section**: Split language competency into a standalone `Languages` section.
-- **Mobile Section Carousel**: Added a compact mobile current-section indicator showing previous, current, and next sections with slide animation.
+- **Mobile Section Navigation**: Added a compact mobile/tablet current-section navigation pattern.
 - **Featured Project Carousel Expansion**: Added PM2.5 & Mental Health Dynamics, Cirrhosis Survival Prediction, Thai Numeral Converter, and BNK/CGM48 election analysis to the featured carousel.
 - **LLM API Skills**: Added a Large Language Model APIs group covering GPT, Claude, Gemini, and ThaiLLM.
 - **Local Skill Logos**: Added local logo-style badges for GPT/OpenAI, ThaiLLM, Power BI, Matplotlib, and Seaborn; reused the local Tableau favicon.

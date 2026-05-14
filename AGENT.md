@@ -23,9 +23,11 @@ The `#expertise` section exists in the markup but is hidden and excluded from na
 
 ## Key UI Behaviors
 - Desktop navigation uses fixed top links with active-state styling.
-- Mobile navigation uses `#navSectionIndicator`, a mini carousel that shows previous/current/next section chips.
+- Mobile/tablet navigation uses `#navSectionIndicator`, a horizontally scrollable all-section chip strip. The current section should use the same visual language as the desktop active nav state.
 - Active-section tracking is based on a viewport reading line in `updateActiveNav()`.
-- Featured projects use a custom carousel with previous/next buttons and dot buttons.
+- Featured projects use a custom carousel with previous/next buttons, dot buttons, autoplay while in view, and mobile swipe gestures.
+- On mobile, Featured Work controls are duplicated into `.featured-project-mobile-nav` and inserted directly below the active project thumbnail. Keep this row independent from caption height so long titles/descriptions do not move the controls.
+- Featured project slides are `article` elements with separate `.featured-project-media-link` and `.featured-project-copy-link` anchors. Preserve this structure to avoid nested interactive elements when mobile controls sit between media and caption.
 - Project chips are metadata only; click events on `.project-tags` are stopped so chips do not navigate.
 - Scroll reveal uses `.fade-in` and delayed reveal calls for direct anchor navigation.
 
@@ -69,8 +71,9 @@ python3 -m http.server 8765 --bind 127.0.0.1
 
 Then inspect:
 - Desktop, tablet, and mobile section layout.
-- Mobile mini section carousel active chip.
-- Featured project carousel controls.
+- Mobile/tablet section chip strip: all sections should be scrollable, and the active chip should match desktop active styling.
+- Featured project carousel controls on desktop.
+- Featured project carousel on mobile: controls should appear below the thumbnail, stay stable when captions change, dots should update, and swipe should not accidentally open project links.
 - Project chips remain static.
 - About stat links navigate to the expected sections.
 - No horizontal overflow on mobile.
