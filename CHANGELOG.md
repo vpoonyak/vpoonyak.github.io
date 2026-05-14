@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2026-05-14] - LANTA HPC Skill Update
+
+### Added
+- **LANTA HPC Environment Experience**: Added Linux and LANTA HPC badges to the Environments skill group to reflect practical supercomputer and basic Linux module usage experience.
+
 ## [2026-04-29] - Huawei Cloud Certificate Update
 
 ### Added
