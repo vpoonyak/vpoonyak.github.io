@@ -278,94 +278,56 @@
       margin-left: 12px;
       margin-right: auto;
       min-width: 0;
-      overflow: hidden;
+      overflow-x: auto;
+      overflow-y: hidden;
       align-items: center;
       gap: 6px;
       font-family: 'JetBrains Mono', monospace;
       white-space: nowrap;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      scroll-padding: 16px;
+    }
+
+    .nav-section-indicator::-webkit-scrollbar {
+      display: none;
     }
 
     .section-chip {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-width: 0;
-      max-width: 8.5rem;
-      padding: 4px 9px;
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      background: var(--bg-card);
+      flex: 0 0 auto;
+      padding: 6px 10px;
+      border-radius: 6px;
+      background: transparent;
       color: var(--text-tertiary);
-      font-size: 0.5625rem;
-      font-weight: 700;
+      font-size: 0.625rem;
+      font-weight: 600;
       letter-spacing: 0.06em;
       line-height: 1.2;
       text-transform: uppercase;
       text-decoration: none;
       overflow: hidden;
       text-overflow: ellipsis;
+      scroll-snap-align: center;
       transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
     }
 
     .section-chip:hover {
+      color: var(--text-primary);
+      background: var(--accent-muted);
       text-decoration: none;
     }
 
     .section-chip[href] {
-      border-color: var(--accent-border);
-      background: var(--bg-card);
-      color: var(--accent-heading);
       cursor: pointer;
     }
 
-    .section-chip[href]:hover {
-      background: var(--accent-muted);
-      border-color: var(--accent);
-    }
-
     .section-chip.current {
-      max-width: 10.5rem;
-      padding: 5px 11px;
-      border-color: var(--border-light);
-      background: var(--bg-card);
-      color: var(--text-secondary);
-      font-size: 0.625rem;
-      cursor: default;
-    }
-
-    .section-chip.adjacent {
-      max-width: 4.75rem;
-      opacity: 0.72;
-    }
-
-    .nav-section-indicator.sliding-forward .section-chip {
-      animation: sectionChipSlideForward 0.24s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .nav-section-indicator.sliding-backward .section-chip {
-      animation: sectionChipSlideBackward 0.24s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .nav-section-indicator.sliding-forward .section-chip.current,
-    .nav-section-indicator.sliding-backward .section-chip.current {
-      animation-delay: 0.025s;
-    }
-
-    @keyframes sectionChipSlideForward {
-      from { transform: translateX(18px); }
-      to { transform: translateX(0); }
-    }
-
-    @keyframes sectionChipSlideBackward {
-      from { transform: translateX(-18px); }
-      to { transform: translateX(0); }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .nav-section-indicator.sliding-forward .section-chip,
-      .nav-section-indicator.sliding-backward .section-chip {
-        animation: none;
-      }
+      color: var(--accent-heading);
+      background: var(--accent-muted);
+      box-shadow: inset 0 -2px 0 var(--accent);
     }
 
     .nav-actions { display: flex; align-items: center; gap: 8px; }
@@ -441,7 +403,7 @@
       transform: translateY(-5.5px) rotate(-45deg);
     }
 
-    @media (max-width: 768px) {
+    @media (max-width: 1024px) {
       section[id], .hero { scroll-margin-top: 104px; }
       .nav-links { display: none; }
       .nav-inner {
@@ -458,8 +420,10 @@
         order: 3;
         display: flex;
         flex: 0 0 100%;
-        justify-content: center;
+        justify-content: flex-start;
         margin: 0;
+        padding: 0 4px 2px;
+        scroll-snap-type: x proximity;
       }
       .menu-toggle { display: flex; }
       .nav-links.open {
@@ -477,11 +441,13 @@
 
     @media (max-width: 480px) {
       .nav-section-indicator {
-        gap: 4px;
+        gap: 3px;
       }
 
-      .section-chip.current { max-width: 12rem; }
-      .section-chip.adjacent { max-width: 4.5rem; }
+      .section-chip {
+        padding: 6px 9px;
+        font-size: 0.5625rem;
+      }
     }
 
     /* ═══════════════════════════════════════════════
@@ -1806,6 +1772,11 @@
       gap: 1rem;
     }
 
+    .lang-item.compact {
+      min-height: 0;
+      align-content: start;
+    }
+
     .lang-header {
       display: flex;
       align-items: flex-start;
@@ -1929,11 +1900,13 @@
 
     @media (max-width: 480px) {
       .lang-proof-card {
-        grid-template-columns: auto minmax(0, 1fr);
+        grid-template-columns: auto minmax(0, 1fr) auto;
+        gap: 8px;
       }
 
       .lang-proof-score {
-        grid-column: 2;
+        grid-column: auto;
+        justify-self: end;
       }
     }
 
@@ -2132,7 +2105,7 @@
       <a href="#top" class="nav-logo" aria-label="Back to top">
         <span class="nav-logo-dot"></span>
       </a>
-      <div class="nav-section-indicator" id="navSectionIndicator" aria-label="Current section" aria-live="polite"></div>
+      <div class="nav-section-indicator" id="navSectionIndicator" aria-label="Section navigation"></div>
       <ul class="nav-links" id="navLinks">
         <li><a href="#about">About</a></li>
         <li><a href="#experience">Experience</a></li>
@@ -2975,7 +2948,7 @@
             </div>
           </div>
         </div>
-        <div class="lang-item">
+        <div class="lang-item compact">
           <div class="lang-header">
             <div>
               <div class="lang-name">Thai</div>
@@ -3116,61 +3089,52 @@
       about: 'About',
       experience: 'Experience',
       projects: 'Projects',
-      publications: 'Publications',
+      publications: 'Research',
       training: 'Training',
-      skills: 'Skills & Certifications',
+      skills: 'Skills',
       languages: 'Languages',
       contact: 'Contact'
     };
     var navAnchors = navLinks.querySelectorAll('a');
     var navSectionIndicator = document.getElementById('navSectionIndicator');
     var activeSectionIndex = null;
-    var sectionIndicatorAnimationTimer = null;
+    var sectionIndicatorChips = [];
 
-    function renderSectionIndicator(activeIndex) {
+    function setupSectionIndicator() {
       if (!navSectionIndicator) return;
-      if (activeIndex === activeSectionIndex && navSectionIndicator.children.length) return;
-
-      var direction = activeSectionIndex === null ? null : activeIndex > activeSectionIndex ? 'forward' : 'backward';
-      activeSectionIndex = activeIndex;
-
-      navSectionIndicator.classList.remove('sliding-forward', 'sliding-backward');
       navSectionIndicator.textContent = '';
+      sectionIndicatorChips = [];
 
-      for (var offset = -1; offset <= 1; offset++) {
-        var sectionIndex = activeIndex + offset;
-        if (sectionIndex < 0 || sectionIndex >= sectionIds.length) continue;
-
-        var sectionId = sectionIds[sectionIndex];
+      sectionIds.forEach(function(sectionId) {
         var label = sectionLabels[sectionId];
-        var chip = document.createElement(offset === 0 ? 'span' : 'a');
+        var chip = document.createElement('a');
 
-        chip.className = 'section-chip' + (offset === 0 ? ' current' : ' adjacent');
+        chip.className = 'section-chip';
+        chip.href = '#' + sectionId;
         chip.textContent = label;
         chip.title = label;
+        chip.setAttribute('aria-label', 'Go to ' + label + ' section');
 
-        if (offset === 0) {
-          chip.setAttribute('aria-current', 'location');
-        } else {
-          chip.href = '#' + sectionId;
-          chip.setAttribute('aria-label', (offset < 0 ? 'Previous section: ' : 'Next section: ') + label);
-        }
-
+        sectionIndicatorChips.push(chip);
         navSectionIndicator.appendChild(chip);
-      }
+      });
+    }
 
-      if (direction) {
-        if (sectionIndicatorAnimationTimer) {
-          window.clearTimeout(sectionIndicatorAnimationTimer);
+    function updateSectionIndicator(activeIndex) {
+      if (!navSectionIndicator || !sectionIndicatorChips.length) return;
+      if (activeIndex === activeSectionIndex) return;
+
+      activeSectionIndex = activeIndex;
+      sectionIndicatorChips.forEach(function(chip, chipIndex) {
+        var isActive = chipIndex === activeIndex;
+        chip.classList.toggle('current', isActive);
+        if (isActive) {
+          chip.setAttribute('aria-current', 'location');
+          chip.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+        } else {
+          chip.removeAttribute('aria-current');
         }
-
-        void navSectionIndicator.offsetWidth;
-        navSectionIndicator.classList.add('sliding-' + direction);
-
-        sectionIndicatorAnimationTimer = window.setTimeout(function() {
-          navSectionIndicator.classList.remove('sliding-forward', 'sliding-backward');
-        }, 260);
-      }
+      });
     }
 
     function updateActiveNav() {
@@ -3199,7 +3163,7 @@
         target.classList.add('active');
         target.setAttribute('aria-current', 'location');
       }
-      renderSectionIndicator(activeIndex);
+      updateSectionIndicator(activeIndex);
     }
 
     document.querySelectorAll('.project-tags').forEach(function(tagGroup) {
@@ -3210,6 +3174,7 @@
     });
 
     window.addEventListener('scroll', updateActiveNav, { passive: true });
+    setupSectionIndicator();
     updateActiveNav();
     window.requestAnimationFrame(updateActiveNav);
     window.addEventListener('load', updateActiveNav);
