@@ -1783,7 +1783,7 @@
        ═══════════════════════════════════════════════ */
     .lang-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: minmax(0, 1.2fr) minmax(220px, 0.8fr);
       gap: 1rem;
       max-width: 760px;
     }
@@ -1857,6 +1857,10 @@
       cursor: default;
     }
 
+    .lang-proof-card.compact {
+      grid-template-columns: auto minmax(0, 1fr);
+    }
+
     .lang-proof-logo {
       min-width: 38px;
       height: 30px;
@@ -1872,6 +1876,25 @@
       font-weight: 800;
       letter-spacing: 0.02em;
       line-height: 1;
+    }
+
+    .lang-proof-logo img {
+      display: block;
+      max-width: 100%;
+      max-height: 19px;
+      object-fit: contain;
+    }
+
+    .lang-proof-logo.toefl {
+      min-width: 58px;
+    }
+
+    .lang-proof-logo.toefl img {
+      filter: invert(1);
+    }
+
+    [data-theme="light"] .lang-proof-logo.toefl img {
+      filter: none;
     }
 
     .lang-proof-logo.duolingo {
@@ -2635,32 +2658,46 @@
       </div>
 
       <div class="training-highlight fade-in delay-2">
-        <div class="training-logo-stack" aria-label="DDC and Chiang Mai University logos">
+        <div class="training-logo-stack" aria-label="Department of Disease Control logo">
           <img src="certlogo/ddc.png" alt="Department of Disease Control" class="training-logo" loading="lazy" width="54" height="54">
-          <img src="certlogo/Chiang_mai_university_logo.png" alt="Chiang Mai University" class="training-logo" loading="lazy" width="54" height="54">
         </div>
         <div>
           <div class="training-heading">
-            <div class="training-title">Epidemiology &amp; Clinical Research Intensive Courses</div>
-            <span class="training-status-chip">Applied Public Health Methods</span>
+            <div class="training-title">Introductory Epidemiology &amp; Biostatistics</div>
+            <span class="training-status-chip">DDC/MOPH</span>
           </div>
-          <div class="training-meta">DDC/MOPH · Chiang Mai University · 2022-2024</div>
+          <div class="training-meta">Field Epidemiology Training Program · Jun 10-Jul 5, 2024</div>
           <div class="training-rows">
             <div class="training-row">
               <div class="training-row-label">Field Epidemiology</div>
               <div class="training-row-content">
                 <span class="training-row-entry stacked">
-                  <span class="training-row-entry-main"><span class="training-row-item">Introductory Epidemiology &amp; Biostatistics</span><span class="training-row-meta">Jun 2024 · DDC, MOPH</span><a href="cert/1721190140618.jpeg" target="_blank" class="cert-verify" rel="noopener noreferrer">View</a></span>
-                  <span class="training-row-note">Intensive FETP-led training in epidemiology and biostatistics for surveillance, outbreak investigation, and applied public health analysis.</span>
+                  <span class="training-row-entry-main"><span class="training-row-item">Introductory Course in Epidemiology and Biostatistics</span><span class="training-row-meta">Jun 10-Jul 5, 2024 · DDC, MOPH</span><a href="cert/1721190140618.jpeg" target="_blank" class="cert-verify" rel="noopener noreferrer">View</a></span>
+                  <span class="training-row-note">FETP-led intensive course organized by the Department of Disease Control, MOPH, with applied epidemiology and biostatistics training for public health field practice.</span>
                 </span>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="training-highlight fade-in delay-2">
+        <div class="training-logo-stack" aria-label="Chiang Mai University logo">
+          <img src="certlogo/Chiang_mai_university_logo.png" alt="Chiang Mai University" class="training-logo" loading="lazy" width="54" height="54">
+        </div>
+        <div>
+          <div class="training-heading">
+            <div class="training-title">Clinical Epidemiology &amp; Statistics</div>
+            <span class="training-status-chip">Chiang Mai University</span>
+          </div>
+          <div class="training-meta">Center for Clinical Epidemiology &amp; Clinical Statistics · Faculty of Medicine · 2022</div>
+          <div class="training-rows">
             <div class="training-row">
               <div class="training-row-label">Clinical Epidemiology</div>
               <div class="training-row-content">
                 <span class="training-row-entry stacked">
-                  <span class="training-row-entry-main"><span class="training-row-item">Diploma in Clinical Epidemiology</span><span class="training-row-meta">Dec 2022 · Chiang Mai University</span><a href="cert/1696631862918.jpeg" target="_blank" class="cert-verify" rel="noopener noreferrer">View</a></span>
-                  <span class="training-row-note">96-hour CMU short-course diploma covering clinical epidemiology, diagnostic, etiologic, prognostic, and therapeutic study design, plus evidence synthesis.</span>
+                  <span class="training-row-entry-main"><span class="training-row-item">Diploma in Clinical Epidemiology</span><span class="training-row-meta">Sep 10-Dec 18, 2022 · Chiang Mai University</span><a href="cert/1696631862918.jpeg" target="_blank" class="cert-verify" rel="noopener noreferrer">View</a></span>
+                  <span class="training-row-note">Program of study in clinical epidemiology from the Center for Clinical Epidemiology &amp; Clinical Statistics, Faculty of Medicine, Chiang Mai University.</span>
                 </span>
               </div>
             </div>
@@ -2668,8 +2705,8 @@
               <div class="training-row-label">Clinical Statistics</div>
               <div class="training-row-content">
                 <span class="training-row-entry stacked">
-                  <span class="training-row-entry-main"><span class="training-row-item">Diploma in Clinical Statistics</span><span class="training-row-meta">May 2022 · Chiang Mai University</span><a href="cert/1696631825168.jpeg" target="_blank" class="cert-verify" rel="noopener noreferrer">View</a></span>
-                  <span class="training-row-note">112-hour CMU intensive short-course diploma in clinical statistics, with applied modeling, real-data analysis, and medical statistics practice.</span>
+                  <span class="training-row-entry-main"><span class="training-row-item">Diploma in Clinical Statistics</span><span class="training-row-meta">Feb 5-May 22, 2022 · Chiang Mai University</span><a href="cert/1696631825168.jpeg" target="_blank" class="cert-verify" rel="noopener noreferrer">View</a></span>
+                  <span class="training-row-note">Program of study in clinical statistics from the Center for Clinical Epidemiology &amp; Clinical Statistics, Faculty of Medicine, Chiang Mai University.</span>
                 </span>
               </div>
             </div>
@@ -2921,7 +2958,7 @@
           </div>
           <div class="lang-evidence" aria-label="English proficiency evidence">
             <div class="lang-proof-card">
-              <span class="lang-proof-logo" aria-hidden="true">TOEFL</span>
+              <span class="lang-proof-logo toefl" aria-hidden="true"><img src="logo/toefl-logo.svg" alt=""></span>
               <div>
                 <div class="lang-proof-name">TOEFL iBT</div>
                 <div class="lang-proof-date">Jun 2025</div>
@@ -2929,7 +2966,7 @@
               <div class="lang-proof-score">91/120</div>
             </div>
             <div class="lang-proof-card">
-              <span class="lang-proof-logo duolingo" aria-hidden="true">Duo</span>
+              <span class="lang-proof-logo duolingo" aria-hidden="true"><img src="logo/duolingo.svg" alt=""></span>
               <div>
                 <div class="lang-proof-name">Duolingo English Test</div>
                 <div class="lang-proof-date">Mar 2026</div>
@@ -2945,16 +2982,6 @@
               <div class="lang-level">Native Proficiency</div>
             </div>
             <span class="lang-code">TH</span>
-          </div>
-          <div class="lang-evidence" aria-label="Thai proficiency">
-            <div class="lang-proof-card">
-              <span class="lang-proof-logo thai" aria-hidden="true">TH</span>
-              <div>
-                <div class="lang-proof-name">Native Proficiency</div>
-                <div class="lang-proof-date">Clinical and public-sector communication</div>
-              </div>
-              <div class="lang-proof-score">Native</div>
-            </div>
           </div>
         </div>
       </div>
