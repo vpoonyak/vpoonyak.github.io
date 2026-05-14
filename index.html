@@ -267,7 +267,106 @@
       text-decoration: none;
     }
 
-    .nav-links a.active { color: var(--accent-heading); }
+    .nav-links a.active {
+      color: var(--accent-heading);
+      background: var(--accent-muted);
+      box-shadow: inset 0 -2px 0 var(--accent);
+    }
+
+    .nav-section-indicator {
+      display: none;
+      margin-left: 12px;
+      margin-right: auto;
+      min-width: 0;
+      overflow: hidden;
+      align-items: center;
+      gap: 6px;
+      font-family: 'JetBrains Mono', monospace;
+      white-space: nowrap;
+    }
+
+    .section-chip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 0;
+      max-width: 8.5rem;
+      padding: 4px 9px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: var(--bg-card);
+      color: var(--text-tertiary);
+      font-size: 0.5625rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      line-height: 1.2;
+      text-transform: uppercase;
+      text-decoration: none;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    }
+
+    .section-chip:hover {
+      text-decoration: none;
+    }
+
+    .section-chip[href] {
+      border-color: var(--accent-border);
+      background: var(--bg-card);
+      color: var(--accent-heading);
+      cursor: pointer;
+    }
+
+    .section-chip[href]:hover {
+      background: var(--accent-muted);
+      border-color: var(--accent);
+    }
+
+    .section-chip.current {
+      max-width: 10.5rem;
+      padding: 5px 11px;
+      border-color: var(--border-light);
+      background: var(--bg-card);
+      color: var(--text-secondary);
+      font-size: 0.625rem;
+      cursor: default;
+    }
+
+    .section-chip.adjacent {
+      max-width: 4.75rem;
+      opacity: 0.72;
+    }
+
+    .nav-section-indicator.sliding-forward .section-chip {
+      animation: sectionChipSlideForward 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .nav-section-indicator.sliding-backward .section-chip {
+      animation: sectionChipSlideBackward 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .nav-section-indicator.sliding-forward .section-chip.current,
+    .nav-section-indicator.sliding-backward .section-chip.current {
+      animation-delay: 0.025s;
+    }
+
+    @keyframes sectionChipSlideForward {
+      from { transform: translateX(18px); }
+      to { transform: translateX(0); }
+    }
+
+    @keyframes sectionChipSlideBackward {
+      from { transform: translateX(-18px); }
+      to { transform: translateX(0); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .nav-section-indicator.sliding-forward .section-chip,
+      .nav-section-indicator.sliding-backward .section-chip {
+        animation: none;
+      }
+    }
 
     .nav-actions { display: flex; align-items: center; gap: 8px; }
 
@@ -343,19 +442,46 @@
     }
 
     @media (max-width: 768px) {
+      section[id], .hero { scroll-margin-top: 104px; }
       .nav-links { display: none; }
+      .nav-inner {
+        height: auto;
+        min-height: 56px;
+        flex-wrap: wrap;
+        row-gap: 6px;
+        padding-top: 8px;
+        padding-bottom: 8px;
+      }
+      .nav-logo { order: 1; }
+      .nav-actions { order: 2; margin-left: auto; }
+      .nav-section-indicator {
+        order: 3;
+        display: flex;
+        flex: 0 0 100%;
+        justify-content: center;
+        margin: 0;
+      }
       .menu-toggle { display: flex; }
       .nav-links.open {
         display: flex;
         flex-direction: column;
         position: absolute;
-        top: 56px; left: 0; right: 0;
+        top: 88px; left: 0; right: 0;
         background: var(--bg-card);
         border-bottom: 1px solid var(--border);
         padding: 12px 20px;
         gap: 2px;
         box-shadow: var(--shadow-card);
       }
+    }
+
+    @media (max-width: 480px) {
+      .nav-section-indicator {
+        gap: 4px;
+      }
+
+      .section-chip.current { max-width: 12rem; }
+      .section-chip.adjacent { max-width: 4.5rem; }
     }
 
     /* ═══════════════════════════════════════════════
@@ -530,10 +656,20 @@
       display: flex;
       flex-direction: column;
       gap: 6px;
-      transition: background 0.3s ease;
+      color: inherit;
+      text-decoration: none;
+      transition: background 0.3s ease, outline-color 0.2s ease;
     }
 
-    .stat-item:hover { background: var(--bg-card-hover); }
+    .stat-item:hover {
+      background: var(--bg-card-hover);
+      text-decoration: none;
+    }
+
+    .stat-item:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: -2px;
+    }
 
     .stat-number {
       font-family: 'JetBrains Mono', monospace;
@@ -653,16 +789,17 @@
       align-items: center;
       margin-left: 8px;
       padding: 1px 7px;
-      border: 1px solid var(--accent-border);
+      border: 1px solid var(--border-light);
       border-radius: 999px;
-      background: var(--accent-muted);
-      color: var(--accent-heading);
+      background: var(--bg-card);
+      color: var(--text-tertiary);
       font-family: 'JetBrains Mono', monospace;
       font-size: 0.5625rem;
       font-weight: 700;
       letter-spacing: 0.08em;
       text-transform: uppercase;
       vertical-align: middle;
+      cursor: default;
     }
 
     .timeline-header {
@@ -749,24 +886,10 @@
       display: flex;
       flex-direction: column;
       gap: 1.25rem;
-      transition: background 0.3s ease;
       position: relative;
       overflow: hidden;
+      cursor: default;
     }
-
-    .expertise-card::after {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 2px;
-      background: var(--accent);
-      transform: scaleX(0);
-      transform-origin: left;
-      transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .expertise-card:hover::after { transform: scaleX(1); }
-    .expertise-card:hover { background: var(--bg-card-hover); }
 
     .expertise-icon {
       width: 44px; height: 44px;
@@ -777,10 +900,7 @@
       justify-content: center;
       color: var(--accent-heading);
       background: var(--bg);
-      transition: border-color 0.3s ease;
     }
-
-    .expertise-card:hover .expertise-icon { border-color: var(--accent-border); }
 
     .expertise-title {
       font-family: 'JetBrains Mono', monospace;
@@ -814,8 +934,6 @@
     /* ═══════════════════════════════════════════════
        PROJECTS
        ═══════════════════════════════════════════════ */
-    .project-list { display: flex; flex-direction: column; }
-
     .featured-project-carousel {
       margin-bottom: 2rem;
       border-top: 1px solid var(--border-light);
@@ -948,34 +1066,12 @@
       background: var(--accent);
     }
 
-    .project-item {
-      display: block;
-      padding: 1.25rem 0;
-      border-bottom: 1px solid var(--border-light);
-      transition: padding 0.2s ease;
-      text-decoration: none;
-      color: inherit;
-    }
-
-    .project-item:first-child { border-top: 1px solid var(--border-light); }
-    .project-item:hover { padding-left: 8px; text-decoration: none; }
-
     @media (max-width: 768px) {
       .featured-project-carousel { padding: 1.25rem 0; }
       .featured-project-slide { grid-template-columns: 1fr; gap: 1rem; }
       .featured-project-header { align-items: flex-start; }
       .featured-project-media { aspect-ratio: 4 / 3; }
-      .project-item { padding: 1rem 0; }
     }
-
-    .project-title {
-      font-size: 1rem;
-      font-weight: 700;
-      color: var(--text-primary);
-      transition: color 0.2s ease;
-    }
-
-    .project-item:hover .project-title { color: var(--accent-heading); }
 
     /* ═══════════════════════════════════════════════
        CONTACT FORM
@@ -1059,23 +1155,9 @@
         .hero-meta { gap: 1rem; }
         .hero { min-height: 60vh; padding-top: 140px; padding-bottom: 20px; }
         .container-grid { padding-left: 16px; padding-right: 16px; }
-        .nav-inner { padding: 0 16px; height: 48px; }
+        .nav-inner { padding: 8px 16px; height: auto; }
         .expertise-card { padding: 1.5rem; }
         .stat-item { padding: 1.25rem; }
-    }
-
-    .project-link {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.6875rem;
-      color: var(--text-tertiary);
-      margin-top: 2px;
-    }
-
-    .project-desc {
-      font-size: 0.8125rem;
-      color: var(--text-secondary);
-      margin-top: 6px;
-      line-height: 1.55;
     }
 
     .project-tags {
@@ -1083,6 +1165,7 @@
       flex-wrap: wrap;
       gap: 4px;
       margin-top: 8px;
+      cursor: default;
     }
 
     .project-tag {
@@ -1090,9 +1173,11 @@
       font-size: 0.625rem;
       font-weight: 600;
       padding: 2px 8px;
-      background: var(--accent-muted);
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
       border-radius: 3px;
-      color: var(--accent-heading);
+      color: var(--text-tertiary);
+      cursor: default;
     }
 
     /* ═══════════════════════════════════════════════
@@ -1236,47 +1321,59 @@
 
     .skills-badges img { height: 26px; border-radius: 4px; }
 
-    .challenge-list {
-      display: flex;
-      flex-direction: column;
-      gap: 0;
+    .skill-logo-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      height: 26px;
+      padding: 0 9px 0 7px;
+      border-radius: 4px;
+      background: var(--badge-bg, #1b1f23);
+      color: var(--badge-color, #ffffff);
+      border: 1px solid var(--badge-border, transparent);
+      font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: 0.6875rem;
+      font-weight: 700;
+      line-height: 1;
     }
 
-    .challenge-item {
-      padding: 0.65rem 0;
-      border-bottom: 1px solid var(--border-light);
+    .skills-badges .skill-logo-badge img {
+      width: 18px;
+      height: 18px;
+      border-radius: 0;
+      object-fit: contain;
     }
 
-    .challenge-item:last-child { border-bottom: none; }
-
-    .challenge-name {
-      font-size: 0.8125rem;
-      font-weight: 600;
-      color: var(--text-primary);
-      line-height: 1.4;
+    .skills-badges .skill-logo-badge.logo-invert img {
+      filter: invert(1);
     }
 
-    .challenge-meta {
-      font-family: 'JetBrains Mono', monospace;
+    .skill-logo-badge .skill-initial {
+      display: inline-grid;
+      place-items: center;
+      min-width: 18px;
+      height: 18px;
+      border-radius: 3px;
+      background: var(--badge-icon-bg, rgba(255,255,255,0.14));
+      color: var(--badge-icon-color, currentColor);
       font-size: 0.625rem;
-      color: var(--text-tertiary);
-      margin-top: 3px;
-      line-height: 1.5;
-    }
-
-    .hackathon-section {
-      margin-top: 3rem;
+      font-weight: 800;
+      line-height: 1;
     }
 
     .training-highlight {
-      margin-top: 3rem;
+      margin-top: 0;
       border-top: 1px solid var(--border-light);
       border-bottom: 1px solid var(--border-light);
       padding: 1.25rem 0;
       display: grid;
       grid-template-columns: auto minmax(0, 1fr);
       gap: 1.25rem;
-      align-items: center;
+      align-items: start;
+    }
+
+    .training-highlight + .training-highlight {
+      margin-top: 1.25rem;
     }
 
     .training-logo-stack {
@@ -1303,46 +1400,148 @@
       line-height: 1.4;
     }
 
+    .training-heading {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .training-status-chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 8px;
+      border: 1px solid var(--border-light);
+      border-radius: 999px;
+      background: var(--bg-card);
+      color: var(--text-tertiary);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.5625rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      cursor: default;
+    }
+
     .training-meta {
       font-family: 'JetBrains Mono', monospace;
       font-size: 0.6875rem;
-      color: var(--accent-heading);
+      color: var(--text-tertiary);
       margin-top: 4px;
       line-height: 1.5;
     }
 
-    .training-desc {
-      font-size: 0.8125rem;
+    .training-summary {
+      margin: 0.75rem 0 0;
+      max-width: 52rem;
       color: var(--text-secondary);
-      margin-top: 8px;
+      font-size: 0.8125rem;
       line-height: 1.65;
     }
 
-    .training-proof {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.6875rem;
-      color: var(--text-tertiary);
-      margin-top: 6px;
-      line-height: 1.5;
-    }
-
-    .training-proof strong {
-      color: var(--accent-heading);
-      font-weight: 700;
-    }
-
-    .hackathon-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: clamp(2rem, 5vw, 4rem);
+    .training-rows {
+      margin-top: 1rem;
+      display: flex;
+      flex-direction: column;
       border-top: 1px solid var(--border-light);
       border-bottom: 1px solid var(--border-light);
-      padding: 1.1rem 0 1.25rem;
     }
 
-    .hackathon-grid .challenge-item {
+    .training-row {
+      display: grid;
+      grid-template-columns: minmax(8rem, 0.28fr) minmax(0, 1fr);
+      gap: 1rem;
+      align-items: center;
+      padding: 0.65rem 0;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .training-row:last-child {
       border-bottom: none;
+    }
+
+    .training-row-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6875rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent-heading);
+    }
+
+    .training-row-content {
+      display: flex;
+      align-items: center;
+      gap: 8px 10px;
+      flex-wrap: wrap;
       min-width: 0;
+    }
+
+    .training-row-entry {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      min-width: 0;
+    }
+
+    .training-row-entry.stacked {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 4px;
+      width: 100%;
+    }
+
+    .training-row-entry-main {
+      display: flex;
+      align-items: center;
+      gap: 8px 10px;
+      flex-wrap: wrap;
+    }
+
+    .training-inline-logo {
+      width: 22px;
+      height: 22px;
+      object-fit: contain;
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      background: var(--bg-card);
+      padding: 2px;
+      flex-shrink: 0;
+    }
+
+    .training-row-item {
+      color: var(--text-primary);
+      font-size: 0.8125rem;
+      font-weight: 600;
+      line-height: 1.45;
+    }
+
+    .training-row-meta {
+      color: var(--text-tertiary);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.625rem;
+    }
+
+    .training-row-note {
+      color: var(--text-secondary);
+      font-size: 0.75rem;
+      line-height: 1.5;
+      max-width: 48rem;
+    }
+
+    .training-rank {
+      color: var(--text-tertiary);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.625rem;
+      font-weight: 700;
+      white-space: nowrap;
+      opacity: 0.82;
+    }
+
+    .training-row-content .cert-verify {
+      margin-top: 0;
     }
 
     .cert-category {
@@ -1404,13 +1603,14 @@
         border-radius: 4px;
     }
 
-    /* Fix for white logos in light mode */
+    /* Keep logo containers aligned with the active theme */
     [data-theme="light"] .app-icon-box,
     [data-theme="light"] .timeline-logo,
     [data-theme="light"] .cert-icon,
-    [data-theme="light"] .training-logo {
-      background: #161b22;
-      border-color: #30363d;
+    [data-theme="light"] .training-logo,
+    [data-theme="light"] .training-inline-logo {
+      background: var(--bg-card);
+      border-color: var(--border);
     }
 
     .cert-name {
@@ -1427,19 +1627,27 @@
     }
 
     .cert-verify {
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
       margin-top: 4px;
       font-family: 'JetBrains Mono', monospace;
       font-size: 0.5625rem;
-      font-weight: 600;
-      padding: 1px 7px;
-      background: var(--accent-muted);
+      font-weight: 700;
+      padding: 2px 8px;
+      background: transparent;
+      border: 1px solid var(--accent-border);
       border-radius: 3px;
       color: var(--accent-heading);
       text-decoration: none;
+      cursor: pointer;
+      transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
     }
 
-    .cert-verify:hover { background: var(--accent-muted-strong); text-decoration: none; }
+    .cert-verify:hover {
+      background: var(--accent-muted-strong);
+      border-color: var(--accent);
+      text-decoration: none;
+    }
 
     @media (min-width: 1200px) {
       .skills-certs-grid {
@@ -1494,15 +1702,11 @@
       .skills-category-title, .cert-category-title { font-size: 0.6875rem; }
       .skills-badges { gap: 5px; }
       .skills-badges img { height: 23px; }
-      .challenge-item { padding: 0.6rem 0; }
-      .challenge-name { font-size: 0.78125rem; }
-      .challenge-meta { font-size: 0.5625rem; }
-      .hackathon-section { margin-top: 2rem; }
-      .training-highlight { grid-template-columns: 1fr; gap: 1rem; margin-top: 2rem; }
+      .training-highlight { grid-template-columns: 1fr; gap: 1rem; }
       .training-logo { width: 48px; height: 48px; }
-      .hackathon-grid { grid-template-columns: 1fr; gap: 0; padding: 0; }
-      .hackathon-grid .challenge-item { border-bottom: 1px solid var(--border-light); }
-      .hackathon-grid .challenge-item:last-child { border-bottom: none; }
+      .training-row { grid-template-columns: 1fr; gap: 0.4rem; }
+      .training-row-label { font-size: 0.625rem; }
+      .training-row-entry { width: 100%; }
       .cert-item { gap: 10px; padding: 0.65rem 0; }
       .cert-icon { width: 38px; height: 38px; }
       .cert-name { font-size: 0.78125rem; }
@@ -1580,42 +1784,134 @@
     .lang-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 1px;
-      background: var(--border);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      overflow: hidden;
-      max-width: 600px;
+      gap: 1rem;
+      max-width: 760px;
     }
 
-    @media (max-width: 768px) { .lang-grid { max-width: 100%; } }
+    @media (max-width: 768px) {
+      .lang-grid {
+        max-width: 100%;
+        grid-template-columns: 1fr;
+      }
+    }
 
     .lang-item {
       background: var(--bg-card);
-      padding: 1.5rem;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      transition: background 0.3s ease;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.25rem;
+      min-height: 150px;
+      display: grid;
+      align-content: space-between;
+      gap: 1rem;
     }
 
-    .lang-item:hover { background: var(--bg-card-hover); }
+    .lang-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+    }
 
-    .lang-name { font-size: 1rem; font-weight: 700; color: var(--text-primary); }
+    .lang-name {
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.3;
+    }
 
     .lang-level {
       font-family: 'JetBrains Mono', monospace;
       font-size: 0.6875rem;
       color: var(--accent-heading);
       font-weight: 600;
+      margin-top: 4px;
     }
 
-    .lang-detail {
+    .lang-code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.625rem;
+      font-weight: 700;
+      color: var(--text-tertiary);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 3px 8px;
+      white-space: nowrap;
+    }
+
+    .lang-evidence {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .lang-proof-card {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 10px;
+      border: 1px solid var(--border-light);
+      border-radius: 6px;
+      background: var(--bg);
+      padding: 8px 10px;
+      cursor: default;
+    }
+
+    .lang-proof-logo {
+      min-width: 38px;
+      height: 30px;
+      padding: 0 7px;
+      display: inline-grid;
+      place-items: center;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--bg-card);
+      color: var(--text-secondary);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.625rem;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      line-height: 1;
+    }
+
+    .lang-proof-logo.duolingo {
+      color: #58a700;
+    }
+
+    .lang-proof-logo.thai {
+      color: var(--accent-heading);
+    }
+
+    .lang-proof-name {
+      font-size: 0.8125rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.35;
+    }
+
+    .lang-proof-date {
+      margin-top: 2px;
       font-family: 'JetBrains Mono', monospace;
       font-size: 0.625rem;
       color: var(--text-tertiary);
-      margin-top: 4px;
-      line-height: 1.6;
+    }
+
+    .lang-proof-score {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6875rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+      white-space: nowrap;
+    }
+
+    @media (max-width: 480px) {
+      .lang-proof-card {
+        grid-template-columns: auto minmax(0, 1fr);
+      }
+
+      .lang-proof-score {
+        grid-column: 2;
+      }
     }
 
     /* ═══════════════════════════════════════════════
@@ -1803,52 +2099,6 @@
     @keyframes metaIn {
       to { opacity: 1; transform: translateY(0); }
     }
-    /* ── Project Toggle ── */
-    .project-show-more {
-      display: none;
-      flex-direction: column;
-    }
-
-    .project-show-more.active {
-      display: flex;
-    }
-
-    .toggle-projects-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      margin-top: 2rem;
-      padding: 12px 24px;
-      border: 1px solid var(--border);
-      background: var(--bg-card);
-      color: var(--text-secondary);
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.75rem;
-      font-weight: 600;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      text-decoration: none;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      width: fit-content;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    .toggle-projects-btn:hover {
-      border-color: var(--accent);
-      color: var(--accent-heading);
-      background: var(--accent-muted);
-    }
-
-    .toggle-projects-btn svg {
-      transition: transform 0.3s ease;
-    }
-
-    .toggle-projects-btn.active svg {
-      transform: rotate(180deg);
-    }
   </style>
 </head>
 <body data-theme="dark">
@@ -1859,13 +2109,15 @@
       <a href="#top" class="nav-logo" aria-label="Back to top">
         <span class="nav-logo-dot"></span>
       </a>
+      <div class="nav-section-indicator" id="navSectionIndicator" aria-label="Current section" aria-live="polite"></div>
       <ul class="nav-links" id="navLinks">
         <li><a href="#about">About</a></li>
         <li><a href="#experience">Experience</a></li>
-        <li><a href="#expertise">Expertise</a></li>
         <li><a href="#projects">Projects</a></li>
         <li><a href="#publications">Research</a></li>
+        <li><a href="#training">Training</a></li>
         <li><a href="#skills">Skills</a></li>
+        <li><a href="#languages">Languages</a></li>
         <li><a href="#contact">Contact</a></li>
       </ul>
       <div class="nav-actions">
@@ -1950,22 +2202,22 @@
           </div>
         </div>
         <div class="about-stats fade-in delay-2">
-          <div class="stat-item">
+          <a class="stat-item" href="#experience" aria-label="View clinical practice experience">
             <span class="stat-number">6+</span>
             <span class="stat-label">Years Clinical Practice</span>
-          </div>
-          <div class="stat-item">
+          </a>
+          <a class="stat-item" href="#skills" aria-label="View data analysis skills">
             <span class="stat-number">4+</span>
             <span class="stat-label">Years Data Analysis</span>
-          </div>
-          <div class="stat-item">
+          </a>
+          <a class="stat-item" href="#publications" aria-label="View publications">
             <span class="stat-number">2</span>
             <span class="stat-label">Publications</span>
-          </div>
-          <div class="stat-item">
+          </a>
+          <a class="stat-item" href="#skills" aria-label="View certifications">
             <span class="stat-number">21+</span>
             <span class="stat-label">Certifications</span>
-          </div>
+          </a>
         </div>
       </div>
     </div>
@@ -2000,7 +2252,7 @@
               </div>
             </div>
             <div class="timeline-item">
-              <div class="timeline-year">Nov 2024 — Present <span class="timeline-chip">Study Leave</span></div>
+              <div class="timeline-year">2024 — Present <span class="timeline-chip">Study Leave</span></div>
               <div class="timeline-header">
                 <div class="timeline-logo-wrap">
                     <img src="experience/pty.png" alt="Pattayarak" class="timeline-logo">
@@ -2078,7 +2330,7 @@
               <div class="timeline-header">
                 <div class="timeline-logo-wrap">
                     <img src="experience/chula.jpg" alt="Chula" class="timeline-logo">
-                    <img src="experience/digihealth.png" alt="DigiHealth" class="timeline-logo">
+                    <img src="experience/digihealth-dh.png" alt="DigiHealth" class="timeline-logo">
                 </div>
                 <div>
                     <div class="timeline-role">Master of Science Program in Digital and AI Technologies in Health Systems (DigiHealth)</div>
@@ -2116,11 +2368,12 @@
           </div>
         </div>
       </div>
+
     </div>
   </section>
 
   <!-- ═══════════════════ EXPERTISE ═══════════════════ -->
-  <section class="section" id="expertise">
+  <section class="section" id="expertise" hidden>
     <div class="container-grid">
       <div class="section-header fade-in">
         <span class="t-section-number">03</span>
@@ -2163,10 +2416,10 @@
   </section>
 
   <!-- ═══════════════════ PROJECTS ═══════════════════ -->
-  <section class="section section-alt-bg" id="projects">
+  <section class="section" id="projects">
     <div class="container-grid">
       <div class="section-header fade-in">
-        <span class="t-section-number">04</span>
+        <span class="t-section-number">03</span>
         <div>
           <span class="t-label" style="display:block;margin-bottom:0.5rem;">Selected Projects</span>
           <div class="section-header-rule"></div>
@@ -2186,18 +2439,18 @@
         </div>
         <a href="https://altit.app/" target="_blank" class="featured-project-slide active" rel="noopener noreferrer" aria-hidden="false">
           <div class="featured-project-media">
-            <img src="project/altit1-thumb.webp" alt="Altitude Itinerary Analyzer interface preview" loading="eager" width="1100" height="657">
+            <img src="project/altit1-thumb.webp" alt="Altitude Itinerary Analyzer interface preview" loading="eager" width="1400" height="840">
           </div>
           <div>
             <div class="featured-project-kicker">AI Clinical Decision Support</div>
             <div class="featured-project-title">Altitude Itinerary Analyzer</div>
             <p class="featured-project-desc">AI-assisted travel medicine tool for extracting and analyzing complex itineraries for high-altitude risk assessment.</p>
-            <div class="project-tags"><span class="project-tag">Live App</span><span class="project-tag">AI/CDS</span><span class="project-tag">Travel Medicine</span></div>
+            <div class="project-tags"><span class="project-tag">Live App</span><span class="project-tag">Artificial Intelligence</span><span class="project-tag">Clinical Decision Support</span><span class="project-tag">Travel Medicine</span></div>
           </div>
         </a>
         <a href="https://public.tableau.com/app/profile/vitchakorn.poonyakanok/viz/yf_malaria/CDC" target="_blank" class="featured-project-slide" rel="noopener noreferrer" aria-hidden="true">
           <div class="featured-project-media">
-            <img src="project/yfmalaria-thumb.webp" alt="Yellow fever and malaria dashboard preview" loading="lazy" width="1100" height="846">
+            <img src="project/yfmalaria-thumb.webp" alt="Yellow fever and malaria dashboard preview" loading="lazy" width="1400" height="1077">
           </div>
           <div>
             <div class="featured-project-kicker">Clinical Dashboard</div>
@@ -2208,7 +2461,7 @@
         </a>
         <a href="https://hoscode.vercel.app/" target="_blank" class="featured-project-slide" rel="noopener noreferrer" aria-hidden="true">
           <div class="featured-project-media">
-            <img src="project/hospcode-thumb.webp" alt="Thai HospSearch application preview" loading="lazy" width="1100" height="901">
+            <img src="project/hospcode-thumb.webp" alt="Thai HospSearch application preview" loading="lazy" width="1400" height="914">
           </div>
           <div>
             <div class="featured-project-kicker">Health Data Tool</div>
@@ -2219,7 +2472,7 @@
         </a>
         <a href="https://hajj-period-planner.vercel.app/" target="_blank" class="featured-project-slide" rel="noopener noreferrer" aria-hidden="true">
           <div class="featured-project-media">
-            <img src="project/hajjmens-thumb.webp" alt="Hajj Menstrual Delay Planner application preview" loading="lazy" width="1100" height="846">
+            <img src="project/hajjmens-thumb.webp" alt="Hajj Menstrual Delay Planner application preview" loading="lazy" width="1400" height="833">
           </div>
           <div>
             <div class="featured-project-kicker">Clinical Planning Utility</div>
@@ -2228,61 +2481,69 @@
             <div class="project-tags"><span class="project-tag">Live App</span><span class="project-tag">Clinical Tool</span><span class="project-tag">Travel Medicine</span></div>
           </div>
         </a>
+        <a href="https://public.tableau.com/app/profile/vitchakorn.poonyakanok/viz/psychi_pm25/Story" target="_blank" class="featured-project-slide" rel="noopener noreferrer" aria-hidden="true">
+          <div class="featured-project-media">
+            <img src="project/pm2-5-thumb.webp" alt="PM2.5 and Mental Health Dynamics Tableau story preview" loading="lazy" width="1400" height="773">
+          </div>
+          <div>
+            <div class="featured-project-kicker">Tableau Public</div>
+            <div class="featured-project-title">PM2.5 &amp; Mental Health Dynamics</div>
+            <p class="featured-project-desc">Visualized spatial-temporal correlations between air pollution and psychiatric disorders using Interrupted Time Series (ITS) models.</p>
+            <div class="project-tags"><span class="project-tag">Data Viz</span><span class="project-tag">Epidemiology</span><span class="project-tag">Interrupted Time Series</span></div>
+          </div>
+        </a>
+        <a href="https://www.kaggle.com/code/vitchakorn/cirrhosis-survival-transplant-outcomes-ml" target="_blank" class="featured-project-slide" rel="noopener noreferrer" aria-hidden="true">
+          <div class="featured-project-media">
+            <img src="project/cirrhosis-thumb.webp" alt="Cirrhosis Survival Prediction notebook preview" loading="lazy" width="1400" height="1178">
+          </div>
+          <div>
+            <div class="featured-project-kicker">Kaggle Notebook</div>
+            <div class="featured-project-title">Cirrhosis Survival Prediction</div>
+            <p class="featured-project-desc">Multi-class prediction model using Ensemble Learning (XGBoost/LightGBM) with engineered clinical features.</p>
+            <div class="project-tags"><span class="project-tag">Machine Learning</span><span class="project-tag">Clinical</span><span class="project-tag">Ensemble</span></div>
+          </div>
+        </a>
+        <a href="https://vk-poonyakanok.github.io/thai-numeral-converter/" target="_blank" class="featured-project-slide" rel="noopener noreferrer" aria-hidden="true">
+          <div class="featured-project-media">
+            <img src="project/th-numeral-thumb.webp" alt="Thai Numeral Converter application preview" loading="lazy" width="1366" height="768">
+          </div>
+          <div>
+            <div class="featured-project-kicker">Thai Documentation Utility</div>
+            <div class="featured-project-title">Thai Numeral Converter</div>
+            <p class="featured-project-desc">Automated utility for Thai government documentation, converting Arabic to Thai numerals while preserving email addresses and URLs.</p>
+            <div class="project-tags"><span class="project-tag">Utility</span><span class="project-tag">Localization</span></div>
+          </div>
+        </a>
+        <a href="https://www.kaggle.com/code/vitchakorn/bnk-cgm48-4th-general-election-predictive-analysis" target="_blank" class="featured-project-slide" rel="noopener noreferrer" aria-hidden="true">
+          <div class="featured-project-media">
+            <img src="project/bnk48-thumb.webp" alt="BNK and CGM48 election predictive analysis notebook preview" loading="lazy" width="1400" height="1161">
+          </div>
+          <div>
+            <div class="featured-project-kicker">Kaggle Notebook</div>
+            <div class="featured-project-title">BNK/CGM48 4th General Election Predictive Analysis</div>
+            <p class="featured-project-desc">Technical case study using end-to-end ML (Scraping to Prediction) to forecast election outcomes in the entertainment industry.</p>
+            <div class="project-tags"><span class="project-tag">Machine Learning</span><span class="project-tag">Web Scraping</span><span class="project-tag">Prediction</span></div>
+          </div>
+        </a>
         <div class="carousel-dots" aria-label="Featured project selector">
           <button type="button" class="carousel-dot" data-project-slide="0" aria-label="Show Altitude Itinerary Analyzer" aria-current="true"></button>
           <button type="button" class="carousel-dot" data-project-slide="1" aria-label="Show Yellow Fever Vaccine and Malaria Prevention Dashboard" aria-current="false"></button>
           <button type="button" class="carousel-dot" data-project-slide="2" aria-label="Show Thai HospSearch" aria-current="false"></button>
           <button type="button" class="carousel-dot" data-project-slide="3" aria-label="Show Hajj Menstrual Delay Planner" aria-current="false"></button>
+          <button type="button" class="carousel-dot" data-project-slide="4" aria-label="Show PM2.5 and Mental Health Dynamics" aria-current="false"></button>
+          <button type="button" class="carousel-dot" data-project-slide="5" aria-label="Show Cirrhosis Survival Prediction" aria-current="false"></button>
+          <button type="button" class="carousel-dot" data-project-slide="6" aria-label="Show Thai Numeral Converter" aria-current="false"></button>
+          <button type="button" class="carousel-dot" data-project-slide="7" aria-label="Show BNK/CGM48 4th General Election Predictive Analysis" aria-current="false"></button>
         </div>
-      </div>
-      <div class="project-list">
-        <div class="project-show-more" id="moreProjects">
-          <a href="https://public.tableau.com/app/profile/vitchakorn.poonyakanok" target="_blank" class="project-item" rel="noopener noreferrer">
-            <div>
-              <div class="project-title">PM2.5 &amp; Mental Health Dynamics</div>
-              <span class="project-link">Tableau Public</span>
-              <p class="project-desc">Visualized spatial-temporal correlations between air pollution and psychiatric disorders using Interrupted Time Series (ITS) models.</p>
-              <div class="project-tags"><span class="project-tag">Data Viz</span><span class="project-tag">Epidemiology</span><span class="project-tag">ITS</span></div>
-            </div>
-          </a>
-          <a href="https://www.kaggle.com/code/vitchakorn/cirrhosis-survival-transplant-outcomes-ml" target="_blank" class="project-item" rel="noopener noreferrer">
-            <div>
-              <div class="project-title">Cirrhosis Survival Prediction</div>
-              <span class="project-link">Kaggle Notebook</span>
-              <p class="project-desc">Multi-class prediction model using Ensemble Learning (XGBoost/LightGBM) with engineered clinical features.</p>
-              <div class="project-tags"><span class="project-tag">ML</span><span class="project-tag">Clinical</span><span class="project-tag">Ensemble</span></div>
-            </div>
-          </a>
-          <a href="https://vk-poonyakanok.github.io/thai-numeral-converter/" target="_blank" class="project-item" rel="noopener noreferrer">
-            <div>
-              <div class="project-title">Thai Numeral Converter</div>
-              <span class="project-link">vk-poonyakanok.github.io</span>
-              <p class="project-desc">Automated utility for Thai government documentation, converting Arabic to Thai numerals while preserving email addresses and URLs.</p>
-              <div class="project-tags"><span class="project-tag">Utility</span><span class="project-tag">Localization</span></div>
-            </div>
-          </a>
-          <a href="https://www.kaggle.com/code/vitchakorn/bnk-cgm48-4th-general-election-predictive-analysis" target="_blank" class="project-item" rel="noopener noreferrer">
-            <div>
-              <div class="project-title">BNK/CGM48 4th General Election Predictive Analysis</div>
-              <span class="project-link">Kaggle Notebook</span>
-              <p class="project-desc">Technical case study using end-to-end ML (Scraping to Prediction) to forecast election outcomes in the entertainment industry.</p>
-              <div class="project-tags"><span class="project-tag">ML</span><span class="project-tag">Web Scraping</span><span class="project-tag">Prediction</span></div>
-            </div>
-          </a>
-        </div>
-        <button class="toggle-projects-btn" id="toggleProjects">
-          <span>View Other Projects</span>
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-        </button>
       </div>
     </div>
   </section>
 
   <!-- ═══════════════════ PUBLICATIONS ═══════════════════ -->
-  <section class="section" id="publications">
+  <section class="section section-alt-bg" id="publications">
     <div class="container-grid">
       <div class="section-header fade-in">
-        <span class="t-section-number">05</span>
+        <span class="t-section-number">04</span>
         <div>
           <span class="t-label" style="display:block;margin-bottom:0.5rem;">Publications</span>
           <div class="section-header-rule"></div>
@@ -2315,6 +2576,109 @@
     </div>
   </section>
 
+  <!-- ═══════════════════ TRAINING ═══════════════════ -->
+  <section class="section" id="training">
+    <div class="container-grid">
+      <div class="section-header fade-in">
+        <span class="t-section-number">05</span>
+        <div>
+          <span class="t-label" style="display:block;margin-bottom:0.5rem;">Training</span>
+          <div class="section-header-rule"></div>
+        </div>
+      </div>
+
+      <div class="training-highlight fade-in delay-1">
+        <div class="training-logo-stack" aria-label="AIAT and Super AI Engineer logos">
+          <img src="experience/AIAT-logo-01.jpg" alt="Artificial Intelligence Association of Thailand" class="training-logo" loading="lazy" width="54" height="54">
+          <img src="experience/superai.png" alt="Super AI Engineer Season 6" class="training-logo" loading="lazy" width="54" height="54">
+        </div>
+        <div>
+          <div class="training-heading">
+            <div class="training-title">Super AI Engineer Season 6</div>
+            <span class="training-status-chip">Advanced AI Level 2 Participant</span>
+          </div>
+          <div class="training-meta">AIAT · Apr-Jun 2026 · Selected 150 from 10,000+ applicants</div>
+          <p class="training-summary">AIAT's applied AI training and real-world project incubation program, covering image processing, signal processing, natural language processing, big data analytics, IoT, and robotics through workshops and hackathons.</p>
+          <div class="training-rows">
+            <div class="training-row">
+              <div class="training-row-label">Housing Team</div>
+              <div class="training-row-content">
+                <img src="logo/Scamper%20Logo.png" alt="The Scamper logo" class="training-inline-logo" loading="lazy" width="22" height="22">
+                <span class="training-row-item">The Scamper</span>
+                <a href="https://thescamperss6.com/" target="_blank" class="cert-verify" rel="noopener noreferrer">Visit Team Site</a>
+              </div>
+            </div>
+            <div class="training-row">
+              <div class="training-row-label">Certificate</div>
+              <div class="training-row-content">
+                <span class="training-row-item">Foundation AI (Theory)</span>
+                <span class="training-row-meta">Apr 2026</span>
+                <a href="https://assessment.aiat.or.th/certificate/2a541cbb-331d-430f-8dcc-2a88f134a6db" target="_blank" class="cert-verify" rel="noopener noreferrer">Verify</a>
+              </div>
+            </div>
+            <div class="training-row">
+              <div class="training-row-label">Level 1 Minihacks</div>
+              <div class="training-row-content">
+                <span class="training-row-entry"><span class="training-row-item">From Data to Insight</span><a href="cert/certificate-hack1-600013.png" target="_blank" class="cert-verify" rel="noopener noreferrer">Cert</a><a href="https://colab.research.google.com/drive/1cfiNwP8mDx0KV8YIdXr54ozYTCy0AagG?usp=sharing" target="_blank" class="cert-verify" rel="noopener noreferrer">Colab</a></span>
+                <span class="training-row-entry"><span class="training-row-item">Agentic Pipeline Hackathon: 2026 Thai Election OCR Challenge</span><span class="training-rank">Rank 102/571</span><a href="cert/certificate-hack2-600013.png" target="_blank" class="cert-verify" rel="noopener noreferrer">Cert</a><a href="https://colab.research.google.com/drive/1CRtQ7Mgcsexlp62pRqHMsBhxjW6MSKj-?usp=sharing" target="_blank" class="cert-verify" rel="noopener noreferrer">Colab</a><a href="https://www.kaggle.com/competitions/super-ai-engineer-season-6-ocr-2569" target="_blank" class="cert-verify" rel="noopener noreferrer">Kaggle</a></span>
+                <span class="training-row-entry"><span class="training-row-item">FahMai RAG Hackathon</span><span class="training-rank">Rank 132/660</span><a href="cert/certificate-hack3-600013.png" target="_blank" class="cert-verify" rel="noopener noreferrer">Cert</a><a href="https://colab.research.google.com/drive/1WwJFtj6d3TClKFQmByqRbkIBYG12pJAO?usp=sharing" target="_blank" class="cert-verify" rel="noopener noreferrer">Colab</a><a href="https://www.kaggle.com/competitions/super-ai-engineer-s-6-fah-mai-rag-challenge-level-1" target="_blank" class="cert-verify" rel="noopener noreferrer">Kaggle</a></span>
+              </div>
+            </div>
+            <div class="training-row">
+              <div class="training-row-label">Level 2 Challenge</div>
+              <div class="training-row-content">
+                <span class="training-row-entry"><span class="training-row-item">Parasite Eggs</span><span class="training-rank">Rank 16/166</span><a href="https://www.kaggle.com/competitions/super-ai-engineer-season-6-parasite-eggs/leaderboard" target="_blank" class="cert-verify" rel="noopener noreferrer">Kaggle</a></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="training-highlight fade-in delay-2">
+        <div class="training-logo-stack" aria-label="DDC and Chiang Mai University logos">
+          <img src="certlogo/ddc.png" alt="Department of Disease Control" class="training-logo" loading="lazy" width="54" height="54">
+          <img src="certlogo/Chiang_mai_university_logo.png" alt="Chiang Mai University" class="training-logo" loading="lazy" width="54" height="54">
+        </div>
+        <div>
+          <div class="training-heading">
+            <div class="training-title">Epidemiology &amp; Clinical Research Intensive Courses</div>
+            <span class="training-status-chip">Applied Public Health Methods</span>
+          </div>
+          <div class="training-meta">DDC/MOPH · Chiang Mai University · 2022-2024</div>
+          <div class="training-rows">
+            <div class="training-row">
+              <div class="training-row-label">Field Epidemiology</div>
+              <div class="training-row-content">
+                <span class="training-row-entry stacked">
+                  <span class="training-row-entry-main"><span class="training-row-item">Introductory Epidemiology &amp; Biostatistics</span><span class="training-row-meta">Jun 2024 · DDC, MOPH</span><a href="cert/1721190140618.jpeg" target="_blank" class="cert-verify" rel="noopener noreferrer">View</a></span>
+                  <span class="training-row-note">Intensive FETP-led training in epidemiology and biostatistics for surveillance, outbreak investigation, and applied public health analysis.</span>
+                </span>
+              </div>
+            </div>
+            <div class="training-row">
+              <div class="training-row-label">Clinical Epidemiology</div>
+              <div class="training-row-content">
+                <span class="training-row-entry stacked">
+                  <span class="training-row-entry-main"><span class="training-row-item">Diploma in Clinical Epidemiology</span><span class="training-row-meta">Dec 2022 · Chiang Mai University</span><a href="cert/1696631862918.jpeg" target="_blank" class="cert-verify" rel="noopener noreferrer">View</a></span>
+                  <span class="training-row-note">96-hour CMU short-course diploma covering clinical epidemiology, diagnostic, etiologic, prognostic, and therapeutic study design, plus evidence synthesis.</span>
+                </span>
+              </div>
+            </div>
+            <div class="training-row">
+              <div class="training-row-label">Clinical Statistics</div>
+              <div class="training-row-content">
+                <span class="training-row-entry stacked">
+                  <span class="training-row-entry-main"><span class="training-row-item">Diploma in Clinical Statistics</span><span class="training-row-meta">May 2022 · Chiang Mai University</span><a href="cert/1696631825168.jpeg" target="_blank" class="cert-verify" rel="noopener noreferrer">View</a></span>
+                  <span class="training-row-note">112-hour CMU intensive short-course diploma in clinical statistics, with applied modeling, real-data analysis, and medical statistics practice.</span>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- ═══════════════════ SKILLS & CERTIFICATIONS ═══════════════════ -->
   <section class="section section-alt-bg" id="skills">
     <div class="container-grid">
@@ -2330,7 +2694,6 @@
         <!-- LEFT: Skills -->
         <div class="skills-column fade-in delay-1">
           <div class="column-kicker">Technical Stack</div>
-          <p class="skills-note">Core tools, applied project experience, and research computing environments.</p>
           <div class="skills-category">
             <div class="skills-category-title">Core Tools</div>
             <div class="skills-badges">
@@ -2341,24 +2704,30 @@
             </div>
           </div>
           <div class="skills-category">
-            <div class="skills-category-title">Applied ML &amp; AI</div>
-            <div class="skills-badges">
-              <img src="https://img.shields.io/badge/XGBoost-1B1F23.svg?style=for-the-badge&logo=xgboost&logoColor=white" alt="XGBoost">
-              <img src="https://img.shields.io/badge/LightGBM-393939.svg?style=for-the-badge&logo=lightgbm&logoColor=white" alt="LightGBM">
-              <img src="https://img.shields.io/badge/YOLO-00FFFF.svg?style=for-the-badge&logo=ultralytics&logoColor=black" alt="YOLO">
-              <img src="https://img.shields.io/badge/Scikit--Learn-%23F7931E.svg?style=for-the-badge&logo=scikit-learn&logoColor=white" alt="Scikit-Learn">
-              <img src="https://img.shields.io/badge/PyTorch-%23EE4C2C.svg?style=for-the-badge&logo=pytorch&logoColor=white" alt="PyTorch">
-              <img src="https://img.shields.io/badge/TensorFlow-%23FF6F00.svg?style=for-the-badge&logo=tensorflow&logoColor=white" alt="TensorFlow">
-              <img src="https://img.shields.io/badge/MLX-000000.svg?style=for-the-badge&logo=apple&logoColor=white" alt="MLX">
-            </div>
-          </div>
-          <div class="skills-category">
             <div class="skills-category-title">Data Analysis &amp; Processing</div>
             <div class="skills-badges">
               <img src="https://img.shields.io/badge/NumPy-%23013243.svg?style=for-the-badge&logo=numpy&logoColor=white" alt="NumPy">
               <img src="https://img.shields.io/badge/Pandas-%23150458.svg?style=for-the-badge&logo=pandas&logoColor=white" alt="Pandas">
               <img src="https://img.shields.io/badge/OpenCV-%235C3EE8.svg?style=for-the-badge&logo=opencv&logoColor=white" alt="OpenCV">
               <img src="https://img.shields.io/badge/jamovi-215082.svg?style=for-the-badge&logo=jamovi&logoColor=white" alt="jamovi">
+            </div>
+          </div>
+          <div class="skills-category">
+            <div class="skills-category-title">Applied ML &amp; AI</div>
+            <div class="skills-badges">
+              <img src="https://img.shields.io/badge/YOLO-00FFFF.svg?style=for-the-badge&logo=ultralytics&logoColor=black" alt="YOLO">
+              <img src="https://img.shields.io/badge/Scikit--Learn-%23F7931E.svg?style=for-the-badge&logo=scikit-learn&logoColor=white" alt="Scikit-Learn">
+              <img src="https://img.shields.io/badge/PyTorch-%23EE4C2C.svg?style=for-the-badge&logo=pytorch&logoColor=white" alt="PyTorch">
+              <img src="https://img.shields.io/badge/TensorFlow-%23FF6F00.svg?style=for-the-badge&logo=tensorflow&logoColor=white" alt="TensorFlow">
+            </div>
+          </div>
+          <div class="skills-category">
+            <div class="skills-category-title">Large Language Model APIs</div>
+            <div class="skills-badges">
+              <span class="skill-logo-badge logo-invert"><img src="logo/OpenAI-logo-white.svg" alt="" aria-hidden="true">GPT</span>
+              <img src="https://img.shields.io/badge/Claude-D97757.svg?style=for-the-badge&logo=anthropic&logoColor=white" alt="Claude API">
+              <img src="https://img.shields.io/badge/Gemini-4285F4.svg?style=for-the-badge&logo=googlegemini&logoColor=white" alt="Gemini API">
+              <span class="skill-logo-badge"><img src="logo/ThaiLLM-logo-white.svg" alt="" aria-hidden="true">ThaiLLM</span>
             </div>
           </div>
           <div class="skills-category">
@@ -2372,12 +2741,12 @@
           <div class="skills-category">
             <div class="skills-category-title">Visualization &amp; Design</div>
             <div class="skills-badges">
-              <img src="https://img.shields.io/badge/Tableau-E97627.svg?style=for-the-badge&logo=tableau&logoColor=white" alt="Tableau">
-              <img src="https://img.shields.io/badge/Power_BI-F2C811.svg?style=for-the-badge&logo=microsoftpowerbi&logoColor=black" alt="Power BI">
-              <img src="https://img.shields.io/badge/Matplotlib-%23ffffff.svg?style=for-the-badge&logo=matplotlib&logoColor=black" alt="Matplotlib">
-              <img src="https://img.shields.io/badge/Seaborn-3B5B9A.svg?style=for-the-badge&logo=seaborn&logoColor=white" alt="Seaborn">
-              <img src="https://img.shields.io/badge/Adobe%20Photoshop-%2331A8FF.svg?style=for-the-badge&logo=adobephotoshop&logoColor=white" alt="Photoshop">
-              <img src="https://img.shields.io/badge/Adobe%20Lightroom-31A8FF.svg?style=for-the-badge&logo=adobelightroom&logoColor=white" alt="Lightroom">
+              <span class="skill-logo-badge" style="--badge-bg:#1f2937;"><img src="favicon/tableau.png" alt="" aria-hidden="true">Tableau</span>
+              <span class="skill-logo-badge" style="--badge-bg:#f2c811;--badge-color:#1f2937;"><img src="logo/Power-BI.svg" alt="" aria-hidden="true">Power BI</span>
+              <span class="skill-logo-badge" style="--badge-bg:#ffffff;--badge-color:#1f2937;--badge-border:#d9e1ea;"><img src="logo/Matplotlib-logo.svg" alt="" aria-hidden="true">Matplotlib</span>
+              <span class="skill-logo-badge" style="--badge-bg:#315477;"><img src="logo/Seaborn-logo.svg" alt="" aria-hidden="true">Seaborn</span>
+              <span class="skill-logo-badge" style="--badge-bg:#001e36;--badge-color:#31a8ff;--badge-icon-bg:#0b2f55;--badge-icon-color:#31a8ff;"><span class="skill-initial">Ps</span>Adobe Photoshop</span>
+              <span class="skill-logo-badge" style="--badge-bg:#001e36;--badge-color:#31a8ff;--badge-icon-bg:#0b2f55;--badge-icon-color:#31a8ff;"><span class="skill-initial">Lr</span>Adobe Lightroom</span>
             </div>
           </div>
           <div class="skills-category">
@@ -2411,10 +2780,6 @@
           <div class="cert-category">
             <div class="cert-category-title">Data Science &amp; AI</div>
             <div class="cert-items">
-              <div class="cert-item">
-                <div class="cert-icon"><img src="certlogo/AIAT-logo-01.jpg" alt="AIAT"></div>
-                <div><div class="cert-name">Foundation AI (Theory)</div><div class="cert-meta">Apr 2026 | AIAT</div><a href="https://assessment.aiat.or.th/certificate/2a541cbb-331d-430f-8dcc-2a88f134a6db" target="_blank" class="cert-verify" rel="noopener noreferrer">Verify</a></div>
-              </div>
               <div class="cert-item">
                 <div class="cert-icon"><img src="badge/google-ai-essentials-v1.png" alt="Google"></div>
                 <div><div class="cert-name">Google AI Essentials V1</div><div class="cert-meta">May 2024 | Google | Coursera</div></div>
@@ -2464,20 +2829,8 @@
                 <div><div class="cert-name">Biomedical Researchers</div><div class="cert-meta">Jan 2025 – Jan 2029 | CITI Program · #67495823</div><a href="https://www.citiprogram.org/verify/?w967a1d11-b9e0-4420-ac76-0f412a68e9bb-67495823" target="_blank" class="cert-verify" rel="noopener noreferrer">Verify</a></div>
               </div>
               <div class="cert-item">
-                <div class="cert-icon"><img src="certlogo/ddc.png" alt="DDC"></div>
-                <div><div class="cert-name">Introductory Epidemiology &amp; Biostatistics</div><div class="cert-meta">Jun 2024 | DDC, MOPH</div> <a href="cert/1721190140618.jpeg" target="_blank" class="cert-verify" rel="noopener noreferrer">View</a></div>
-              </div>
-              <div class="cert-item">
                 <div class="cert-icon"><img src="certlogo/international_society_of_travel_medicine_logo.jpeg" alt="ISTM"></div>
                 <div><div class="cert-name">ISTM Review Course</div><div class="cert-meta">Feb 2024 | Intl. Society of Travel Medicine</div> <a href="https://workshop-evaluator.herokuapp.com/evaluation/events/15651/respondents/607729/certificate" target="_blank" class="cert-verify" rel="noopener noreferrer">View</a></div>
-              </div>
-              <div class="cert-item">
-                <div class="cert-icon"><img src="certlogo/Chiang_mai_university_logo.png" alt="CMU"></div>
-                <div><div class="cert-name">Diploma in Clinical Epidemiology</div><div class="cert-meta">Dec 2022 | Chiang Mai University</div> <a href="cert/1696631862918.jpeg" target="_blank" class="cert-verify" rel="noopener noreferrer">View</a></div>
-              </div>
-              <div class="cert-item">
-                <div class="cert-icon"><img src="certlogo/Chiang_mai_university_logo.png" alt="CMU"></div>
-                <div><div class="cert-name">Diploma in Clinical Statistics</div><div class="cert-meta">May 2022 | Chiang Mai University</div> <a href="cert/1696631825168.jpeg" target="_blank" class="cert-verify" rel="noopener noreferrer">View</a></div>
               </div>
             </div>
           </div>
@@ -2486,7 +2839,7 @@
             <div class="cert-category-title">Cybersecurity</div>
             <div class="cert-items">
               <div class="cert-item">
-                <div class="cert-icon"><img src="badge/certified-in-cybersecurity-cc.1.png" alt="ISC2"></div>
+                <div class="cert-icon"><img src="badge/certified-in-cybersecurity-cc.1-white.png" alt="ISC2"></div>
                 <div><div class="cert-name">ISC2 Certified in Cybersecurity (CC)</div><div class="cert-meta">Apr 2026 – Mar 2029 | #3613846</div><a href="https://www.credly.com/badges/8769d712-3992-4f5c-b8bc-af7ba2b1f15c/" target="_blank" class="cert-verify" rel="noopener noreferrer">Verify</a> <a href="cert/digitalcert.pdf" target="_blank" class="cert-verify" rel="noopener noreferrer">View</a></div>
               </div>
               <div class="cert-item">
@@ -2512,45 +2865,8 @@
         </div>
       </div>
 
-      <!-- AI Training -->
-      <div class="training-highlight fade-in">
-        <div class="training-logo-stack" aria-label="AIAT and Super AI Engineer logos">
-          <img src="experience/AIAT-logo-01.jpg" alt="Artificial Intelligence Association of Thailand" class="training-logo" loading="lazy" width="54" height="54">
-          <img src="experience/superai.png" alt="Super AI Engineer Season 6" class="training-logo" loading="lazy" width="54" height="54">
-        </div>
-        <div>
-          <div class="exp-category-label" style="margin-bottom:0.75rem;padding-bottom:0;border-bottom:none;">AI Training &amp; Selection</div>
-          <div class="training-title">Super AI Engineer Season 6 · Advanced AI Level 2 Participant</div>
-          <div class="training-meta">AIAT · Apr-Jun 2026 · Selected 150 from 10,000+ applicants</div>
-          <div class="training-proof">Selection note: <strong>150</strong> participants selected from <strong>10,000+</strong> applicants.</div>
-          <p class="training-desc">Selected for AIAT's applied AI training and real-world project incubation program, covering image processing, signal processing, natural language processing, big data analytics, IoT, and robotics through workshops and hackathons.</p>
-        </div>
-      </div>
-
-      <!-- Hackathons -->
-      <div class="hackathon-section fade-in">
-        <div class="exp-category-label" style="margin-bottom:1.25rem;">Hackathons</div>
-        <div class="hackathon-grid">
-          <div class="challenge-item">
-            <div class="challenge-name">From Data to Insight</div>
-            <div class="challenge-meta">Super AI Engineer Season 6 · Level 1 · Hack 1 · AIAT · Cert ID 610147BE</div>
-            <a href="cert/certificate-hack1-600013.png" target="_blank" class="cert-verify" rel="noopener noreferrer">View</a>
-          </div>
-          <div class="challenge-item">
-            <div class="challenge-name">Agentic Pipeline Hackathon: 2026 Thai Election OCR Challenge</div>
-            <div class="challenge-meta">Super AI Engineer Season 6 · Level 1 · Hack 2 · AIAT · Cert ID 7E3E221B</div>
-            <a href="cert/certificate-hack2-600013.png" target="_blank" class="cert-verify" rel="noopener noreferrer">View</a>
-          </div>
-          <div class="challenge-item">
-            <div class="challenge-name">FahMai RAG Hackathon</div>
-            <div class="challenge-meta">Super AI Engineer Season 6 · Level 1 · Hack 3 · AIAT · Cert ID BED316AA</div>
-            <a href="cert/certificate-hack3-600013.png" target="_blank" class="cert-verify" rel="noopener noreferrer">View</a>
-          </div>
-        </div>
-      </div>
-
       <!-- Apps -->
-      <div style="margin-top:3.5rem;" class="fade-in">
+      <div style="margin-top:3.5rem;" class="fade-in" hidden>
         <div class="exp-category-label" style="margin-bottom:1.25rem;">Applications</div>
         <div class="apps-grid">
           <a href="https://altit.app/" target="_blank" class="app-card" rel="noopener noreferrer">
@@ -2580,18 +2896,65 @@
         </div>
       </div>
 
-      <!-- Languages -->
-      <div style="margin-top:2.5rem;" class="fade-in">
-        <div class="exp-category-label" style="margin-bottom:1.25rem;">Language Competency</div>
-        <div class="lang-grid">
-          <div class="lang-item">
-            <div class="lang-name">English</div>
-            <div class="lang-level">Professional Working Proficiency</div>
-            <div class="lang-detail">TOEFL iBT: 91/120 (Jun 2025)<br>Duolingo: 120/160 (Mar 2026)</div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ LANGUAGES ═══════════════════ -->
+  <section class="section" id="languages">
+    <div class="container-grid">
+      <div class="section-header fade-in">
+        <span class="t-section-number">07</span>
+        <div>
+          <span class="t-label" style="display:block;margin-bottom:0.5rem;">Languages</span>
+          <div class="section-header-rule"></div>
+        </div>
+      </div>
+
+      <div class="lang-grid fade-in delay-1">
+        <div class="lang-item">
+          <div class="lang-header">
+            <div>
+              <div class="lang-name">English</div>
+              <div class="lang-level">Professional Working Proficiency</div>
+            </div>
+            <span class="lang-code">EN</span>
           </div>
-          <div class="lang-item">
-            <div class="lang-name">Thai</div>
-            <div class="lang-level">Native Proficiency</div>
+          <div class="lang-evidence" aria-label="English proficiency evidence">
+            <div class="lang-proof-card">
+              <span class="lang-proof-logo" aria-hidden="true">TOEFL</span>
+              <div>
+                <div class="lang-proof-name">TOEFL iBT</div>
+                <div class="lang-proof-date">Jun 2025</div>
+              </div>
+              <div class="lang-proof-score">91/120</div>
+            </div>
+            <div class="lang-proof-card">
+              <span class="lang-proof-logo duolingo" aria-hidden="true">Duo</span>
+              <div>
+                <div class="lang-proof-name">Duolingo English Test</div>
+                <div class="lang-proof-date">Mar 2026</div>
+              </div>
+              <div class="lang-proof-score">120/160</div>
+            </div>
+          </div>
+        </div>
+        <div class="lang-item">
+          <div class="lang-header">
+            <div>
+              <div class="lang-name">Thai</div>
+              <div class="lang-level">Native Proficiency</div>
+            </div>
+            <span class="lang-code">TH</span>
+          </div>
+          <div class="lang-evidence" aria-label="Thai proficiency">
+            <div class="lang-proof-card">
+              <span class="lang-proof-logo thai" aria-hidden="true">TH</span>
+              <div>
+                <div class="lang-proof-name">Native Proficiency</div>
+                <div class="lang-proof-date">Clinical and public-sector communication</div>
+              </div>
+              <div class="lang-proof-score">Native</div>
+            </div>
           </div>
         </div>
       </div>
@@ -2599,10 +2962,10 @@
   </section>
 
   <!-- ═══════════════════ CONTACT ═══════════════════ -->
-  <section class="section" id="contact">
+  <section class="section section-alt-bg" id="contact">
     <div class="container-grid">
       <div class="section-header fade-in">
-        <span class="t-section-number">07</span>
+        <span class="t-section-number">08</span>
         <div>
           <span class="t-label" style="display:block;margin-bottom:0.5rem;">Contact</span>
           <div class="section-header-rule"></div>
@@ -2709,6 +3072,9 @@
 
     // Run immediately so content is visible without waiting
     revealOnScroll();
+    window.requestAnimationFrame(revealOnScroll);
+    window.addEventListener('load', revealOnScroll);
+    window.setTimeout(revealOnScroll, 100);
 
     // Run on scroll
     window.addEventListener('scroll', revealOnScroll, { passive: true });
@@ -2717,47 +3083,111 @@
     window.addEventListener('resize', revealOnScroll, { passive: true });
 
     // ── Active Nav Link ──
-    var sectionIds = ['top', 'about', 'experience', 'expertise', 'projects', 'publications', 'skills', 'contact'];
+    var sectionIds = ['top', 'about', 'experience', 'projects', 'publications', 'training', 'skills', 'languages', 'contact'];
+    var sectionLabels = {
+      top: 'Home',
+      about: 'About',
+      experience: 'Experience',
+      projects: 'Projects',
+      publications: 'Publications',
+      training: 'Training',
+      skills: 'Skills & Certifications',
+      languages: 'Languages',
+      contact: 'Contact'
+    };
     var navAnchors = navLinks.querySelectorAll('a');
+    var navSectionIndicator = document.getElementById('navSectionIndicator');
+    var activeSectionIndex = null;
+    var sectionIndicatorAnimationTimer = null;
 
-    function updateActiveNav() {
-      var scrollPos = window.scrollY + 120;
-      for (var i = sectionIds.length - 1; i >= 0; i--) {
-        var section = document.getElementById(sectionIds[i]);
-        if (section && section.offsetTop <= scrollPos) {
-          navAnchors.forEach(function(a) { a.classList.remove('active'); });
-          var target = navLinks.querySelector('a[href="#' + sectionIds[i] + '"]');
-          if (target) target.classList.add('active');
-          break;
+    function renderSectionIndicator(activeIndex) {
+      if (!navSectionIndicator) return;
+      if (activeIndex === activeSectionIndex && navSectionIndicator.children.length) return;
+
+      var direction = activeSectionIndex === null ? null : activeIndex > activeSectionIndex ? 'forward' : 'backward';
+      activeSectionIndex = activeIndex;
+
+      navSectionIndicator.classList.remove('sliding-forward', 'sliding-backward');
+      navSectionIndicator.textContent = '';
+
+      for (var offset = -1; offset <= 1; offset++) {
+        var sectionIndex = activeIndex + offset;
+        if (sectionIndex < 0 || sectionIndex >= sectionIds.length) continue;
+
+        var sectionId = sectionIds[sectionIndex];
+        var label = sectionLabels[sectionId];
+        var chip = document.createElement(offset === 0 ? 'span' : 'a');
+
+        chip.className = 'section-chip' + (offset === 0 ? ' current' : ' adjacent');
+        chip.textContent = label;
+        chip.title = label;
+
+        if (offset === 0) {
+          chip.setAttribute('aria-current', 'location');
+        } else {
+          chip.href = '#' + sectionId;
+          chip.setAttribute('aria-label', (offset < 0 ? 'Previous section: ' : 'Next section: ') + label);
         }
+
+        navSectionIndicator.appendChild(chip);
+      }
+
+      if (direction) {
+        if (sectionIndicatorAnimationTimer) {
+          window.clearTimeout(sectionIndicatorAnimationTimer);
+        }
+
+        void navSectionIndicator.offsetWidth;
+        navSectionIndicator.classList.add('sliding-' + direction);
+
+        sectionIndicatorAnimationTimer = window.setTimeout(function() {
+          navSectionIndicator.classList.remove('sliding-forward', 'sliding-backward');
+        }, 260);
       }
     }
 
-    // ── Project List Toggle ──
-    const toggleBtn = document.getElementById('toggleProjects');
-    const moreProjects = document.getElementById('moreProjects');
+    function updateActiveNav() {
+      var viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+      var readingLine = Math.min(viewportHeight * 0.62, 520);
+      var activeIndex = 0;
 
-    if (toggleBtn && moreProjects) {
-        toggleBtn.addEventListener('click', () => {
-          const isActive = moreProjects.classList.toggle('active');
-          toggleBtn.classList.toggle('active');
-          toggleBtn.querySelector('span').textContent = isActive ? 'Hide Other Projects' : 'View Other Projects';
-        
-        if (isActive) {
-          // Trigger fade-in for newly visible items
-          const items = moreProjects.querySelectorAll('.project-item');
-          items.forEach((item, index) => {
-            setTimeout(() => {
-              item.style.opacity = '1';
-              item.style.transform = 'translateY(0)';
-            }, index * 100);
-          });
+      for (var i = sectionIds.length - 1; i >= 0; i--) {
+        var section = document.getElementById(sectionIds[i]);
+        if (!section) continue;
+
+        var rect = section.getBoundingClientRect();
+        if (rect.top <= readingLine && rect.bottom > readingLine) {
+          activeIndex = i;
+          break;
         }
+      }
+
+      navAnchors.forEach(function(a) {
+        a.classList.remove('active');
+        a.removeAttribute('aria-current');
       });
+
+      var target = navLinks.querySelector('a[href="#' + sectionIds[activeIndex] + '"]');
+      if (target) {
+        target.classList.add('active');
+        target.setAttribute('aria-current', 'location');
+      }
+      renderSectionIndicator(activeIndex);
     }
+
+    document.querySelectorAll('.project-tags').forEach(function(tagGroup) {
+      tagGroup.addEventListener('click', function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+      });
+    });
 
     window.addEventListener('scroll', updateActiveNav, { passive: true });
     updateActiveNav();
+    window.requestAnimationFrame(updateActiveNav);
+    window.addEventListener('load', updateActiveNav);
+    window.setTimeout(updateActiveNav, 100);
+    window.setTimeout(updateActiveNav, 350);
 
     // ── Featured Project Carousel ──
     const projectCarousel = document.getElementById('projectCarousel');

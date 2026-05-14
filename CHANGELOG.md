@@ -2,6 +2,37 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2026-05-14] - Portfolio IA, Training, and Skills Refresh
+
+### Added
+- **Standalone Training Section**: Moved Super AI Engineer Season 6 content into its own `Training` section with AIAT/Super AI logos, Foundation AI certificate, The Scamper housing team link, Level 1 minihack Colab/certificate/Kaggle links, and Level 2 Parasite Eggs rank.
+- **Languages Section**: Split language competency into a standalone `Languages` section.
+- **Mobile Section Carousel**: Added a compact mobile current-section indicator showing previous, current, and next sections with slide animation.
+- **Featured Project Carousel Expansion**: Added PM2.5 & Mental Health Dynamics, Cirrhosis Survival Prediction, Thai Numeral Converter, and BNK/CGM48 election analysis to the featured carousel.
+- **LLM API Skills**: Added a Large Language Model APIs group covering GPT, Claude, Gemini, and ThaiLLM.
+- **Local Skill Logos**: Added local logo-style badges for GPT/OpenAI, ThaiLLM, Power BI, Matplotlib, and Seaborn; reused the local Tableau favicon.
+
+### Changed
+- **Information Architecture**: Hid the dry `Expertise` section from navigation and active-section tracking so visitors reach project evidence sooner.
+- **Section Numbering**: Renumbered visible sections to About `01`, Experience `02`, Projects `03`, Research `04`, Training `05`, Skills `06`, Languages `07`, and Contact `08`.
+- **About Stats Links**: Made stats navigate to relevant sections; the `4+ Years Data Analysis` stat now points to `Skills`.
+- **Project Metadata**: Changed Thai Numeral Converter source label from `vk-poonyakanok.github.io` to `Thai Documentation Utility`.
+- **Project Tags**: Made project metadata chips static so they no longer behave like outbound links.
+- **Skills Ordering**: Moved `Data Analysis & Processing` directly under `Core Tools`.
+- **Skills Pruning**: Hid XGBoost, LightGBM, and MLX from the Applied ML & AI chip row.
+- **Visualization & Design Skills**: Replaced text-only Shields badges with clearer local logo/lettermark badges for Tableau, Power BI, Matplotlib, Seaborn, Photoshop, and Lightroom.
+- **Training Evidence**: Added Colab links for all Level 1 minihacks and Kaggle ranks for OCR, FahMai RAG, and Parasite Eggs.
+- **Experience Logo**: Updated DigiHealth logo source from `experience/digihealth.png` to `experience/digihealth-dh.png`.
+- **Cybersecurity Certificate Logo**: Switched ISC2 CC badge to `badge/certified-in-cybersecurity-cc.1-white.png`.
+- **Training Design**: Integrated The Scamper housing team and removed redundant `AI Training & Selection` text inside the Training card.
+- **Applications Section**: Hid the Applications section while keeping the markup available for future reuse.
+
+### Fixed
+- **PM2.5 Tableau Link**: Corrected PM2.5 & Mental Health Dynamics to the Tableau Public story URL.
+- **Mobile Active Section Tracking**: Updated active-section logic so the mini section carousel follows the section the user is actually viewing, including direct anchor links.
+- **Direct Anchor Reveal**: Added delayed reveal/active-nav passes so anchor navigation reliably displays the target section.
+- **Training Mobile Wrapping**: Grouped each hackathon title with its related links so mobile wrapping stays readable.
+
 ## [2026-05-14] - LANTA HPC Skill Update
 
 ### Added
