@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2026-05-15] - Training Hackathon Detail Update
+
+### Added
+- **Parasite Eggs Detail**: Expanded the Level 2 Online entry with the cascaded YOLOv8/DINOv2 microscopy pipeline, gold-label validation, SAHI-style inference, and artifact calibration.
+- **Level 2 On-site Hackathon**: Added Demand Forecasting at Scale detail for the Coffee Chain Hackathon, including leakage-aware forecasting pipeline work, private Kaggle rank #1, 30-team on-site cohort context, and final placement.
+
 ## [2026-05-15] - Mobile Navigation and Project Carousel Refinement
 
 ### Added

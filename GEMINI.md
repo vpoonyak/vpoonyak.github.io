@@ -7,7 +7,7 @@ This repository contains the personal portfolio website of Vitchakorn Poonyakano
 - **Experience**: Clinical, public health, academic, and education timeline with institutional logos.
 - **Projects**: Featured carousel of clinical AI, travel medicine, data visualization, machine learning, and utility projects.
 - **Research**: Publications with DOI links and expandable details.
-- **Training**: Super AI Engineer Season 6 program details, Foundation AI certificate, The Scamper housing team, minihack Colab/certificate/Kaggle links, and Level 2 challenge rank.
+- **Training**: Super AI Engineer Season 6 program details, Foundation AI certificate, The Scamper housing team, minihack Colab/certificate/Kaggle links, Level 2 online challenge rank, and Level 2 on-site hackathon placement.
 - **Skills & Certifications**: Technical stack and credential library.
 - **Languages**: English and Thai language competency.
 - **Contact**: Email and Formspree-powered contact form.
@@ -51,7 +51,8 @@ The old `Expertise` section is intentionally hidden because its claims are now b
 - **Housing Team**: The Scamper, linked to `https://thescamperss6.com/`.
 - **Foundation AI (Theory)**: Verification link in the Training section.
 - **Level 1 Minihacks**: Certificate and Colab links for all three minihacks; Kaggle ranks for OCR and FahMai RAG where available.
-- **Level 2 Challenge**: Parasite Eggs, rank 16/166 with Kaggle leaderboard link.
+- **Level 2 Online**: Parasite Eggs, rank 16/166 with Kaggle leaderboard link; cascaded YOLOv8 + DINOv2 parasite egg detection/classification pipeline with gold-label validation, SAHI-style inference, and microscopy artifact calibration.
+- **Level 2 On-site Hackathon**: Demand Forecasting at Scale, private Kaggle leaderboard rank #1 across the 30-team on-site cohort and 2nd runner-up overall in final evaluation.
 
 ## Asset Notes
 - Local logos and project screenshots live in `logo/`, `experience/`, `project/`, `badge/`, `cert/`, and `certlogo/`.
