@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2026-05-26] - LLM API Skills Update
+
+### Added
+- **LLM API Skills**: Added GLM by Z.ai and Grok by xAI to the Large Language Model APIs group with local logo badges.
+
 ## [2026-05-15] - Training Hackathon Detail Update
 
 ### Added

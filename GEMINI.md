@@ -38,7 +38,7 @@ The old `Expertise` section is intentionally hidden because its claims are now b
 - **Core Tools**: Python, R, SQL, Stata.
 - **Data Analysis & Processing**: NumPy, Pandas, OpenCV, jamovi.
 - **Applied ML & AI**: YOLO, Scikit-Learn, PyTorch, TensorFlow.
-- **Large Language Model APIs**: GPT, Claude, Gemini, ThaiLLM.
+- **Large Language Model APIs**: GPT, Claude, Gemini, GLM, Grok, ThaiLLM.
 - **Cloud & Infrastructure**: Google Cloud, Firebase, Huawei Cloud.
 - **Visualization & Design**: Tableau, Power BI, Matplotlib, Seaborn, Adobe Photoshop, Adobe Lightroom.
 - **Geospatial**: QGIS.

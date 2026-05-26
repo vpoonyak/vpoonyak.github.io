@@ -44,6 +44,8 @@ The `#expertise` section exists in the markup but is hidden and excluded from na
 - Scamper logo: `logo/Scamper Logo.png`, referenced as `logo/Scamper%20Logo.png`
 - ThaiLLM logo: `logo/ThaiLLM-logo-white.svg`
 - OpenAI/GPT logo: `logo/OpenAI-logo-white.svg`
+- Z.ai/GLM logo: `logo/Z.ai-logo.svg`
+- xAI/Grok logo: `logo/xAI-logo.svg`
 - Power BI logo: `logo/Power-BI.svg`
 - Matplotlib logo: `logo/Matplotlib-logo.svg`
 - Seaborn logo: `logo/Seaborn-logo.svg`
