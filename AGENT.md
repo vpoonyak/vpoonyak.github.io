@@ -34,7 +34,7 @@ The `#expertise` section exists in the markup but is hidden and excluded from na
 ## Content Decisions
 - `Expertise` is hidden because the portfolio now prioritizes proof through projects, training, publications, and experience.
 - `Applications` is hidden but retained in markup for future reuse.
-- `Training` is a standalone section for Super AI Engineer Season 6.
+- `Training` is a standalone section for Super AI Engineer Season 6, including Team Site/Mirror contribution detail and Level 2 online/on-site hackathon entries.
 - `Languages` is a standalone section.
 - Thai Numeral Converter uses the kicker `Thai Documentation Utility`.
 - `4+ Years Data Analysis` in About points to `#skills`.

@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2026-05-29] - Super AI Season 6 Detail Expansion
+
+### Added
+- **The Scamper Team Site Role**: Added web developer contribution detail for The Scamper team website, highlighting the Mirror encrypted letter feature.
+- **Level 2 On-site Hackathons**: Added Edge-AI for Intelligence Transport System detail with project link, Jetson Nano CCTV analytics scope, and co-honorable mention recognition.
+- **WellSense AIoT Detail**: Added WellSense AIoT & System Product Hackathon detail with result marked pending, covering Arduino Nano IMU capture, Arduino UNO Q inference, BLE telemetry, and mobile dashboard work.
+
 ## [2026-05-26] - LLM API Skills Update
 
 ### Added
