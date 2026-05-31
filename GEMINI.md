@@ -7,7 +7,7 @@ This repository contains the personal portfolio website of Vitchakorn Poonyakano
 - **Experience**: Clinical, public health, academic, and education timeline with institutional logos.
 - **Projects**: Featured carousel of clinical AI, travel medicine, data visualization, machine learning, and utility projects.
 - **Research**: Publications with DOI links and expandable details.
-- **Training**: Super AI Engineer Season 6 program details, Foundation AI certificate, The Scamper housing team and Team Site role, minihack Colab/certificate/Kaggle links, Level 2 online challenge rank, and Level 2 on-site hackathon placements.
+- **Training**: Super AI Engineer Season 6 program details, Foundation AI certificate, The Scamper housing team, minihack Colab/certificate/Kaggle links, Level 2 online challenge rank, and Level 2 on-site hackathon placements.
 - **Skills & Certifications**: Technical stack and credential library.
 - **Languages**: English and Thai language competency.
 - **Contact**: Email and Formspree-powered contact form.
@@ -48,11 +48,11 @@ The old `Expertise` section is intentionally hidden because its claims are now b
 ## Training Highlights
 - **Super AI Engineer Season 6**: Advanced AI Level 2 Participant, AIAT, Apr-Jun 2026.
 - **Selection Note**: Selected 150 from 10,000+ applicants.
-- **Housing Team**: The Scamper, linked to `https://thescamperss6.com/`, with Team Site web developer contribution detail for the Mirror encrypted letter feature.
+- **Housing Team**: The Scamper, linked to `https://thescamperss6.com/`.
 - **Foundation AI (Theory)**: Verification link in the Training section.
 - **Level 1 Minihacks**: Certificate and Colab links for all three minihacks; Kaggle ranks for OCR and FahMai RAG where available.
 - **Level 2 Online**: Parasite Eggs, rank 16/166 with Kaggle leaderboard link; cascaded YOLOv8 + DINOv2 parasite egg detection/classification pipeline with gold-label validation, SAHI-style inference, and microscopy artifact calibration.
-- **Level 2 On-site Hackathons**: Demand Forecasting at Scale, private Kaggle leaderboard rank #1 across the 30-team on-site cohort and 2nd runner-up overall in final evaluation; Edge-AI for Intelligence Transport System Hackathon, co-honorable mention for Jetson Nano CCTV vehicle analytics; WellSense AIoT & System Product Hackathon, result pending, with FormWings running-form wearable work using Arduino Nano IMU capture, Arduino UNO Q inference, BLE telemetry, and mobile dashboard.
+- **Level 2 On-site Hackathons**: Demand Forecasting at Scale, private Kaggle leaderboard rank #1 across the 30-team on-site cohort and 2nd runner-up overall in final evaluation; Edge-AI for Intelligence Transport System Hackathon, co-honorable mention for Jetson Nano CCTV vehicle analytics; WellSense AIoT & System Product Hackathon, Academic Popular Vote recognition, with FormWings running-form wearable work using Arduino Nano IMU capture, Arduino UNO Q inference, BLE telemetry, and mobile dashboard.
 
 ## Asset Notes
 - Local logos and project screenshots live in `logo/`, `experience/`, `project/`, `badge/`, `cert/`, and `certlogo/`.
