@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2026-06-09] - TPQI Huawei Certification Detail
+
+### Added
+- **TPQI x Huawei Credentials**: Added compact combined certification badges for Huawei Cloud HCCDA credentials and TPQI x Huawei professional certifications with QR-derived verification links.
+
+### Changed
+- **Certification Stat**: Updated the About certification count from `21+` to `23+`.
+- **Certification Readability**: Hid long certificate IDs from visible metadata while keeping verification links intact.
+
 ## [2026-05-29] - Super AI Season 6 Detail Expansion
 
 ### Added
