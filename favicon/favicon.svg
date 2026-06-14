@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
+  <title id="title">Vitchakorn Poonyakanok favicon</title>
+  <desc id="desc">A blue VP monogram on a transparent background.</desc>
+  <g transform="translate(-24 0)">
+    <path d="M48 58h31l36 104 36-104h30l-52 140h-28L48 58z" fill="#2f81f7"/>
+    <path d="M157 58h38c31 0 51 18 51 45 0 28-21 46-53 46h-14v49h-22V58zm22 22v47h14c18 0 30-9 30-24 0-14-11-23-29-23h-15z" fill="#2f81f7"/>
+  </g>
+</svg>
