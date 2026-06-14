@@ -1220,6 +1220,45 @@
       display: none;
     }
 
+    @media (min-width: 769px) {
+      .featured-project-carousel {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1.25rem;
+      }
+
+      .featured-project-header {
+        grid-column: 1 / -1;
+        margin-bottom: 0;
+      }
+
+      .featured-project-header .featured-project-controls,
+      .featured-project-carousel > .carousel-dots {
+        display: none;
+      }
+
+      .featured-project-slide,
+      .featured-project-slide.active {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.85rem;
+      }
+
+      .featured-project-slide:nth-of-type(n+5) {
+        display: none;
+      }
+
+      .featured-project-title {
+        font-size: 1.05rem;
+      }
+
+      .featured-project-desc {
+        font-size: 0.8125rem;
+        line-height: 1.55;
+      }
+    }
+
     @media (max-width: 768px) {
       .featured-project-carousel { padding: 1.25rem 0; }
       .featured-project-header { align-items: flex-start; margin-bottom: 1rem; }
@@ -1629,6 +1668,27 @@
       line-height: 1.65;
     }
 
+    .training-proof-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 0.85rem;
+    }
+
+    .training-proof {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0.35rem 0.55rem;
+      border: 1px solid var(--border-light);
+      border-radius: 6px;
+      background: var(--bg-card);
+      color: var(--text-primary);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.625rem;
+      font-weight: 700;
+    }
+
     .training-rows {
       margin-top: 1rem;
       display: flex;
@@ -1719,6 +1779,28 @@
       font-size: 0.75rem;
       line-height: 1.5;
       max-width: 48rem;
+    }
+
+    .training-detail-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.625rem;
+      margin-top: 0.75rem;
+    }
+
+    .training-detail-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .training-detail-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.625rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
     }
 
     .training-rank {
@@ -2336,8 +2418,7 @@
         <li><a href="#projects">Projects</a></li>
         <li><a href="#publications">Research</a></li>
         <li><a href="#training">Training</a></li>
-        <li><a href="#skills">Skills</a></li>
-        <li><a href="#languages">Languages</a></li>
+        <li><a href="#skills">Capabilities</a></li>
         <li><a href="#contact">Contact</a></li>
       </ul>
       <div class="nav-actions">
@@ -2363,7 +2444,7 @@
     <div class="hero-meta">
       <div class="hero-meta-item">
         <span class="t-label">Specialty</span>
-        <span style="font-size:0.875rem;font-weight:500;color:var(--text-primary);">MD · Travel Medicine Resident<br>M.Sc. Student in Digital &amp; AI Health Systems</span>
+        <span style="font-size:0.875rem;font-weight:500;color:var(--text-primary);">MD · Travel Medicine Resident<br>M.Sc. Digital &amp; AI Health Systems</span>
       </div>
       <div class="hero-meta-item">
         <span class="t-label">Location</span>
@@ -2395,7 +2476,7 @@
       <div class="about-grid">
         <div class="about-text fade-in delay-1">
           <p class="t-body-large">
-            I am a <span class="about-badge">Physician & Clinical Data Analyst</span> (known as <strong>Blue</strong>) and a Travel Medicine Resident at the Institute of Preventive Medicine, Thailand. I specialize in bridging clinical practice with data architecture, currently pursuing a Master of Science in Digital and AI Technologies in Health Systems at Chulalongkorn University, with an upcoming Master of Science in Health Care Analytics at Carnegie Mellon University’s Heinz College of Information Systems and Public Policy (2026).
+            I am a <span class="about-badge">Physician & Clinical Data Analyst</span> (known as <strong>Blue</strong>) and a Travel Medicine Resident at the Institute of Preventive Medicine, Thailand. I specialize in bridging clinical practice with data architecture, having completed a Master of Science in Digital and AI Technologies in Health Systems at Chulalongkorn University, with an upcoming Master of Science in Health Care Analytics at Carnegie Mellon University’s Heinz College of Information Systems and Public Policy (2026).
           </p>
           <p class="t-body-large font-mono" style="font-size:0.8125rem;color:var(--accent-heading);margin-top:1.25rem;">
             Current_Focus: "National Vaccine Registry & Public Health Data Initiatives"
@@ -2546,14 +2627,14 @@
               </div>
             </div>
             <div class="timeline-item">
-              <div class="timeline-year">2025 — Present</div>
+              <div class="timeline-year">2025 — 2026</div>
               <div class="timeline-header">
                 <div class="timeline-logo-wrap">
                     <img src="experience/chula.jpg" alt="Chula" class="timeline-logo">
                     <img src="experience/digihealth-dh.png" alt="DigiHealth" class="timeline-logo">
                 </div>
                 <div>
-                    <div class="timeline-role">Master of Science Program in Digital and AI Technologies in Health Systems (DigiHealth)</div>
+                    <div class="timeline-role">Master of Science in Digital and AI Technologies in Health Systems (DigiHealth)</div>
                     <div class="timeline-org">Chulalongkorn University</div>
                     <div class="timeline-location">Bangkok, Thailand</div>
                 </div>
@@ -2641,7 +2722,7 @@
       <div class="section-header fade-in">
         <span class="t-section-number">03</span>
         <div>
-          <h2 class="t-label section-title">Selected Projects</h2>
+          <h2 class="t-label section-title">Top Projects</h2>
           <div class="section-header-rule"></div>
         </div>
       </div>
@@ -2850,7 +2931,12 @@
             <span class="training-status-chip">Advanced AI Level 2 Participant</span>
           </div>
           <div class="training-meta">AIAT · Apr-Jun 2026 · Selected 150 from 10,000+ applicants</div>
-          <p class="training-summary">AIAT's applied AI training and real-world project incubation program, covering image processing, signal processing, natural language processing, big data analytics, IoT, and robotics through workshops and hackathons.</p>
+          <p class="training-summary">Condensed proof from AIAT's national applied AI program, with certificates, notebooks, hackathon placements, and method notes visible for a fast first scan.</p>
+          <div class="training-proof-strip" aria-label="Super AI proof highlights">
+            <span class="training-proof">AI Practitioner</span>
+            <span class="training-proof">Advanced AI Level 2</span>
+            <span class="training-proof">Selected 150 / 10,000+</span>
+          </div>
           <div class="training-rows">
             <div class="training-row">
               <div class="training-row-label">Housing Team</div>
@@ -2861,19 +2947,15 @@
               </div>
             </div>
             <div class="training-row">
-              <div class="training-row-label">Certificate</div>
+              <div class="training-row-label">Credential</div>
               <div class="training-row-content">
-                <span class="training-row-item">Foundation AI (Theory)</span>
-                <span class="training-row-meta">Apr 2026</span>
-                <a href="https://assessment.aiat.or.th/certificate/2a541cbb-331d-430f-8dcc-2a88f134a6db" target="_blank" class="cert-verify" rel="noopener noreferrer">Verify</a>
-              </div>
-            </div>
-            <div class="training-row">
-              <div class="training-row-label">Level 1 Minihacks</div>
-              <div class="training-row-content">
-                <span class="training-row-entry"><span class="training-row-item">From Data to Insight</span><a href="cert/certificate-hack1-600013.png" target="_blank" class="cert-verify" rel="noopener noreferrer">Cert</a><a href="https://colab.research.google.com/drive/1cfiNwP8mDx0KV8YIdXr54ozYTCy0AagG?usp=sharing" target="_blank" class="cert-verify" rel="noopener noreferrer">Colab</a></span>
-                <span class="training-row-entry"><span class="training-row-item">Agentic Pipeline Hackathon: 2026 Thai Election OCR Challenge</span><span class="training-rank">Rank 102/571</span><a href="cert/certificate-hack2-600013.png" target="_blank" class="cert-verify" rel="noopener noreferrer">Cert</a><a href="https://colab.research.google.com/drive/1CRtQ7Mgcsexlp62pRqHMsBhxjW6MSKj-?usp=sharing" target="_blank" class="cert-verify" rel="noopener noreferrer">Colab</a><a href="https://www.kaggle.com/competitions/super-ai-engineer-season-6-ocr-2569" target="_blank" class="cert-verify" rel="noopener noreferrer">Kaggle</a></span>
-                <span class="training-row-entry"><span class="training-row-item">FahMai RAG Hackathon</span><span class="training-rank">Rank 132/660</span><a href="cert/certificate-hack3-600013.png" target="_blank" class="cert-verify" rel="noopener noreferrer">Cert</a><a href="https://colab.research.google.com/drive/1WwJFtj6d3TClKFQmByqRbkIBYG12pJAO?usp=sharing" target="_blank" class="cert-verify" rel="noopener noreferrer">Colab</a><a href="https://www.kaggle.com/competitions/super-ai-engineer-s-6-fah-mai-rag-challenge-level-1" target="_blank" class="cert-verify" rel="noopener noreferrer">Kaggle</a></span>
+                <div class="training-row-entry stacked">
+                  <span class="training-row-entry-main"><span class="training-row-item">AI Practitioner</span><span class="training-row-meta">Level 1 Foundation AI (Theory) + Minihacks</span><a href="https://mysuperai.aiat.or.th/verify/3893dd94-0ff5-464f-b26f-f8f44e655bdf" target="_blank" class="cert-verify" rel="noopener noreferrer">Verify</a></span>
+                  <span class="training-row-entry"><span class="training-row-item">Foundation AI (Theory)</span><span class="training-row-meta">Apr 2026</span><a href="https://assessment.aiat.or.th/certificate/2a541cbb-331d-430f-8dcc-2a88f134a6db" target="_blank" class="cert-verify" rel="noopener noreferrer">Verify</a></span>
+                  <span class="training-row-entry"><span class="training-row-item">From Data to Insight</span><a href="https://mysuperai.aiat.or.th/verify/610147be-1f00-431d-a8ae-e67f0387bc37" target="_blank" class="cert-verify" rel="noopener noreferrer">Verify</a><a href="https://colab.research.google.com/drive/1cfiNwP8mDx0KV8YIdXr54ozYTCy0AagG?usp=sharing" target="_blank" class="cert-verify" rel="noopener noreferrer">Colab</a></span>
+                  <span class="training-row-entry"><span class="training-row-item">Agentic Pipeline Hackathon: 2026 Thai Election OCR Challenge</span><span class="training-rank">Rank 102/571</span><a href="https://mysuperai.aiat.or.th/verify/7e3e221b-c6ef-4492-921f-6f520d4c82e5" target="_blank" class="cert-verify" rel="noopener noreferrer">Verify</a><a href="https://colab.research.google.com/drive/1CRtQ7Mgcsexlp62pRqHMsBhxjW6MSKj-?usp=sharing" target="_blank" class="cert-verify" rel="noopener noreferrer">Colab</a><a href="https://www.kaggle.com/competitions/super-ai-engineer-season-6-ocr-2569" target="_blank" class="cert-verify" rel="noopener noreferrer">Kaggle</a></span>
+                  <span class="training-row-entry"><span class="training-row-item">FahMai RAG Hackathon</span><span class="training-rank">Rank 132/660</span><a href="https://mysuperai.aiat.or.th/verify/bed316aa-36dc-419d-b364-84d0c536e941" target="_blank" class="cert-verify" rel="noopener noreferrer">Verify</a><a href="https://colab.research.google.com/drive/1WwJFtj6d3TClKFQmByqRbkIBYG12pJAO?usp=sharing" target="_blank" class="cert-verify" rel="noopener noreferrer">Colab</a><a href="https://www.kaggle.com/competitions/super-ai-engineer-s-6-fah-mai-rag-challenge-level-1" target="_blank" class="cert-verify" rel="noopener noreferrer">Kaggle</a></span>
+                </div>
               </div>
             </div>
             <div class="training-row">
@@ -2907,15 +2989,17 @@
       </div>
 
       <div class="training-highlight fade-in delay-2">
-        <div class="training-logo-stack" aria-label="Department of Disease Control logo">
+        <div class="training-logo-stack" aria-label="Clinical methods training logos">
           <img src="certlogo/ddc.png" alt="Department of Disease Control" class="training-logo" loading="lazy" width="54" height="54">
+          <img src="certlogo/Chiang_mai_university_logo.png" alt="Chiang Mai University" class="training-logo" loading="lazy" width="54" height="54">
         </div>
         <div>
           <div class="training-heading">
-            <div class="training-title">Introductory Epidemiology &amp; Biostatistics</div>
-            <span class="training-status-chip">DDC/MOPH</span>
+            <div class="training-title">Clinical Methods Training</div>
+            <span class="training-status-chip">Epidemiology &amp; Biostatistics</span>
           </div>
-          <div class="training-meta">Field Epidemiology Training Program · Jun 10-Jul 5, 2024</div>
+          <div class="training-meta">DDC/MOPH · Chiang Mai University · 2022-2024</div>
+          <p class="training-summary">Applied epidemiology, clinical epidemiology, and clinical statistics training supporting public health field practice and clinical research methods.</p>
           <div class="training-rows">
             <div class="training-row">
               <div class="training-row-label">Field Epidemiology</div>
@@ -2926,21 +3010,6 @@
                 </span>
               </div>
             </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="training-highlight fade-in delay-2">
-        <div class="training-logo-stack" aria-label="Chiang Mai University logo">
-          <img src="certlogo/Chiang_mai_university_logo.png" alt="Chiang Mai University" class="training-logo" loading="lazy" width="54" height="54">
-        </div>
-        <div>
-          <div class="training-heading">
-            <div class="training-title">Clinical Epidemiology &amp; Statistics</div>
-            <span class="training-status-chip">Chiang Mai University</span>
-          </div>
-          <div class="training-meta">Center for Clinical Epidemiology &amp; Clinical Statistics · Faculty of Medicine · 2022</div>
-          <div class="training-rows">
             <div class="training-row">
               <div class="training-row-label">Clinical Epidemiology</div>
               <div class="training-row-content">
@@ -2971,7 +3040,7 @@
       <div class="section-header fade-in">
         <span class="t-section-number">06</span>
         <div>
-          <h2 class="t-label section-title">Skills &amp; Certifications</h2>
+          <h2 class="t-label section-title">Capabilities</h2>
           <div class="section-header-rule"></div>
         </div>
       </div>
@@ -2979,7 +3048,7 @@
       <div class="skills-certs-grid">
         <!-- LEFT: Skills -->
         <div class="skills-column fade-in delay-1">
-          <div class="column-kicker">Technical Stack</div>
+          <div class="column-kicker">Selected Stack</div>
           <div class="skills-category">
             <div class="skills-category-title">Core Tools</div>
             <div class="skills-badges">
@@ -3064,9 +3133,9 @@
 
         <!-- RIGHT: Certifications -->
         <div class="certifications-column fade-in delay-2">
-          <div class="column-kicker">Credential Library</div>
-          <div class="cert-category">
-            <div class="cert-category-title">Data Science &amp; AI</div>
+          <div class="column-kicker">Credential Archive</div>
+          <details class="cert-category">
+            <summary class="cert-category-title">Data Science &amp; AI</summary>
             <div class="cert-items">
               <div class="cert-item">
                 <div class="cert-icon"><img src="badge/google-ai-essentials-v1.png" alt="Google"></div>
@@ -3093,10 +3162,10 @@
                 <div><div class="cert-name">Excel Level Up Update 2021</div><div class="cert-meta">Jul 2023 | SkillLane</div><a href="https://certificate.skilllane.com/certificates/23QLOQ9" target="_blank" class="cert-verify" rel="noopener noreferrer">Verify</a></div>
               </div>
             </div>
-          </div>
+          </details>
 
-          <div class="cert-category">
-            <div class="cert-category-title">Cloud &amp; Infrastructure</div>
+          <details class="cert-category">
+            <summary class="cert-category-title">Cloud &amp; Infrastructure</summary>
             <div class="cert-items">
               <div class="cert-item">
                 <div class="cert-icon"><img src="certlogo/HCCDA.png" alt="Huawei"></div>
@@ -3117,10 +3186,10 @@
                 </div>
               </div>
             </div>
-          </div>
+          </details>
 
-          <div class="cert-category">
-            <div class="cert-category-title">Medical &amp; Public Health</div>
+          <details class="cert-category">
+            <summary class="cert-category-title">Medical &amp; Public Health</summary>
             <div class="cert-items">
               <div class="cert-item">
                 <div class="cert-icon"><img src="certlogo/citi.jpeg" alt="CITI"></div>
@@ -3131,10 +3200,10 @@
                 <div><div class="cert-name">ISTM Review Course</div><div class="cert-meta">Feb 2024 | Intl. Society of Travel Medicine</div> <a href="https://workshop-evaluator.herokuapp.com/evaluation/events/15651/respondents/607729/certificate" target="_blank" class="cert-verify" rel="noopener noreferrer">View</a></div>
               </div>
             </div>
-          </div>
+          </details>
 
-          <div class="cert-category">
-            <div class="cert-category-title">Cybersecurity</div>
+          <details class="cert-category">
+            <summary class="cert-category-title">Cybersecurity</summary>
             <div class="cert-items">
               <div class="cert-item">
                 <div class="cert-icon"><img src="badge/certified-in-cybersecurity-cc.1-white.png" alt="ISC2"></div>
@@ -3149,17 +3218,17 @@
                 <div><div class="cert-name">Cybersecurity Foundation Course</div><div class="cert-meta">Aug 2024 | Thailand National Cyber Academy</div><a href="https://learn.thnca.or.th/pluginfile.php/1/tool_certificate/issues/1723999206/8277556641WP.pdf" target="_blank" class="cert-verify" rel="noopener noreferrer">View</a></div>
               </div>
             </div>
-          </div>
+          </details>
 
-          <div class="cert-category">
-            <div class="cert-category-title">Other</div>
+          <details class="cert-category">
+            <summary class="cert-category-title">Other</summary>
             <div class="cert-items">
               <div class="cert-item">
                 <div class="cert-icon"><img src="certlogo/tourism.png" alt="Tourism"></div>
                 <div><div class="cert-name">Tour Leader License</div><div class="cert-meta">Dec 2025 | Dept. of Tourism, Thailand</div></div>
               </div>
             </div>
-          </div>
+          </details>
         </div>
       </div>
 
@@ -3371,7 +3440,7 @@
     window.addEventListener('resize', revealOnScroll, { passive: true });
 
     // ── Active Nav Link ──
-    var sectionIds = ['top', 'about', 'experience', 'projects', 'publications', 'training', 'skills', 'languages', 'contact'];
+    var sectionIds = ['top', 'about', 'experience', 'projects', 'publications', 'training', 'skills', 'contact'];
     var sectionLabels = {
       top: 'Home',
       about: 'About',
@@ -3379,8 +3448,7 @@
       projects: 'Projects',
       publications: 'Research',
       training: 'Training',
-      skills: 'Skills',
-      languages: 'Languages',
+      skills: 'Capabilities',
       contact: 'Contact'
     };
     var navAnchors = navLinks.querySelectorAll('a');
