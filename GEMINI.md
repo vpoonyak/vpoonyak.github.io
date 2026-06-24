@@ -1,15 +1,15 @@
-# Project Context: vk-poonyakanok.github.io
+# Project Context: vpoonyak.github.io
 
 This repository contains the personal portfolio website of Vitchakorn Poonyakanok (Blue), a physician and clinical data analyst focused on travel medicine, clinical AI, and public health data systems.
 
 ## Site Structure
 - **About**: Professional summary, contact links, and clickable stats.
 - **Experience**: Clinical, public health, academic, and education timeline with institutional logos.
-- **Projects**: Featured carousel of clinical AI, travel medicine, data visualization, machine learning, and utility projects.
+- **Projects**: Desktop Top Projects grid with the first four proof projects; mobile keeps the featured carousel.
 - **Research**: Publications with DOI links and expandable details.
-- **Training**: Super AI Engineer Season 6 program details, Foundation AI certificate, The Scamper housing team, minihack Colab/certificate/Kaggle links, Level 2 online challenge rank, and Level 2 on-site hackathon placements.
-- **Skills & Certifications**: Technical stack and credential library.
-- **Languages**: English and Thai language competency.
+- **Training**: Super AI Engineer Season 6 proof summary, The Scamper housing team, AI Practitioner Level 1 credential with collapsible Foundation AI (Theory) and Minihacks evidence, Level 2 ranks/placements with collapsible method details, and collapsed additional clinical methods training.
+- **Capabilities**: Selected technical stack and collapsed credential archive.
+- **Languages**: English and Thai language competency; visible as a section but demoted from primary navigation.
 - **Contact**: Email and Formspree-powered contact form.
 
 The old `Expertise` section is intentionally hidden because its claims are now better demonstrated through projects, training, publications, and experience.
@@ -18,9 +18,9 @@ The old `Expertise` section is intentionally hidden because its claims are now b
 - **Typography-first portfolio**: Minimal, technical design using Inter and JetBrains Mono.
 - **Persistent Theme Toggle**: Light/dark mode with local storage.
 - **Desktop Navigation**: Fixed top navigation with active section highlighting.
-- **Mobile Navigation**: Horizontally scrollable all-section chip strip with the current section styled like the desktop active state.
+- **Mobile Navigation**: Horizontally scrollable primary-section chip strip with the current section styled like the desktop active state; Languages is intentionally omitted.
 - **Scroll Reveal**: Section content fades in as it enters view.
-- **Featured Project Carousel**: Eight featured projects with previous/next controls, slide dots, mobile swipe support, and a mobile-only control row placed directly below the active thumbnail.
+- **Featured Projects**: Desktop shows the first four projects as a static proof grid; mobile uses the carousel with previous/next controls, slide dots, swipe support, and a mobile-only control row placed directly below the active thumbnail.
 - **Static Project Chips**: Project tags are metadata only and should not navigate.
 - **Hidden Applications Block**: Application card grid remains in markup but is hidden for now.
 
@@ -49,16 +49,17 @@ The old `Expertise` section is intentionally hidden because its claims are now b
 - **Super AI Engineer Season 6**: Advanced AI Level 2 Participant, AIAT, Apr-Jun 2026.
 - **Selection Note**: Selected 150 from 10,000+ applicants.
 - **Housing Team**: The Scamper, linked to `https://thescamperss6.com/`.
-- **Foundation AI (Theory)**: Verification link in the Training section.
-- **Level 1 Minihacks**: Certificate and Colab links for all three minihacks; Kaggle ranks for OCR and FahMai RAG where available.
-- **Level 2 Online**: Parasite Eggs, rank 16/166 with Kaggle leaderboard link; cascaded YOLOv8 + DINOv2 parasite egg detection/classification pipeline with gold-label validation, SAHI-style inference, and microscopy artifact calibration.
-- **Level 2 On-site Hackathons**: Demand Forecasting at Scale, private Kaggle leaderboard rank #1 across the 30-team on-site cohort and 2nd runner-up overall in final evaluation; Edge-AI for Intelligence Transport System Hackathon, co-honorable mention for Jetson Nano CCTV vehicle analytics; WellSense AIoT & System Product Hackathon, Academic Popular Vote recognition, with FormWings running-form wearable work using Arduino Nano IMU capture, Arduino UNO Q inference, BLE telemetry, and mobile dashboard.
+- **AI Practitioner**: Primary visible Level 1 credential combining Foundation AI (Theory) and Level 1 Minihacks, verified at `https://mysuperai.aiat.or.th/verify/3893dd94-0ff5-464f-b26f-f8f44e655bdf`.
+- **Level 1 Detail**: Foundation AI (Theory) and all three Level 1 Minihacks live in the collapsible detail block under AI Practitioner; Minihacks use public `mysuperai.aiat.or.th/verify/...` links plus Colab links and Kaggle ranks where available.
+- **Level 2 Online**: Parasite Eggs rank remains visible; the long model-method writeup lives in `Method detail`.
+- **Level 2 On-site Hackathons**: Demand Forecasting, Edge-AI, and WellSense placements remain visible; long implementation notes live in `Method detail`.
 
 ## Asset Notes
 - Local logos and project screenshots live in `logo/`, `experience/`, `project/`, `badge/`, `cert/`, and `certlogo/`.
 - Featured carousel previews should use optimized `project/*-thumb.webp` assets while keeping original screenshots as source files.
 - Tableau uses `favicon/tableau.png`.
 - DigiHealth currently uses `experience/digihealth-dh.png`.
+- DigiHealth is complete and should be shown as `Master of Science in Digital and AI Technologies in Health Systems (DigiHealth)` with `2025 — 2026`.
 - ISC2 CC currently uses `badge/certified-in-cybersecurity-cc.1-white.png`.
 - Scamper logo path contains a space and is referenced as `logo/Scamper%20Logo.png`.
 

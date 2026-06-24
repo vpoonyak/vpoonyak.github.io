@@ -1,4 +1,4 @@
-# Agent Guide: vk-poonyakanok.github.io
+# Agent Guide: vpoonyak.github.io
 
 This repository is a static GitHub Pages portfolio for Vitchakorn Poonyakanok. The main implementation lives in `index.html`.
 
@@ -16,7 +16,7 @@ This repository is a static GitHub Pages portfolio for Vitchakorn Poonyakanok. T
 4. `#publications`
 5. `#training`
 6. `#skills`
-7. `#languages`
+7. `#languages` (visible, demoted from primary navigation)
 8. `#contact`
 
 The `#expertise` section exists in the markup but is hidden and excluded from navigation/active-section tracking.
@@ -25,7 +25,7 @@ The `#expertise` section exists in the markup but is hidden and excluded from na
 - Desktop navigation uses fixed top links with active-state styling.
 - Mobile/tablet navigation uses `#navSectionIndicator`, a horizontally scrollable all-section chip strip. The current section should use the same visual language as the desktop active nav state.
 - Active-section tracking is based on a viewport reading line in `updateActiveNav()`.
-- Featured projects use a custom carousel with previous/next buttons, dot buttons, autoplay while in view, and mobile swipe gestures.
+- Featured projects render as a desktop Top Projects grid showing the first four project slides. Mobile keeps the carousel with previous/next buttons, dot buttons, autoplay while in view, and swipe gestures.
 - On mobile, Featured Work controls are duplicated into `.featured-project-mobile-nav` and inserted directly below the active project thumbnail. Keep this row independent from caption height so long titles/descriptions do not move the controls.
 - Featured project slides are `article` elements with separate `.featured-project-media-link` and `.featured-project-copy-link` anchors. Preserve this structure to avoid nested interactive elements when mobile controls sit between media and caption.
 - Project chips are metadata only; click events on `.project-tags` are stopped so chips do not navigate.
@@ -34,8 +34,12 @@ The `#expertise` section exists in the markup but is hidden and excluded from na
 ## Content Decisions
 - `Expertise` is hidden because the portfolio now prioritizes proof through projects, training, publications, and experience.
 - `Applications` is hidden but retained in markup for future reuse.
-- `Training` is a standalone section for Super AI Engineer Season 6, including The Scamper housing team and Level 2 online/on-site hackathon entries.
-- `Languages` is a standalone section.
+- `Training` is a standalone proof section for Super AI Engineer Season 6, including The Scamper housing team, the AI Practitioner Level 1 credential, and Level 2 online/on-site hackathon entries.
+- AI Practitioner is the visible Level 1 credential. Keep Foundation AI (Theory) and Level 1 Minihacks inside the collapsible `Level 1 detail` block as supporting evidence.
+- Keep Level 2 method writeups and additional clinical methods training inside collapsible details so the first scan stays concise.
+- DigiHealth is complete and should use the wording `Master of Science in Digital and AI Technologies in Health Systems (DigiHealth)` with the date range `2025 — 2026`.
+- `#skills` is labeled `Capabilities` in visible UI and contains selected stack badges plus a collapsed credential archive.
+- `Languages` remains a standalone section but is intentionally omitted from primary navigation and mobile section chips.
 - Thai Numeral Converter uses the kicker `Thai Documentation Utility`.
 - `4+ Years Data Analysis` in About points to `#skills`.
 
@@ -74,7 +78,7 @@ python3 -m http.server 8765 --bind 127.0.0.1
 Then inspect:
 - Desktop, tablet, and mobile section layout.
 - Mobile/tablet section chip strip: all sections should be scrollable, and the active chip should match desktop active styling.
-- Featured project carousel controls on desktop.
+- Desktop Top Projects grid should show the first four featured projects and hide carousel controls.
 - Featured project carousel on mobile: controls should appear below the thumbnail, stay stable when captions change, dots should update, and swipe should not accidentally open project links.
 - Project chips remain static.
 - About stat links navigate to the expected sections.

@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2026-06-13] - Education and Super AI Credential Refresh
+
+### Added
+- **AI Practitioner Credential**: Added the Super AI Engineer Season 6 Level 1 AI Practitioner verification link and folded Foundation AI (Theory) plus Level 1 Minihacks into a collapsible detail block.
+- **Agent Documentation**: Added `CLAUDE.md` and renamed `AGENT.md` to `AGENTS.md` for broader agent compatibility.
+- **Portfolio Declutter Branch**: Added a cleaner information hierarchy with a desktop Top Projects grid, compact Super AI proof strip, collapsible Level 2 method details, collapsed clinical methods training, and a collapsed credential archive.
+
+### Changed
+- **DigiHealth Education**: Updated Chulalongkorn DigiHealth wording to `Master of Science in Digital and AI Technologies in Health Systems (DigiHealth)` with the completed date range `2025 — 2026`.
+- **About Copy**: Updated the About intro to describe DigiHealth as completed rather than currently pursued.
+- **Minihacks Verification**: Replaced local Level 1 Minihacks certificate image links with public Super AI verification URLs.
+- **Agent Notes**: Refreshed `AGENTS.md` and `GEMINI.md` to document the current Training structure and DigiHealth wording.
+- **Capabilities IA**: Renamed `Skills & Certifications` to `Capabilities`, demoted `Languages` from primary navigation, and reduced first-pass visible text in Training and Capabilities.
+
 ## [2026-06-09] - TPQI Huawei Certification Detail
 
 ### Added
@@ -55,7 +69,7 @@ All notable changes to this project will be documented in this file.
 - **Information Architecture**: Hid the dry `Expertise` section from navigation and active-section tracking so visitors reach project evidence sooner.
 - **Section Numbering**: Renumbered visible sections to About `01`, Experience `02`, Projects `03`, Research `04`, Training `05`, Skills `06`, Languages `07`, and Contact `08`.
 - **About Stats Links**: Made stats navigate to relevant sections; the `4+ Years Data Analysis` stat now points to `Skills`.
-- **Project Metadata**: Changed Thai Numeral Converter source label from `vk-poonyakanok.github.io` to `Thai Documentation Utility`.
+- **Project Metadata**: Changed Thai Numeral Converter source label from `vpoonyak.github.io` to `Thai Documentation Utility`.
 - **Project Tags**: Made project metadata chips static so they no longer behave like outbound links.
 - **Skills Ordering**: Moved `Data Analysis & Processing` directly under `Core Tools`.
 - **Skills Pruning**: Hid XGBoost, LightGBM, and MLX from the Applied ML & AI chip row.
