@@ -93,6 +93,17 @@
             "position": 1,
             "item": {
               "@type": "CreativeWork",
+              "name": "DDS Chatbot",
+              "url": "https://vpoonyak-ddschatbot.hf.space/",
+              "description": "Guardrailed Thai disease-surveillance LLM assistant for the Department of Disease Control, using tool-calling over an aggregate, PII-free data mart.",
+              "keywords": "public health informatics, disease surveillance, LLM tool calling, PDPA-aligned guardrails"
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "item": {
+              "@type": "CreativeWork",
               "name": "Altitude Itinerary Analyzer",
               "url": "https://altit.app/",
               "description": "AI-assisted travel medicine tool for extracting and analyzing complex itineraries for high-altitude risk assessment.",
@@ -101,7 +112,7 @@
           },
           {
             "@type": "ListItem",
-            "position": 2,
+            "position": 3,
             "item": {
               "@type": "CreativeWork",
               "name": "Yellow Fever Vaccine and Malaria Prevention Dashboard",
@@ -112,7 +123,7 @@
           },
           {
             "@type": "ListItem",
-            "position": 3,
+            "position": 4,
             "item": {
               "@type": "CreativeWork",
               "name": "Thai HospSearch",
@@ -123,7 +134,7 @@
           },
           {
             "@type": "ListItem",
-            "position": 4,
+            "position": 5,
             "item": {
               "@type": "CreativeWork",
               "name": "Hajj Menstrual Delay Planner",
@@ -134,7 +145,7 @@
           },
           {
             "@type": "ListItem",
-            "position": 5,
+            "position": 6,
             "item": {
               "@type": "CreativeWork",
               "name": "PM2.5 and Mental Health Dynamics",
@@ -145,7 +156,7 @@
           },
           {
             "@type": "ListItem",
-            "position": 6,
+            "position": 7,
             "item": {
               "@type": "CreativeWork",
               "name": "Cirrhosis Survival Prediction",
@@ -156,7 +167,7 @@
           },
           {
             "@type": "ListItem",
-            "position": 7,
+            "position": 8,
             "item": {
               "@type": "CreativeWork",
               "name": "Thai Numeral Converter",
@@ -167,7 +178,7 @@
           },
           {
             "@type": "ListItem",
-            "position": 8,
+            "position": 9,
             "item": {
               "@type": "CreativeWork",
               "name": "BNK/CGM48 4th General Election Predictive Analysis",
@@ -2303,6 +2314,27 @@
 
     .contact-link:hover .contact-link-icon { color: var(--accent-heading); }
 
+    .contact-formal-review {
+      margin-top: 1rem;
+      color: var(--text-secondary);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8125rem;
+      line-height: 1.7;
+    }
+
+    .contact-formal-review a {
+      color: var(--text-primary);
+      font-weight: 600;
+      text-decoration: none;
+      border-bottom: 1px solid var(--border-light);
+      transition: color 0.2s ease, border-color 0.2s ease;
+    }
+
+    .contact-formal-review a:hover {
+      color: var(--accent-heading);
+      border-color: var(--accent-heading);
+    }
+
     /* ═══════════════════════════════════════════════
        FOOTER
        ═══════════════════════════════════════════════ */
@@ -2748,9 +2780,24 @@
           </div>
         </div>
         <article class="featured-project-slide active" aria-hidden="false">
+          <a href="https://vpoonyak-ddschatbot.hf.space/" target="_blank" class="featured-project-media-link" rel="noopener noreferrer">
+            <div class="featured-project-media">
+              <img src="project/ddschatbot.png" alt="DDS Chatbot Thai disease surveillance interface preview" loading="eager" width="2192" height="1502">
+            </div>
+          </a>
+          <a href="https://vpoonyak-ddschatbot.hf.space/" target="_blank" class="featured-project-copy-link" rel="noopener noreferrer">
+            <div class="featured-project-copy">
+            <div class="featured-project-kicker">Public Health LLM</div>
+            <h3 class="featured-project-title">DDS Chatbot</h3>
+            <p class="featured-project-desc">Guardrailed Thai disease-surveillance LLM assistant for DDC, using tool-calling over an aggregate, PII-free data mart.</p>
+            <div class="project-tags"><span class="project-tag">Live Demo</span><span class="project-tag">LLM Tool Calling</span><span class="project-tag">Public Health</span><span class="project-tag">PDPA-Aligned</span></div>
+            </div>
+          </a>
+        </article>
+        <article class="featured-project-slide" aria-hidden="true">
           <a href="https://altit.app/" target="_blank" class="featured-project-media-link" rel="noopener noreferrer">
             <div class="featured-project-media">
-              <img src="project/altit1-thumb.webp" alt="Altitude Itinerary Analyzer interface preview" loading="eager" width="1400" height="840">
+              <img src="project/altit1-thumb.webp" alt="Altitude Itinerary Analyzer interface preview" loading="lazy" width="1400" height="840">
             </div>
           </a>
           <a href="https://altit.app/" target="_blank" class="featured-project-copy-link" rel="noopener noreferrer">
@@ -2868,14 +2915,15 @@
           </a>
         </article>
         <div class="carousel-dots" aria-label="Featured project selector">
-          <button type="button" class="carousel-dot" data-project-slide="0" aria-label="Show Altitude Itinerary Analyzer" aria-current="true"></button>
-          <button type="button" class="carousel-dot" data-project-slide="1" aria-label="Show Yellow Fever Vaccine and Malaria Prevention Dashboard" aria-current="false"></button>
-          <button type="button" class="carousel-dot" data-project-slide="2" aria-label="Show Thai HospSearch" aria-current="false"></button>
-          <button type="button" class="carousel-dot" data-project-slide="3" aria-label="Show Hajj Menstrual Delay Planner" aria-current="false"></button>
-          <button type="button" class="carousel-dot" data-project-slide="4" aria-label="Show PM2.5 and Mental Health Dynamics" aria-current="false"></button>
-          <button type="button" class="carousel-dot" data-project-slide="5" aria-label="Show Cirrhosis Survival Prediction" aria-current="false"></button>
-          <button type="button" class="carousel-dot" data-project-slide="6" aria-label="Show Thai Numeral Converter" aria-current="false"></button>
-          <button type="button" class="carousel-dot" data-project-slide="7" aria-label="Show BNK/CGM48 4th General Election Predictive Analysis" aria-current="false"></button>
+          <button type="button" class="carousel-dot" data-project-slide="0" aria-label="Show DDS Chatbot" aria-current="true"></button>
+          <button type="button" class="carousel-dot" data-project-slide="1" aria-label="Show Altitude Itinerary Analyzer" aria-current="false"></button>
+          <button type="button" class="carousel-dot" data-project-slide="2" aria-label="Show Yellow Fever Vaccine and Malaria Prevention Dashboard" aria-current="false"></button>
+          <button type="button" class="carousel-dot" data-project-slide="3" aria-label="Show Thai HospSearch" aria-current="false"></button>
+          <button type="button" class="carousel-dot" data-project-slide="4" aria-label="Show Hajj Menstrual Delay Planner" aria-current="false"></button>
+          <button type="button" class="carousel-dot" data-project-slide="5" aria-label="Show PM2.5 and Mental Health Dynamics" aria-current="false"></button>
+          <button type="button" class="carousel-dot" data-project-slide="6" aria-label="Show Cirrhosis Survival Prediction" aria-current="false"></button>
+          <button type="button" class="carousel-dot" data-project-slide="7" aria-label="Show Thai Numeral Converter" aria-current="false"></button>
+          <button type="button" class="carousel-dot" data-project-slide="8" aria-label="Show BNK/CGM48 4th General Election Predictive Analysis" aria-current="false"></button>
         </div>
       </div>
     </div>
@@ -3331,6 +3379,7 @@
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
               vk.poonyakanok@gmail.com
             </a>
+            <p class="contact-formal-review">For formal review: <a href="cv.pdf" target="_blank" rel="noopener noreferrer">CV</a> · <a href="resume.pdf" target="_blank" rel="noopener noreferrer">Resume</a></p>
           </div>
         </div>
         <div class="fade-in delay-2">
