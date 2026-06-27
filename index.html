@@ -188,6 +188,93 @@
             }
           }
         ]
+      },
+      {
+        "@type": "ItemList",
+        "@id": "https://vpoonyak.github.io/#training-evidence",
+        "name": "Training Evidence",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "item": {
+              "@type": "CreativeWork",
+              "name": "Parasite Eggs",
+              "description": "Cascaded parasite egg detector/classifier for noisy stool microscopy. Reached a 0.24657 Kaggle score through COCO-to-YOLO conversion, a YOLOv8 hunter, gold-label validation, SAHI-style high-resolution inference, and a DINOv2 specialist head with morphology and background calibration.",
+              "keywords": "medical image detection, parasite egg classification, YOLOv8, DINOv2, microscopy"
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "item": {
+              "@type": "CreativeWork",
+              "name": "Demand Forecasting at Scale",
+              "description": "Leakage-aware demand forecasting pipeline for the Coffee Chain Hackathon using time-series feature engineering, model blending, and robust validation across 30 on-site teams from 6 housing teams.",
+              "keywords": "demand forecasting, time series, model blending, leakage-aware validation"
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "item": {
+              "@type": "CreativeWork",
+              "name": "Edge-AI for Intelligence Transport System",
+              "url": "https://thescamperss6.com/projects/edge-ai-its-hackathon-2026",
+              "description": "Edge CCTV vehicle analytics pipeline for 10 traffic cameras at NT Chaeng Watthana using YOLO/ONNX Runtime on Jetson Nano boards, ROI tuning, tracking, vehicle type/color metadata, SQLite event logs, and exportable CSV answers.",
+              "keywords": "edge AI, computer vision, traffic analytics, Jetson Nano, ONNX Runtime"
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 4,
+            "item": {
+              "@type": "CreativeWork",
+              "name": "WellSense AIoT and System Product Hackathon",
+              "description": "Wearable running-form analysis system combining Arduino Nano 33 BLE Sense IMU capture, Arduino UNO Q model inference, compact BLE telemetry, and a mobile React dashboard for posture, form score, alerts, and run summaries.",
+              "keywords": "AIoT, wearable sensor, BLE telemetry, running form analysis, mobile dashboard"
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 5,
+            "item": {
+              "@type": "Course",
+              "name": "Introductory Course in Epidemiology and Biostatistics",
+              "description": "FETP-led intensive course organized by the Department of Disease Control, MOPH, with applied epidemiology and biostatistics training for public health field practice.",
+              "provider": {
+                "@type": "Organization",
+                "name": "Department of Disease Control, Ministry of Public Health"
+              }
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 6,
+            "item": {
+              "@type": "Course",
+              "name": "Diploma in Clinical Epidemiology",
+              "description": "Program of study in clinical epidemiology from the Center for Clinical Epidemiology and Clinical Statistics, Faculty of Medicine, Chiang Mai University.",
+              "provider": {
+                "@type": "CollegeOrUniversity",
+                "name": "Chiang Mai University"
+              }
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 7,
+            "item": {
+              "@type": "Course",
+              "name": "Diploma in Clinical Statistics",
+              "description": "Program of study in clinical statistics from the Center for Clinical Epidemiology and Clinical Statistics, Faculty of Medicine, Chiang Mai University.",
+              "provider": {
+                "@type": "CollegeOrUniversity",
+                "name": "Chiang Mai University"
+              }
+            }
+          }
+        ]
       }
     ]
   }
@@ -1104,9 +1191,13 @@
        ═══════════════════════════════════════════════ */
     .featured-project-carousel {
       margin-bottom: 2rem;
-      border-top: 1px solid var(--border-light);
-      border-bottom: 1px solid var(--border-light);
-      padding: 1.5rem 0;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+      background:
+        linear-gradient(135deg, rgba(var(--accent-rgb), 0.08), transparent 42%),
+        var(--bg-card);
+      box-shadow: var(--shadow-card);
     }
 
     .featured-project-header {
@@ -1152,6 +1243,7 @@
       align-items: center;
       color: inherit;
       text-decoration: none;
+      min-width: 0;
     }
 
     .featured-project-slide.active {
@@ -1260,6 +1352,7 @@
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 1.25rem;
+        padding: 1.25rem;
       }
 
       .featured-project-header {
@@ -1278,6 +1371,18 @@
         flex-direction: column;
         align-items: stretch;
         gap: 0.85rem;
+        min-height: 100%;
+        padding: 0.85rem;
+        border: 1px solid var(--border-light);
+        border-radius: 8px;
+        background: color-mix(in srgb, var(--bg-card) 82%, var(--bg) 18%);
+        transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+      }
+
+      .featured-project-slide:hover {
+        transform: translateY(-2px);
+        border-color: var(--accent-border);
+        background: var(--bg-card-hover);
       }
 
       .featured-project-slide:nth-of-type(n+5) {
@@ -1295,13 +1400,14 @@
     }
 
     @media (max-width: 768px) {
-      .featured-project-carousel { padding: 1.25rem 0; }
+      .featured-project-carousel { padding: 1rem; }
       .featured-project-header { align-items: flex-start; margin-bottom: 1rem; }
       .featured-project-header .featured-project-controls,
       .featured-project-carousel > .carousel-dots { display: none; }
       .featured-project-slide {
         grid-template-columns: 1fr;
         gap: 0;
+        min-width: 0;
       }
       .featured-project-slide.slide-from-next {
         animation: projectSlideFromNext 0.28s ease;
@@ -1310,20 +1416,30 @@
         animation: projectSlideFromPrev 0.28s ease;
       }
       .featured-project-media { aspect-ratio: 4 / 3; }
+      .featured-project-copy { padding: 0; }
       .featured-project-mobile-nav {
         display: flex;
         align-items: center;
         justify-content: space-between;
         gap: 0.75rem;
         margin: 0.8rem 0 1rem;
+        min-width: 0;
       }
       .featured-project-mobile-nav .carousel-dots {
         flex: 1;
         justify-content: center;
         margin-top: 0;
+        min-width: 0;
+        gap: 3px;
       }
       .featured-project-mobile-nav .carousel-btn {
         flex: 0 0 auto;
+      }
+      .featured-project-mobile-nav .carousel-dot {
+        width: 12px;
+      }
+      .featured-project-mobile-nav .carousel-dot[aria-current="true"] {
+        width: 22px;
       }
     }
 
@@ -1793,6 +1909,18 @@
       font-size: 0.75rem;
       line-height: 1.5;
       max-width: 48rem;
+    }
+
+    .training-detail {
+      width: 100%;
+      margin-top: 0.45rem;
+      padding: 0.6rem 0.75rem;
+      border-color: var(--border-light);
+      background: color-mix(in srgb, var(--bg-card) 82%, var(--bg) 18%);
+    }
+
+    .training-detail summary {
+      font-size: 0.6875rem;
     }
 
     .training-detail-list {
@@ -2988,7 +3116,7 @@
             <span class="training-status-chip">Advanced AI Level 2 Participant</span>
           </div>
           <div class="training-meta">AIAT · Apr-Jun 2026 · Selected 150 from 10,000+ applicants</div>
-          <p class="training-summary">Condensed proof from AIAT's national applied AI program, with certificates, notebooks, hackathon placements, and method notes visible for a fast first scan.</p>
+          <p class="training-summary">Selected proof from AIAT's national applied AI program: credential, ranks, notebooks, and on-site hackathon results.</p>
           <div class="training-rows">
             <div class="training-row">
               <div class="training-row-label">Housing Team</div>
@@ -3003,37 +3131,42 @@
               <div class="training-row-content">
                 <div class="training-row-entry stacked">
                   <span class="training-row-entry-main"><span class="training-row-item">AI Practitioner</span><span class="training-row-meta">Level 1 Foundation AI (Theory) + Minihacks</span><a href="https://mysuperai.aiat.or.th/verify/3893dd94-0ff5-464f-b26f-f8f44e655bdf" target="_blank" class="cert-verify" rel="noopener noreferrer">Verify</a></span>
-                  <span class="training-row-entry"><span class="training-row-item">Foundation AI (Theory)</span><span class="training-row-meta">Apr 2026</span><a href="https://assessment.aiat.or.th/certificate/2a541cbb-331d-430f-8dcc-2a88f134a6db" target="_blank" class="cert-verify" rel="noopener noreferrer">Verify</a></span>
-                  <span class="training-row-entry"><span class="training-row-item">From Data to Insight</span><a href="https://mysuperai.aiat.or.th/verify/610147be-1f00-431d-a8ae-e67f0387bc37" target="_blank" class="cert-verify" rel="noopener noreferrer">Verify</a><a href="https://colab.research.google.com/drive/1cfiNwP8mDx0KV8YIdXr54ozYTCy0AagG?usp=sharing" target="_blank" class="cert-verify" rel="noopener noreferrer">Colab</a></span>
-                  <span class="training-row-entry"><span class="training-row-item">Agentic Pipeline Hackathon: 2026 Thai Election OCR Challenge</span><span class="training-rank">Rank 102/571</span><a href="https://mysuperai.aiat.or.th/verify/7e3e221b-c6ef-4492-921f-6f520d4c82e5" target="_blank" class="cert-verify" rel="noopener noreferrer">Verify</a><a href="https://colab.research.google.com/drive/1CRtQ7Mgcsexlp62pRqHMsBhxjW6MSKj-?usp=sharing" target="_blank" class="cert-verify" rel="noopener noreferrer">Colab</a><a href="https://www.kaggle.com/competitions/super-ai-engineer-season-6-ocr-2569" target="_blank" class="cert-verify" rel="noopener noreferrer">Kaggle</a></span>
-                  <span class="training-row-entry"><span class="training-row-item">FahMai RAG Hackathon</span><span class="training-rank">Rank 132/660</span><a href="https://mysuperai.aiat.or.th/verify/bed316aa-36dc-419d-b364-84d0c536e941" target="_blank" class="cert-verify" rel="noopener noreferrer">Verify</a><a href="https://colab.research.google.com/drive/1WwJFtj6d3TClKFQmByqRbkIBYG12pJAO?usp=sharing" target="_blank" class="cert-verify" rel="noopener noreferrer">Colab</a><a href="https://www.kaggle.com/competitions/super-ai-engineer-s-6-fah-mai-rag-challenge-level-1" target="_blank" class="cert-verify" rel="noopener noreferrer">Kaggle</a></span>
+                  <details class="training-detail">
+                    <summary>Level 1 detail</summary>
+                    <div class="training-detail-list">
+                      <span class="training-row-entry"><span class="training-row-item">Foundation AI (Theory)</span><span class="training-row-meta">Apr 2026</span><a href="https://assessment.aiat.or.th/certificate/2a541cbb-331d-430f-8dcc-2a88f134a6db" target="_blank" class="cert-verify" rel="noopener noreferrer">Verify</a></span>
+                      <span class="training-row-entry"><span class="training-row-item">From Data to Insight</span><a href="https://mysuperai.aiat.or.th/verify/610147be-1f00-431d-a8ae-e67f0387bc37" target="_blank" class="cert-verify" rel="noopener noreferrer">Verify</a><a href="https://colab.research.google.com/drive/1cfiNwP8mDx0KV8YIdXr54ozYTCy0AagG?usp=sharing" target="_blank" class="cert-verify" rel="noopener noreferrer">Colab</a></span>
+                      <span class="training-row-entry"><span class="training-row-item">Thai Election OCR Challenge</span><span class="training-rank">Rank 102/571</span><a href="https://mysuperai.aiat.or.th/verify/7e3e221b-c6ef-4492-921f-6f520d4c82e5" target="_blank" class="cert-verify" rel="noopener noreferrer">Verify</a><a href="https://colab.research.google.com/drive/1CRtQ7Mgcsexlp62pRqHMsBhxjW6MSKj-?usp=sharing" target="_blank" class="cert-verify" rel="noopener noreferrer">Colab</a><a href="https://www.kaggle.com/competitions/super-ai-engineer-season-6-ocr-2569" target="_blank" class="cert-verify" rel="noopener noreferrer">Kaggle</a></span>
+                      <span class="training-row-entry"><span class="training-row-item">FahMai RAG Hackathon</span><span class="training-rank">Rank 132/660</span><a href="https://mysuperai.aiat.or.th/verify/bed316aa-36dc-419d-b364-84d0c536e941" target="_blank" class="cert-verify" rel="noopener noreferrer">Verify</a><a href="https://colab.research.google.com/drive/1WwJFtj6d3TClKFQmByqRbkIBYG12pJAO?usp=sharing" target="_blank" class="cert-verify" rel="noopener noreferrer">Colab</a><a href="https://www.kaggle.com/competitions/super-ai-engineer-s-6-fah-mai-rag-challenge-level-1" target="_blank" class="cert-verify" rel="noopener noreferrer">Kaggle</a></span>
+                    </div>
+                  </details>
                 </div>
               </div>
             </div>
             <div class="training-row">
               <div class="training-row-label">Level 2 Online</div>
               <div class="training-row-content">
-                <span class="training-row-entry stacked">
+                <div class="training-row-entry stacked">
                   <span class="training-row-entry-main"><span class="training-row-item">Parasite Eggs</span><span class="training-rank">Rank 16/166</span><a href="https://www.kaggle.com/competitions/super-ai-engineer-season-6-parasite-eggs/leaderboard" target="_blank" class="cert-verify" rel="noopener noreferrer">Kaggle</a></span>
-                  <span class="training-row-note">Built a cascaded parasite egg detector/classifier for noisy stool microscopy, reaching a 0.24657 Kaggle score through COCO-to-YOLO conversion, a YOLOv8 hunter, gold-label validation, SAHI-style high-resolution inference, and a DINOv2 specialist head with morphology and background calibration for debris, rulers, and microscope edges.</span>
-                </span>
+                  <span class="training-row-note">Parasite egg detection pipeline for noisy stool microscopy.</span>
+                </div>
               </div>
             </div>
             <div class="training-row">
               <div class="training-row-label">Level 2 On-site</div>
               <div class="training-row-content">
-                <span class="training-row-entry stacked">
+                <div class="training-row-entry stacked">
                   <span class="training-row-entry-main"><span class="training-row-item">Demand Forecasting at Scale</span><span class="training-rank">Private Kaggle rank #1 · 2nd runner-up overall</span></span>
-                  <span class="training-row-note">Built a leakage-aware demand forecasting pipeline for the Coffee Chain Hackathon using time-series feature engineering, model blending, and robust validation across 30 on-site teams from 6 housing teams.</span>
-                </span>
-                <span class="training-row-entry stacked">
+                  <span class="training-row-note">Leakage-aware demand forecasting pipeline for the Coffee Chain Hackathon.</span>
+                </div>
+                <div class="training-row-entry stacked">
                   <span class="training-row-entry-main"><span class="training-row-item">Edge-AI for Intelligence Transport System</span><span class="training-rank">Co-honorable mention</span><a href="https://thescamperss6.com/projects/edge-ai-its-hackathon-2026" target="_blank" class="cert-verify" rel="noopener noreferrer">Project</a></span>
-                  <span class="training-row-note">Helped build an edge CCTV vehicle analytics pipeline for 10 cameras at NT Chaeng Watthana, using YOLO/ONNX Runtime on Jetson Nano boards, ROI tuning, tracking, vehicle type/color metadata, SQLite event logs, and exportable CSV answers.</span>
-                </span>
-                <span class="training-row-entry stacked">
+                  <span class="training-row-note">Edge CCTV vehicle analytics pipeline for 10 traffic cameras.</span>
+                </div>
+                <div class="training-row-entry stacked">
                   <span class="training-row-entry-main"><span class="training-row-item">WellSense AIoT &amp; System Product Hackathon</span><span class="training-rank">Academic Popular Vote</span></span>
-                  <span class="training-row-note">Developed a wearable running-form analysis system with Arduino Nano 33 BLE Sense IMU capture, Arduino UNO Q model inference, compact BLE telemetry, and a mobile React dashboard for live posture, form score, alerts, and run summaries.</span>
-                </span>
+                  <span class="training-row-note">Wearable running-form analysis system with live mobile feedback.</span>
+                </div>
               </div>
             </div>
           </div>
@@ -3051,33 +3184,30 @@
             <span class="training-status-chip">Epidemiology &amp; Biostatistics</span>
           </div>
           <div class="training-meta">DDC/MOPH · Chiang Mai University · 2022-2024</div>
-          <p class="training-summary">Applied epidemiology, clinical epidemiology, and clinical statistics training supporting public health field practice and clinical research methods.</p>
+          <p class="training-summary">Applied epidemiology and clinical statistics training supporting public health field practice and research methods.</p>
           <div class="training-rows">
             <div class="training-row">
               <div class="training-row-label">Field Epidemiology</div>
               <div class="training-row-content">
-                <span class="training-row-entry stacked">
+                <div class="training-row-entry stacked">
                   <span class="training-row-entry-main"><span class="training-row-item">Introductory Course in Epidemiology and Biostatistics</span><span class="training-row-meta">Jun 10-Jul 5, 2024 · DDC, MOPH</span><a href="cert/1721190140618.jpeg" target="_blank" class="cert-verify" rel="noopener noreferrer">View</a></span>
-                  <span class="training-row-note">FETP-led intensive course organized by the Department of Disease Control, MOPH, with applied epidemiology and biostatistics training for public health field practice.</span>
-                </span>
+                </div>
               </div>
             </div>
             <div class="training-row">
               <div class="training-row-label">Clinical Epidemiology</div>
               <div class="training-row-content">
-                <span class="training-row-entry stacked">
+                <div class="training-row-entry stacked">
                   <span class="training-row-entry-main"><span class="training-row-item">Diploma in Clinical Epidemiology</span><span class="training-row-meta">Sep 10-Dec 18, 2022 · Chiang Mai University</span><a href="cert/1696631862918.jpeg" target="_blank" class="cert-verify" rel="noopener noreferrer">View</a></span>
-                  <span class="training-row-note">Program of study in clinical epidemiology from the Center for Clinical Epidemiology &amp; Clinical Statistics, Faculty of Medicine, Chiang Mai University.</span>
-                </span>
+                </div>
               </div>
             </div>
             <div class="training-row">
               <div class="training-row-label">Clinical Statistics</div>
               <div class="training-row-content">
-                <span class="training-row-entry stacked">
+                <div class="training-row-entry stacked">
                   <span class="training-row-entry-main"><span class="training-row-item">Diploma in Clinical Statistics</span><span class="training-row-meta">Feb 5-May 22, 2022 · Chiang Mai University</span><a href="cert/1696631825168.jpeg" target="_blank" class="cert-verify" rel="noopener noreferrer">View</a></span>
-                  <span class="training-row-note">Program of study in clinical statistics from the Center for Clinical Epidemiology &amp; Clinical Statistics, Faculty of Medicine, Chiang Mai University.</span>
-                </span>
+                </div>
               </div>
             </div>
           </div>
