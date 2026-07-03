@@ -741,6 +741,8 @@
 
     @media (max-width: 768px) { .hero { padding-top: 100px; min-height: 60vh; } }
 
+    .hero > * { position: relative; z-index: 1; }
+
     .hero-name { margin-bottom: 1.5rem; }
 
     .hero-name .t-hero {
@@ -817,6 +819,44 @@
     @keyframes scrollPulse {
       0%, 100% { opacity: 1; }
       50% { opacity: 0.3; }
+    }
+
+    /* ═══════════════════════════════════════════════
+       HERO GLOBE
+       ═══════════════════════════════════════════════ */
+    .hero-globe {
+      position: absolute;
+      z-index: 0;
+      top: 50%;
+      right: max(24px, 3vw);
+      transform: translateY(-50%);
+      width: min(42vw, 520px);
+      aspect-ratio: 1;
+      -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 32%);
+      mask-image: linear-gradient(to right, transparent 0%, #000 32%);
+    }
+
+    .hero-globe canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      touch-action: pan-y;
+      cursor: grab;
+    }
+
+    .hero-globe canvas.dragging { cursor: grabbing; }
+
+    @media (max-width: 768px) {
+      .hero-globe {
+        left: 50%;
+        right: auto;
+        transform: translate(-50%, -50%);
+        width: min(88vw, 400px);
+        opacity: 0.35;
+        pointer-events: none;
+        -webkit-mask-image: none;
+        mask-image: none;
+      }
     }
 
     /* ═══════════════════════════════════════════════
@@ -2602,6 +2642,7 @@
 
   <!-- ═══════════════════ TOP ═══════════════════ -->
   <section class="hero container-grid" id="top">
+    <div class="hero-globe" aria-hidden="true"><canvas id="heroGlobe"></canvas></div>
     <h1 class="hero-name">
       <span class="t-hero name-line"><span class="accent-char">V</span>itchakorn</span>
       <span class="t-hero name-line">Poonyakanok</span>
@@ -3918,6 +3959,177 @@
     }
     updateTime();
     setInterval(updateTime, 1000);
+
+    // ── Hero Globe ──
+    // Dotted world globe on a 2D canvas: points sampled on a sphere against an
+    // embedded 240x120 equirectangular land mask (1 bit/pixel, base64), rotated
+    // and orthographically projected each frame. No libraries.
+    (function () {
+      var canvas = document.getElementById('heroGlobe');
+      if (!canvas || !canvas.getContext) return;
+      var ctx = canvas.getContext('2d');
+      if (!ctx) return;
+
+      var MASK_W = 240, MASK_H = 120;
+      var MASK_B64 = '///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////8AP//////////////////////////////////+AAAAAD+f//////////////////////////////gAP8AAAAAAAH////////////////////wf/////AAAAAAAAAAAAD////////////////////gAH////AAAAAAAAAAAA////////////////////5AAB///+AAAAAAAAQAAH//////////5Bh//////+/wAB///4AAAAAAABgDA///////////wAEAAAJ//8//AAP//4AAAAAAABgHf///////////AB//wPc/+/v/wAP//wAAAA/8AABHf///////////wD/////+w//P4Af/wAAAAD//wD//v////////////A////////+B/A//gAAAAH//5///f///////////HH////7///+D9Af4AH4AAPx+H///////////////AA////////PA+APwADAAAf3////////////////+AD///////8AIIAHwAAAAD/P////////////////8AD/9/////4APgAAgAAAAH/P7/////////////xfgAA/AD////4APzAAAAAAAD/Df////////////5hgAAAGAA////8AP/gAAAAAMAOD////////////8AHgAAAAAAf////gH/gAAAAAOAuP////////////wAPgAAAAAAH////+P/4AAAAAyA5f/////////f//gAOAAAAAAAD/////P/+AAAAB3j//////////////+AMAAAAAAAB///////+AAAAAHv//////////////9AIAAAAAAAB//////9iAAAAAA///////////////9AAAAAAAAAAf///v/+HAAAAAH///////////////4AAAAAAAAAAf//+H/+AAAAAAD///////////////4AAAAAAAAAAP///0//gAAAAAB///zf5/////////wAAAAAAAAAAf///2/yAAAAAAB/z/gPz/////////hAAAAAAAAAAf///3/gAAAAAA/wd/gHx////////+DAAAAAAAAAAf/////AAAAAAA/wufnH4////////wAAAAAAAAAAAP////8AAAAAAA/Bjd//5///////zgGAAAAAAAAAAP////8AAAAAAA/ACM//4///////hwEAAAAAAAAAAH////4AAAAAAAefkM//8///////4wcAAAAAAAAAAH////4AAAAAAAP/gAA/////////wx8AAAAAAAAAAD////wAAAAAAAf/wAB/////////wHgAAAAAAAAAAA////AAAAAAAB//+eB/////////4EAAAAAAAAAAAA////AAAAAAAB//////////////4AAAAAAAAAAAAAX/5BAAAAAAAB//////z///////4AAAAAAAAAAAAAL/gBgAAAAAAH//////7///////4AAAAAAAAAAAAAF/gBgAAAAAAP////+/8P//////wAAAAAAAAAAAAAE/gAAAAAAAAP/////f8wP/////gAAAAAAAAAAAAAAfgAAAAAAAAf/////f/4D/////IAAAAAAAAAAAAAAPgA4AAAAAAf/////v/8D//f/4AAAAAAAAAAAAAAAPwwMAAAAAAf/////v/4A/8P+AAAAAAAAAAAAAAAAH5wBwAAAAAf/////3/wAf4H+wAAAAAAAAAAAAAAAB/gAAAAAAAf/////z/gAfgH+AMAAAAAAAAAAAAAAAX8AAAAAAAf/////7+AAfAB/AMAAAAAAAAAAAAAAAD+AAAAAAAf//////8AAfAB/gMAAAAAAAAAAAAAAAAeAAAAAAAf//////gAAPAA/gEAAAAAAAAAAAAAAAAOBwAAAAAP/////+cAAOAAvgCAAAAAAAAAAAAAAAAHH/gAAAAH//////8AAGAAiAAAAAAAAAAAAAAAAAABv/4AAAAH//////8AABgAgADAAAAAAAAAAAAAAAAAP/8AAAAD//////4AABAAQADAAAAAAAAAAAAAAAAAP//gAAAA/H////4AAAACYBgAAAAAAAAAAAAAAAAAP//wAAAAAA////wAAAADYDgAAAAAAAAAAAAAAAAAP//4AAAAAA////gAAAAB4PgAAAAAAAAAAAAAAAAAf//4AAAAAA///+AAAAAA4fkAAAAAAAAAAAAAAAAAf//+AAAAAA///8AAAAAAYfICAAAAAAAAAAAAAAAA////gAAAAA///4AAAAAAefcDYAAAAAAAAAAAAAAA////+AAAAAf//4AAAAAAOCMB/AAAAAAAAAAAAAAA/////gAAAAP//wAAAAAAGAIAfgAAAAAAAAAAAAAAf////gAAAAP//wAAAAAABIAAPwAAAAAAAAAAAAAAf////gAAAAP//wAAAAAAA8AAPYAAAAAAAAAAAAAAP////gAAAAH//4AAAAAAAABAAIAAAAAAAAAAAAAAP///+AAAAAH//4AAAAAAAAAAAAAAAAAAAAAAAAAAH///+AAAAAP//4EAAAAAAAAHjAAAAAAAAAAAAAAAH///8AAAAAP//4MAAAAAAAAvjgAAAAAAAAAAAAAAD///8AAAAAP//48AAAAAAAB/jgAAAAAAAAAAAAAAA///8AAAAAf//x4AAAAAAAD//gAAAAAAAAAAAAAAAf//8AAAAAP//B4AAAAAAAH//wAAAAAAAAAAAAAAAf//4AAAAAP/+B4AAAAAAA///4AAAAAAAAAAAAAAAf//4AAAAAH//BwAAAAAAD///8AAAAAAAAAAAAAAAf//AAAAAAH//BwAAAAAAD///+AAAAAAAAAAAAAAAf/8AAAAAAH/+BwAAAAAAD////AAAAAAAAAAAAAAAf/8AAAAAAD/8AAAAAAAAD////AAAAAAAAAAAAAAA//4AAAAAAD/8AAAAAAAAD////AAAAAAAAAAAAAAA//4AAAAAAB/4AAAAAAAAD////AAAAAAAAAAAAAAA//wAAAAAAA/4AAAAAAAAB////AAAAAAAAAAAAAAA//gAAAAAAA/wAAAAAAAAB/z//AAAAAAAAAAAAAAA//AAAAAAAA+AAAAAAAAAB0A/+AAAAAAAAAAAAAAA/8AAAAAAAAAAAAAAAAAAAAAP8AAAAAAAAAAAAAAB/8AAAAAAAAAAAAAAAAAAAAAH8AAAAAAAAAAAAAAB/4AAAAAAAAAAAAAAAAAAAAABwAAMAAAAAAAAAAAB/gAAAAAAAAAAAAAAAAAAAAAAAAAMAAAAAAAAAAAB+AAAAAAAAAAAAAAAAAAAAAAAQAAQAAAAAAAAAAAA+AAAAAAAAAAAAAAAAAAAAAAAQAAgAAAAAAAAAAAB8AAAAAAAAAAAAAAAAAAAAAAAAADAAAAAAAAAAAAB4AAAAAAAAAAAAAAAAAAAAAAAAADAAAAAAAAAAAAB8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAIAAAf/8AAAAAAAAAAIAAAAAAAcAAAW/+/+HwwD/4/OB////4fP8OF/////z/x/8MD/7h48///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////3////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////';
+
+      var maskBin = atob(MASK_B64);
+      function isLand(lonDeg, latDeg) {
+        var x = Math.min(MASK_W - 1, Math.floor((lonDeg + 180) / 360 * MASK_W));
+        var y = Math.min(MASK_H - 1, Math.floor((90 - latDeg) / 180 * MASK_H));
+        var i = y * MASK_W + x;
+        return (maskBin.charCodeAt(i >> 3) >> (7 - (i & 7))) & 1;
+      }
+
+      var DOT_COUNT = 1300;
+      var dots = [];
+      var guard = 0;
+      while (dots.length < DOT_COUNT && guard++ < DOT_COUNT * 500) {
+        var lon = Math.random() * 360 - 180;
+        var lat = Math.asin(Math.random() * 2 - 1) * 180 / Math.PI;
+        if (isLand(lon, lat)) {
+          var latR = lat * Math.PI / 180;
+          dots.push({ cosLat: Math.cos(latR), sinLat: Math.sin(latR), lon: lon * Math.PI / 180 });
+        }
+      }
+
+      var TILT = -0.3;
+      var cosT = Math.cos(TILT), sinT = Math.sin(TILT);
+
+      var accentRGB = '47, 129, 247';
+      function refreshGlobeColors() {
+        var v = getComputedStyle(htmlEl).getPropertyValue('--accent-rgb').trim();
+        if (v) accentRGB = v;
+      }
+      refreshGlobeColors();
+      new MutationObserver(refreshGlobeColors).observe(htmlEl, { attributes: true, attributeFilter: ['data-theme'] });
+
+      var dpr = 1, cw = 0, ch = 0;
+      function resizeGlobe() {
+        var rect = canvas.parentElement.getBoundingClientRect();
+        dpr = Math.min(window.devicePixelRatio || 1, 2);
+        var w = Math.max(1, Math.round(rect.width * dpr));
+        var h = Math.max(1, Math.round(rect.height * dpr));
+        if (w !== cw || h !== ch) {
+          cw = w; ch = h;
+          canvas.width = cw;
+          canvas.height = ch;
+          drawGlobe();
+        }
+      }
+
+      var AUTO_SPEED = 0.00012; // rad per ms
+      var phi = 0.9, extraVel = 0;
+      var dragging = false, lastX = 0, lastMoveT = 0;
+
+      function drawGlobe() {
+        ctx.clearRect(0, 0, cw, ch);
+        var R = Math.min(cw, ch) * 0.46;
+        var cx = cw / 2, cy = ch / 2;
+        var dotBase = Math.max(dpr * 0.8, R * 0.0085);
+        for (var i = 0; i < dots.length; i++) {
+          var d = dots[i];
+          var a = d.lon + phi;
+          var x0 = d.cosLat * Math.sin(a);
+          var z0 = d.cosLat * Math.cos(a);
+          var y1 = d.sinLat * cosT + z0 * sinT;
+          var z1 = z0 * cosT - d.sinLat * sinT;
+          var depth = (z1 + 1) / 2;
+          if (z1 > 0) {
+            ctx.fillStyle = 'rgba(' + accentRGB + ',' + (0.22 + 0.68 * depth).toFixed(3) + ')';
+          } else {
+            ctx.fillStyle = 'rgba(' + accentRGB + ',0.07)';
+          }
+          var s = dotBase * (0.55 + 0.75 * depth);
+          ctx.fillRect(cx + x0 * R - s, cy - y1 * R - s, s * 2, s * 2);
+        }
+      }
+
+      var reduceMotionGlobe = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var running = false, rafId = 0, lastFrameT = 0, inView = true;
+
+      function globeTick(now) {
+        rafId = 0;
+        var dt = Math.min(48, Math.max(1, now - lastFrameT));
+        lastFrameT = now;
+        if (!dragging) {
+          phi += (reduceMotionGlobe ? 0 : AUTO_SPEED * dt) + extraVel * dt;
+          extraVel *= Math.pow(0.94, dt / 16.7);
+          if (Math.abs(extraVel) < 0.000005) extraVel = 0;
+        }
+        drawGlobe();
+        var needsMotion = !reduceMotionGlobe || dragging || extraVel !== 0;
+        if (running && inView && !document.hidden && needsMotion) {
+          rafId = requestAnimationFrame(globeTick);
+        } else {
+          running = false;
+        }
+      }
+
+      function startGlobe() {
+        if (document.hidden || !inView) return;
+        if (reduceMotionGlobe && !dragging && extraVel === 0) { drawGlobe(); return; }
+        if (running) return;
+        running = true;
+        lastFrameT = performance.now();
+        rafId = requestAnimationFrame(globeTick);
+      }
+
+      function stopGlobe() {
+        if (rafId) cancelAnimationFrame(rafId);
+        rafId = 0;
+        running = false;
+      }
+
+      canvas.addEventListener('pointerdown', function (e) {
+        dragging = true;
+        lastX = e.clientX;
+        lastMoveT = performance.now();
+        canvas.classList.add('dragging');
+        if (canvas.setPointerCapture) canvas.setPointerCapture(e.pointerId);
+        startGlobe();
+      });
+
+      canvas.addEventListener('pointermove', function (e) {
+        if (!dragging) return;
+        var now = performance.now();
+        var rect = canvas.getBoundingClientRect();
+        var dPhi = (e.clientX - lastX) / Math.max(1, rect.width) * 2.4;
+        phi += dPhi;
+        extraVel = Math.max(-0.004, Math.min(0.004, dPhi / Math.max(1, now - lastMoveT)));
+        lastX = e.clientX;
+        lastMoveT = now;
+      });
+
+      function endDrag() {
+        if (!dragging) return;
+        dragging = false;
+        canvas.classList.remove('dragging');
+        startGlobe();
+      }
+      canvas.addEventListener('pointerup', endDrag);
+      canvas.addEventListener('pointercancel', endDrag);
+
+      document.addEventListener('visibilitychange', function () {
+        if (document.hidden) stopGlobe(); else startGlobe();
+      });
+
+      if ('IntersectionObserver' in window) {
+        new IntersectionObserver(function (entries) {
+          inView = entries[0].isIntersecting;
+          if (inView) startGlobe(); else stopGlobe();
+        }).observe(canvas.parentElement);
+      }
+
+      if ('ResizeObserver' in window) {
+        new ResizeObserver(resizeGlobe).observe(canvas.parentElement);
+      } else {
+        window.addEventListener('resize', resizeGlobe);
+      }
+
+      resizeGlobe();
+      startGlobe();
+    })();
   </script>
 </body>
 </html>
