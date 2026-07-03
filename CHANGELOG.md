@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2026-07-03] - Live Data Overlays and Section Scroll Identity
+
+### Added
+- **Live Surveillance Chart**: The *Data Analysis* canvas state now streams weekly observations into the chart, tracks them with a rolling-average line, and projects a dashed forecast with a widening uncertainty cone past a "now" cursor; each loop generates a new outbreak curve.
+- **Roaming Inference Signal**: The *AI Engineering* neural network now routes its pulse along a different random input→hidden→output path each cycle, glowing the traversed edges and nodes.
+- **Per-Section Scroll Identity**: Scrolling sets `data-active-section` on `<body>`, driving barely-there per-section accent tints on the big section numbers, one ghosted CSS motif per section (rings, grids, ruled lines, dot matrix), a slide-in reveal variant for section headers, and a 2px scroll-progress bar under the fixed navigation.
+
+### Changed
+- **Chart Dot Targets**: The particle field now forms only the axes, gridlines, and a ghost of last season's curve; the live series is drawn as an overlay for smooth motion.
+
 ## [2026-07-03] - Morphing Hero Dot Canvas and Role Transitions
 
 ### Added

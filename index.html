@@ -887,6 +887,79 @@
     }
 
     /* ═══════════════════════════════════════════════
+       SECTION IDENTITY — barely-there tints, ghosted
+       motifs, and a nav scroll-progress bar, keyed off
+       body[data-active-section]
+       ═══════════════════════════════════════════════ */
+    .nav::after {
+      content: '';
+      position: absolute;
+      left: 0; bottom: -1px;
+      width: 100%; height: 2px;
+      background: var(--accent);
+      transform-origin: left;
+      transform: scaleX(var(--scroll-progress, 0));
+      pointer-events: none;
+    }
+
+    body[data-active-section="about"]        { --tint-rgb: 47, 137, 240; }
+    body[data-active-section="experience"]   { --tint-rgb: 36, 150, 232; }
+    body[data-active-section="projects"]     { --tint-rgb: 76, 122, 250; }
+    body[data-active-section="publications"] { --tint-rgb: 42, 140, 218; }
+    body[data-active-section="training"]     { --tint-rgb: 56, 130, 246; }
+    body[data-active-section="skills"]       { --tint-rgb: 82, 116, 248; }
+    body[data-active-section="contact"]      { --tint-rgb: 96, 126, 250; }
+
+    body[data-active-section="about"] #about .t-section-number,
+    body[data-active-section="experience"] #experience .t-section-number,
+    body[data-active-section="projects"] #projects .t-section-number,
+    body[data-active-section="publications"] #publications .t-section-number,
+    body[data-active-section="training"] #training .t-section-number,
+    body[data-active-section="skills"] #skills .t-section-number,
+    body[data-active-section="contact"] #contact .t-section-number {
+      -webkit-text-stroke-color: rgba(var(--tint-rgb, var(--accent-rgb)), 0.5);
+    }
+
+    .section::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 1s ease;
+      z-index: 0;
+    }
+
+    #about::before        { background: repeating-linear-gradient(45deg, rgba(var(--tint-rgb, var(--accent-rgb)), 0.5) 0 1px, transparent 1px 20px); }
+    #experience::before   { background: repeating-radial-gradient(circle at 85% 15%, rgba(var(--tint-rgb, var(--accent-rgb)), 0.55) 0 1px, transparent 1px 28px); }
+    #projects::before     { background:
+                              repeating-linear-gradient(0deg, rgba(var(--tint-rgb, var(--accent-rgb)), 0.4) 0 1px, transparent 1px 34px),
+                              repeating-linear-gradient(90deg, rgba(var(--tint-rgb, var(--accent-rgb)), 0.4) 0 1px, transparent 1px 34px); }
+    #publications::before { background: repeating-linear-gradient(180deg, rgba(var(--tint-rgb, var(--accent-rgb)), 0.5) 0 1px, transparent 1px 24px); }
+    #training::before     { background: repeating-radial-gradient(circle at 10% 85%, rgba(var(--tint-rgb, var(--accent-rgb)), 0.5) 0 1px, transparent 1px 32px); }
+    #skills::before       { background: radial-gradient(rgba(var(--tint-rgb, var(--accent-rgb)), 0.6) 1px, transparent 1.5px); background-size: 24px 24px; }
+    #contact::before      { background: radial-gradient(circle at 50% 25%, rgba(var(--tint-rgb, var(--accent-rgb)), 0.5), transparent 60%); }
+
+    body[data-active-section="about"] #about::before,
+    body[data-active-section="experience"] #experience::before,
+    body[data-active-section="projects"] #projects::before,
+    body[data-active-section="publications"] #publications::before,
+    body[data-active-section="training"] #training::before,
+    body[data-active-section="skills"] #skills::before,
+    body[data-active-section="contact"] #contact::before {
+      opacity: 0.045;
+    }
+
+    /* reveal variety: section headers slide in from the left */
+    .section-header.fade-in { transform: translateX(-18px); }
+    .section-header.fade-in.visible { transform: translateX(0); }
+
+    @media (prefers-reduced-motion: reduce) {
+      .section::before { transition: none; }
+      .section-header.fade-in { transform: none; }
+    }
+
+    /* ═══════════════════════════════════════════════
        SECTIONS
        ═══════════════════════════════════════════════ */
     .section {
@@ -3763,6 +3836,13 @@
         target.setAttribute('aria-current', 'location');
       }
       updateSectionIndicator(activeIndex);
+
+      // per-section identity hooks: body attribute for CSS tints/motifs,
+      // scroll progress for the nav progress bar
+      document.body.setAttribute('data-active-section', sectionIds[activeIndex]);
+      var docEl = document.documentElement;
+      var maxScroll = Math.max(1, docEl.scrollHeight - viewportHeight);
+      docEl.style.setProperty('--scroll-progress', Math.min(1, (window.scrollY || docEl.scrollTop || 0) / maxScroll).toFixed(4));
     }
 
     document.querySelectorAll('.project-tags').forEach(function(tagGroup) {
@@ -4070,6 +4150,25 @@
 
       // Contact-tracing overlay nodes chosen from the decoded Thailand dots
       var traceNodes = [];
+      // Neural-net layout, saved at build time for the roaming signal overlay
+      var netLayers = null;
+
+      // Deterministic small PRNG so looped animations vary per cycle but stay
+      // stable within one
+      function mulberry(seed) {
+        return function () {
+          seed |= 0; seed = seed + 0x6D2B79F5 | 0;
+          var z = Math.imul(seed ^ seed >>> 15, 1 | seed);
+          z = z + Math.imul(z ^ z >>> 7, 61 | z) ^ z;
+          return ((z ^ z >>> 14) >>> 0) / 4294967296;
+        };
+      }
+
+      // skewed outbreak peak (log-normal-ish), u in [0,1] → [0,1]
+      function chartEpi(u) {
+        var lu = Math.log(u * 3.2 + 0.06);
+        return Math.exp(-lu * lu / 0.55);
+      }
 
       function buildThailand() {
         var bin = atob(THAI_B64);
@@ -4129,24 +4228,13 @@
             targets.push(T(-0.78 + (i / 25) * 1.58, 0.62 - g * 0.32, 0.14, 0.8, 0, 1));
           }
         }
-        // epidemic curve: skewed peak (log-normal-ish), drawn dense
-        function epi(u) { // u in [0,1] → y in [0,1]
-          var lu = Math.log(u * 3.2 + 0.06);
-          return Math.exp(-lu * lu / 0.55);
-        }
-        for (i = 0; i < 150; i++) {
-          t = i / 149;
+        // ghost of last season's outbreak — static context; the live weekly
+        // series, rolling average, and forecast cone are drawn as an overlay
+        for (i = 0; i < 130; i++) {
+          t = i / 129;
           x = -0.74 + t * 1.5;
-          y = 0.58 - epi(t) * 1.1;
-          targets.push(T(x, y, 0.95, 1.3, t, 2));
-          targets.push(T(x, y + 0.028, 0.6, 1, t, 2));
-        }
-        // scattered observations around the curve
-        for (i = 0; i < 110; i++) {
-          t = Math.random();
-          x = -0.74 + t * 1.5;
-          y = 0.58 - epi(t) * 1.1 + (Math.random() - 0.5) * 0.16;
-          targets.push(T(x, Math.min(y, 0.6), 0.35 + Math.random() * 0.3, 0.9, t, 3));
+          y = 0.58 - chartEpi(t) * 1.02;
+          targets.push(T(x, y, 0.26, 0.95, t, 2));
         }
         return padShape(targets);
       }
@@ -4167,32 +4255,24 @@
           }
           nodes.push(col);
         });
-        // signal path: input 2 → hidden 3 → output
-        var sigA = nodes[0][2], sigB = nodes[1][3], sigC = nodes[2][0];
-        function onSig(p, q) {
-          return (p === sigA && q === sigB) || (p === sigB && q === sigC);
-        }
-        function edge(p, q, seg) {
+        netLayers = nodes; // saved for the roaming signal overlay
+        function edge(p, q) {
           var steps = 9;
-          var sig = onSig(p, q);
           for (var s = 1; s < steps; s++) {
             var t = s / steps;
-            var path = sig ? (seg + t) / 2 : -1;
-            targets.push(T(p.x + (q.x - p.x) * t, p.y + (q.y - p.y) * t, sig ? 0.3 : 0.16, 0.85, 0, 4, path));
+            targets.push(T(p.x + (q.x - p.x) * t, p.y + (q.y - p.y) * t, 0.16, 0.85, 0, 4));
           }
         }
-        nodes[0].forEach(function (p) { nodes[1].forEach(function (q) { edge(p, q, 0); }); });
-        nodes[1].forEach(function (p) { nodes[2].forEach(function (q) { edge(p, q, 1); }); });
+        nodes[0].forEach(function (p) { nodes[1].forEach(function (q) { edge(p, q); }); });
+        nodes[1].forEach(function (p) { nodes[2].forEach(function (q) { edge(p, q); }); });
         nodes.forEach(function (col, li) {
           col.forEach(function (p) {
-            var isSig = p === sigA || p === sigB || p === sigC;
             var r = li === 2 ? 0.085 : 0.06;
             var count = li === 2 ? 46 : 26;
             for (var k = 0; k < count; k++) {
               var ang = Math.random() * Math.PI * 2;
               var rr = Math.sqrt(Math.random()) * r;
-              var path = isSig ? (p === sigA ? 0 : (p === sigB ? 0.5 : 1)) : -1;
-              targets.push(T(p.x + Math.cos(ang) * rr, p.y + Math.sin(ang) * rr, 0.55 + Math.random() * 0.3, 1.05, 0, 5, path));
+              targets.push(T(p.x + Math.cos(ang) * rr, p.y + Math.sin(ang) * rr, 0.55 + Math.random() * 0.3, 1.05, 0, 5));
             }
           });
         });
@@ -4461,10 +4541,6 @@
             d = dots[i];
             if (activeRole === 'health') {
               d.a = d.ta * (0.82 + 0.18 * Math.sin(now / 700 + d.tgroup * 1.7 + d.tx * 2));
-            } else if (activeRole === 'ai' && d.tpath >= 0) {
-              var s = (now / 1800) % 1;
-              var dist = Math.abs(d.tpath - s);
-              d.a = d.ta + (dist < 0.09 ? (1 - dist / 0.09) * 0.55 : 0);
             } else if (activeRole === 'data' && d.tgroup === 2) {
               d.a = d.ta * (0.88 + 0.12 * Math.sin(now / 500 + d.tphase * 9));
             }
@@ -4541,6 +4617,151 @@
         }
       }
 
+      // Live surveillance chart: weekly observations stream in, a rolling
+      // average follows, and a dashed forecast with a widening uncertainty
+      // cone projects past the "now" cursor. New outbreak every loop.
+      var CH = { x0: -0.74, x1: 0.76, y0: 0.58, h: 1.05, weeks: 24, fore: 5, stepMs: 165 };
+      var chartLoop = -1, chartVals = [], chartAvg = [];
+      function rebuildSeries(loop) {
+        chartLoop = loop;
+        var rnd = mulberry(loop * 9973 + 7);
+        var amp = 0.7 + rnd() * 0.45;
+        chartVals = []; chartAvg = [];
+        var i;
+        for (i = 0; i < CH.weeks; i++) {
+          chartVals.push(Math.max(0.02, chartEpi(i / (CH.weeks - 1)) * amp + (rnd() - 0.5) * 0.13));
+        }
+        for (i = 0; i < CH.weeks; i++) {
+          var s = 0, n = 0;
+          for (var k = Math.max(0, i - 2); k <= i; k++) { s += chartVals[k]; n++; }
+          chartAvg.push(s / n);
+        }
+      }
+      var chP = { x: 0, y: 0 };
+      function chartPt(i, v, out) {
+        out.x = CH.x0 + (i / (CH.weeks - 1 + CH.fore)) * (CH.x1 - CH.x0);
+        out.y = CH.y0 - v * CH.h;
+      }
+
+      function drawChartLive(now, cx, cy, R, dotBase) {
+        var t = now - roleStartT - 500;
+        if (t < 0) return;
+        var cycle = CH.weeks * CH.stepMs + 1200;
+        var loop = Math.floor(t / cycle);
+        if (loop !== chartLoop) rebuildSeries(loop);
+        var wf = Math.min(CH.weeks - 1, (t - loop * cycle) / CH.stepMs);
+        var w = Math.floor(wf);
+        var i, k;
+        // weekly observations
+        for (i = 0; i <= w; i++) {
+          chartPt(i, chartVals[i], chP);
+          var fresh = (wf - i) < 1 ? 1 - (wf - i) : 0;
+          var sz = dotBase * (1.15 + fresh * 1.1);
+          ctx.fillStyle = 'rgba(' + accentRGB + ',' + (0.55 + fresh * 0.45).toFixed(3) + ')';
+          ctx.fillRect(cx + chP.x * R - sz, cy + chP.y * R - sz, sz * 2, sz * 2);
+        }
+        // rolling average line
+        ctx.strokeStyle = 'rgba(' + accentRGB + ',0.85)';
+        ctx.lineWidth = dpr * 1.6;
+        ctx.beginPath();
+        for (i = 0; i <= w; i++) {
+          chartPt(i, chartAvg[i], chP);
+          if (i === 0) ctx.moveTo(cx + chP.x * R, cy + chP.y * R);
+          else ctx.lineTo(cx + chP.x * R, cy + chP.y * R);
+        }
+        ctx.stroke();
+        // "now" cursor
+        chartPt(w, 0, chP);
+        ctx.strokeStyle = 'rgba(' + accentRGB + ',0.15)';
+        ctx.lineWidth = dpr;
+        ctx.beginPath();
+        ctx.moveTo(cx + chP.x * R, cy + (CH.y0 - CH.h) * R);
+        ctx.lineTo(cx + chP.x * R, cy + CH.y0 * R);
+        ctx.stroke();
+        // forecast: damped trend projection + widening uncertainty cone
+        if (w >= 2) {
+          var last = chartAvg[w];
+          var slope = chartAvg[w] - chartAvg[w - 1];
+          var fx = [], fy = [], up = [], dn = [];
+          var v = last;
+          for (k = 1; k <= CH.fore; k++) {
+            v = Math.max(0.02, v + slope * Math.pow(0.72, k));
+            chartPt(w + k, v, chP);
+            fx.push(chP.x); fy.push(chP.y);
+            up.push(chP.y - 0.026 * k);
+            dn.push(Math.min(CH.y0, chP.y + 0.026 * k));
+          }
+          ctx.fillStyle = 'rgba(' + accentRGB + ',0.07)';
+          ctx.beginPath();
+          chartPt(w, last, chP);
+          ctx.moveTo(cx + chP.x * R, cy + chP.y * R);
+          for (k = 0; k < CH.fore; k++) ctx.lineTo(cx + fx[k] * R, cy + up[k] * R);
+          for (k = CH.fore - 1; k >= 0; k--) ctx.lineTo(cx + fx[k] * R, cy + dn[k] * R);
+          ctx.closePath();
+          ctx.fill();
+          ctx.strokeStyle = 'rgba(' + accentRGB + ',0.55)';
+          ctx.lineWidth = dpr * 1.2;
+          ctx.setLineDash([4 * dpr, 4 * dpr]);
+          ctx.beginPath();
+          chartPt(w, last, chP);
+          ctx.moveTo(cx + chP.x * R, cy + chP.y * R);
+          for (k = 0; k < CH.fore; k++) ctx.lineTo(cx + fx[k] * R, cy + fy[k] * R);
+          ctx.stroke();
+          ctx.setLineDash([]);
+        }
+      }
+
+      // Roaming inference signal: every cycle a new random input→hidden→output
+      // path lights up and a comet travels it
+      function drawNet(now, cx, cy, R, dotBase) {
+        if (!netLayers) return;
+        var CYC = 1500;
+        var t = now - roleStartT;
+        if (t < 400) return;
+        t -= 400;
+        var cyc = Math.floor(t / CYC);
+        var rnd = mulberry(cyc * 7919 + 3);
+        var A = netLayers[0][Math.floor(rnd() * netLayers[0].length)];
+        var B = netLayers[1][Math.floor(rnd() * netLayers[1].length)];
+        var C = netLayers[2][0];
+        var s = (t % CYC) / CYC;
+        // traversed edges glow
+        ctx.lineWidth = dpr;
+        ctx.strokeStyle = 'rgba(' + accentRGB + ',' + (s < 0.5 ? 0.35 : 0.15) + ')';
+        ctx.beginPath();
+        ctx.moveTo(cx + A.x * R, cy + A.y * R);
+        ctx.lineTo(cx + B.x * R, cy + B.y * R);
+        ctx.stroke();
+        ctx.strokeStyle = 'rgba(' + accentRGB + ',' + (s >= 0.5 ? 0.35 : 0.12) + ')';
+        ctx.beginPath();
+        ctx.moveTo(cx + B.x * R, cy + B.y * R);
+        ctx.lineTo(cx + C.x * R, cy + C.y * R);
+        ctx.stroke();
+        // comet with a short trail
+        for (var k = 0; k < 6; k++) {
+          var ss = s - k * 0.022;
+          if (ss < 0) break;
+          var px, py, u;
+          if (ss < 0.5) { u = ss / 0.5; px = A.x + (B.x - A.x) * u; py = A.y + (B.y - A.y) * u; }
+          else { u = (ss - 0.5) / 0.5; px = B.x + (C.x - B.x) * u; py = B.y + (C.y - B.y) * u; }
+          var al = (1 - k / 6) * 0.95;
+          var sz = dotBase * (2.0 - k * 0.22);
+          ctx.fillStyle = 'rgba(' + accentRGB + ',' + al.toFixed(3) + ')';
+          ctx.fillRect(cx + px * R - sz, cy + py * R - sz, sz * 2, sz * 2);
+        }
+        // node glow as the signal hands off
+        var stations = [[A, 0.03], [B, 0.5], [C, 0.97]];
+        for (k = 0; k < 3; k++) {
+          var dd = Math.abs(s - stations[k][1]);
+          if (dd < 0.1) {
+            var g = 1 - dd / 0.1;
+            var gsz = dotBase * (2 + g * 2.2);
+            ctx.fillStyle = 'rgba(' + accentRGB + ',' + (0.4 * g).toFixed(3) + ')';
+            ctx.fillRect(cx + stations[k][0].x * R - gsz, cy + stations[k][0].y * R - gsz, gsz * 2, gsz * 2);
+          }
+        }
+      }
+
       function drawTrace(now, cx, cy, R, dotBase) {
         var t = now - roleStartT;
         ctx.lineWidth = dpr * 1.5;
@@ -4591,6 +4812,12 @@
         }
         if (activeRole === 'health' && mode === 'shape' && !reduceMotionGlobe) {
           drawTrace(now, cx, cy, R, dotBase);
+        }
+        if (activeRole === 'data' && mode === 'shape' && !reduceMotionGlobe) {
+          drawChartLive(now, cx, cy, R, dotBase);
+        }
+        if (activeRole === 'ai' && mode === 'shape' && !reduceMotionGlobe) {
+          drawNet(now, cx, cy, R, dotBase);
         }
       }
 
