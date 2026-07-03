@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2026-07-03] - Morphing Hero Dot Canvas and Role Transitions
+
+### Added
+- **Morphing Hero Dot Canvas**: Replaced the static rotating globe with a morphing dotted particle canvas that cycles between four states matching the current active role:
+  - *Travel Medicine*: A 3D spinning globe with active flight path arcs (e.g. Pittsburgh to Bangkok).
+  - *Public Health*: A hospital-density choropleth map of Thailand with contact-tracing overlays.
+  - *Data Analysis*: An epidemiological/data curve chart.
+  - *AI Engineering*: A connected, pulsing neural network graph.
+- **Hero Role Typewriter Cycler**: Implemented a typewriter role switcher (`#roleSwap`) with a blinking cursor animation in the hero positioning text. It automatically rotates through the four key identities and triggers custom events to synchronize the background canvas morphs.
+
+### Changed
+- **Hero Interactive Canvas Layout**: Set canvas pointer-events to `none` to avoid overlapping layout blocking, adjusted dot scaling (1600 dots on mobile, 3000 on desktop) for better mobile performance, and adapted animations to respect `prefers-reduced-motion` preferences.
+
 ## [2026-06-13] - Education and Super AI Credential Refresh
 
 ### Added
