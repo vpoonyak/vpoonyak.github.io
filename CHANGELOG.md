@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2026-07-03] - Seasonal Forecast Chart, Section Identity Boost, HF Icon Fix
+
+### Added
+- **Seasonal Surveillance Chart**: The *Data Analysis* canvas now shows ~1.5 seasons of fixed history as a raw-observation dot cloud with season tick marks; the current season streams in weekly while a rolling average smooths the full series and a seasonal-naive forecast (same phase last season, scaled to the current level) predicts the next seasonal peak with a widening uncertainty cone.
+
+### Changed
+- **Section Identity Visibility**: Raised ghosted motif opacity (0.045 → 0.09), strengthened the active section-number tint, and tinted the active section's mono label so the per-section scroll identity is clearly perceivable.
+
+### Fixed
+- **Hugging Face Icon**: Replaced the CSS `mask`-based icon (invisible in browsers without `mask` shorthand support) with an inline `currentColor` SVG matching the Google Scholar icon pattern.
+
 ## [2026-07-03] - Live Data Overlays and Section Scroll Identity
 
 ### Added
