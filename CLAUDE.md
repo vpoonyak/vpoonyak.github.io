@@ -15,8 +15,7 @@ This repository is a static GitHub Pages portfolio for Vitchakorn Poonyakanok. T
 4. `#publications`
 5. `#training`
 6. `#skills`
-7. `#languages` (visible, demoted from primary navigation)
-8. `#contact`
+7. `#contact`
 
 The `#expertise` section exists in markup but is hidden and excluded from navigation/active-section tracking.
 
@@ -30,7 +29,7 @@ The `#expertise` section exists in markup but is hidden and excluded from naviga
 - Level 2 entries remain visible as separate online/on-site hackathon evidence, but method writeups stay inside collapsible `Method detail` blocks.
 - Additional clinical methods training is collapsed under `Additional clinical methods training`.
 - `#skills` is labeled `Capabilities` in visible UI and combines selected stack badges with a collapsed credential archive.
-- `#languages` remains visible but is intentionally omitted from primary navigation.
+- Languages are no longer a standalone section; they live as a `Languages` column inside `#skills`.
 - Desktop Projects are a four-item Top Projects grid; mobile keeps the carousel.
 
 ## Important Assets

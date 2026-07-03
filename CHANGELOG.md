@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2026-07-04] - Transition Choreography, Social Card, SEO and Icon Cleanup
+
+### Added
+- **Social Share Card**: New 1200×630 `pic/og-card.jpg` (site-styled name, positioning line, portrait) wired into `og:image`/`twitter:image` with `og:image:width/height/alt` and `twitter:image:alt`, replacing the 500×500 square photo that `summary_large_image` cards cropped.
+
+### Changed
+- **AI → Travel Transition**: Leaving *AI Engineering*, the camera now dives into the network's output node and the globe blooms out of that point (matching the health zoom-dive grammar), replacing the generic collapse-and-chase return.
+- **Health → Data Transition**: The Thailand map now morphs into the chart by direct per-dot flight — each dot flies from its map location to its chart position with the existing left-to-right stagger — replacing the collapse-then-expand beat.
+- **Brand Icons Inlined**: Replaced the render-blocking Font Awesome CDN stylesheet (loaded for six icons) with inline `currentColor` SVGs (Simple Icons paths) for LinkedIn, ResearchGate, ORCID, GitHub, Google, and Kaggle.
+- **Sitemap**: Removed the duplicate `sitemap-pages.xml` (robots.txt only ever referenced `sitemap.xml`) and refreshed `lastmod`.
+
+### Fixed
+- **Tableau Icon Hover**: Converted the grayscale-filtered `<img>` to the `currentColor` + `mask`/`-webkit-mask` `.social-icon-mask` span so it recolors on hover like the other social icons.
+- **Hero Screen-Reader Text**: The hero positioning line's `aria-label` (unsupported on paragraph roles, with all visible content `aria-hidden`) is now a static `.sr-only` sentence, so assistive tech reads the full positioning statement.
+- **Font Preconnect**: Added `fonts.gstatic.com` `crossorigin` preconnect alongside the existing `fonts.googleapis.com` one.
+
 ## [2026-07-03] - Seasonal Forecast Chart, Section Identity Boost, HF Icon Fix
 
 ### Added

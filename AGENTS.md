@@ -16,8 +16,7 @@ This repository is a static GitHub Pages portfolio for Vitchakorn Poonyakanok. T
 4. `#publications`
 5. `#training`
 6. `#skills`
-7. `#languages` (visible, demoted from primary navigation)
-8. `#contact`
+7. `#contact`
 
 The `#expertise` section exists in the markup but is hidden and excluded from navigation/active-section tracking.
 
