@@ -12,11 +12,17 @@ All notable changes to this project will be documented in this file.
 - **Health → Data Transition**: The Thailand map now morphs into the chart by direct per-dot flight — each dot flies from its map location to its chart position with the existing left-to-right stagger — replacing the collapse-then-expand beat.
 - **Brand Icons Inlined**: Replaced the render-blocking Font Awesome CDN stylesheet (loaded for six icons) with inline `currentColor` SVGs (Simple Icons paths) for LinkedIn, ResearchGate, ORCID, GitHub, Google, and Kaggle.
 - **Sitemap**: Removed the duplicate `sitemap-pages.xml` (robots.txt only ever referenced `sitemap.xml`) and refreshed `lastmod`.
+- **Kaggle Icon**: Replaced the current Kaggle wordmark SVG with the classic lowercase "k" logomark, traced from the official artwork via `potrace` into a `currentColor` path.
+- **Data Analysis Chart Pacing**: The seasonal chart's stream/forecast reveal now paces to fill almost the entire ~6s "data" role window instead of finishing early and sitting frozen for the last ~1.5s.
+- **Hero Globe Dot Brightness**: Sphere dots now carry an independent, long-tail-skewed brightness jitter (mostly dim, a minority spiking bright) so the globe reads like scattered city lights instead of a uniform depth-only gradient; dot count raised (3000→4400 desktop, 1600→2200 mobile) for finer texture.
+- **Social Share Card**: Recomposed `pic/og-card.jpg` into a centered layout with all content (label, photo, name, tagline, URL) inside the center 630×630 "safe zone" — apps like LINE that crop link-preview images to a square were cutting off the name and photo under the old left-text/right-photo layout.
 
 ### Fixed
-- **Tableau Icon Hover**: Converted the grayscale-filtered `<img>` to the `currentColor` + `mask`/`-webkit-mask` `.social-icon-mask` span so it recolors on hover like the other social icons.
+- **Tableau Icon**: The `currentColor` + `mask`/`-webkit-mask` `.social-icon-mask` span (added to fix hover recolor) turned out not to render in real-world browsers despite working in headless Chromium; replaced with a `currentColor` SVG traced from the source PNG's alpha channel, which recolors on hover and needs no mask support.
 - **Hero Screen-Reader Text**: The hero positioning line's `aria-label` (unsupported on paragraph roles, with all visible content `aria-hidden`) is now a static `.sr-only` sentence, so assistive tech reads the full positioning statement.
 - **Font Preconnect**: Added `fonts.gstatic.com` `crossorigin` preconnect alongside the existing `fonts.googleapis.com` one.
+- **Hero Role-Cycle Layout Shift**: The hero paragraph now reserves a JS-measured `min-height` (covering all four role labels, re-measured on resize since the font uses a fluid `vw` clamp) so retyping a shorter/longer role never reflows the line count and shifts the page below the hero, at any viewport width.
+- **About Stats Years**: "Years Clinical Practice" / "Years Data Analysis" are now computed at load from `data-years-since` anchor dates instead of hardcoded numbers, so they never go stale.
 
 ## [2026-07-03] - Seasonal Forecast Chart, Section Identity Boost, HF Icon Fix
 

@@ -4114,7 +4114,7 @@
 
       var isSmallScreen = window.matchMedia('(max-width: 768px)').matches;
       var reduceMotionGlobe = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      var DOT_COUNT = isSmallScreen ? 1600 : 3000;
+      var DOT_COUNT = isSmallScreen ? 2200 : 4400;
 
       // ── Dot field ── unit coords in [-1,1], y down; drawn at center + p*R
       var dots = [];
@@ -4129,6 +4129,9 @@
             sinLat: Math.sin(latR),
             lon: lon * Math.PI / 180,
             jitter: 0.75 + Math.random() * 0.5,
+            // skewed long-tail: most dots stay dim, a minority spike bright —
+            // reads as scattered city lights rather than an even sprinkle
+            glow: 0.32 + Math.pow(Math.random(), 2.4) * 1.55,
             x: 0, y: 0, a: 0, size: 1,
             sx: 0, sy: 0, sa: 0,
             wx: 0, wy: 0, ex: 0, ey: 0,
@@ -4181,7 +4184,10 @@
       // Seasonal surveillance series: ~1.5 seasons of fixed history (raw
       // observations live in the dot field), the current season streams in as
       // an overlay, and a seasonal-naive forecast projects the next rise.
-      var CH = { x0: -0.74, x1: 0.76, y0: 0.58, h: 1.05, hist: 36, stream: 24, period: 24, fore: 8, stepMs: 165 };
+      // stepMs is paced so the stream + forecast keep advancing for the
+      // entire ~6s 'data' role window (see ROLE_PERIOD in the Hero Role
+      // Cycle IIFE) instead of finishing early and sitting frozen.
+      var CH = { x0: -0.74, x1: 0.76, y0: 0.58, h: 1.05, hist: 36, stream: 24, period: 24, fore: 8, stepMs: 225 };
       CH.total = CH.hist + CH.stream;
       var AMP_A = 0.68, AMP_B = 0.95;
 
@@ -4466,7 +4472,9 @@
         var depth = (z1 + 1) / 2;
         out.x = x0 * 0.92;
         out.y = -y1 * 0.92;
-        out.a = z1 > 0 ? 0.22 + 0.68 * depth : 0.07;
+        // per-dot brightness jitter (d.glow) so the sphere reads like
+        // scattered city lights rather than a uniform depth gradient
+        out.a = (z1 > 0 ? 0.22 + 0.68 * depth : 0.07) * d.glow;
         out.size = (0.55 + 0.75 * depth);
         return out;
       }
