@@ -2822,11 +2822,11 @@
         </div>
         <div class="about-stats fade-in delay-2">
           <a class="stat-item" href="#experience" aria-label="View clinical practice experience">
-            <span class="stat-number">6+</span>
+            <span class="stat-number" data-years-since="2019-09-09">6+</span>
             <span class="stat-label">Years Clinical Practice</span>
           </a>
           <a class="stat-item" href="#skills" aria-label="View data analysis skills">
-            <span class="stat-number">4+</span>
+            <span class="stat-number" data-years-since="2022-02-05">4+</span>
             <span class="stat-label">Years Data Analysis</span>
           </a>
           <a class="stat-item" href="#publications" aria-label="View publications">
@@ -3717,6 +3717,13 @@
       htmlEl.setAttribute('data-theme', next);
       bodyEl.setAttribute('data-theme', next);
       localStorage.setItem('theme', next);
+    });
+
+    // ── Stat Years (auto-updates so "6+ years" etc. never goes stale) ──
+    document.querySelectorAll('.stat-number[data-years-since]').forEach(function (el) {
+      var start = new Date(el.getAttribute('data-years-since'));
+      var years = Math.floor((Date.now() - start) / (365.2425 * 24 * 60 * 60 * 1000));
+      el.textContent = years + '+';
     });
 
     // ── Mobile Menu ──

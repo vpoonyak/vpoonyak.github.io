@@ -31,6 +31,7 @@ The `#expertise` section exists in markup but is hidden and excluded from naviga
 - `#skills` is labeled `Capabilities` in visible UI and combines selected stack badges with a collapsed credential archive.
 - Languages are no longer a standalone section; they live as a `Languages` column inside `#skills`.
 - Desktop Projects are a four-item Top Projects grid; mobile keeps the carousel.
+- The About stats grid's "Years Clinical Practice" / "Years Data Analysis" numbers are computed at load from `data-years-since` attributes on their `.stat-number` spans (see script's "Stat Years" block), not hand-edited — update the date attribute, not the visible text, if an anchor date changes. Clinical practice anchors to the Nong Khai Hospital start date (`2019-09-09`, confirmed against `profile.yaml`); data analysis anchors to the Chiang Mai University Diploma in Clinical Statistics start (`2022-02-05`).
 
 ## Important Assets
 - DigiHealth logo: `experience/digihealth-dh.png`
