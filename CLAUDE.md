@@ -38,7 +38,7 @@ The `#expertise` section exists in markup but is hidden and excluded from naviga
 - Scamper logo: `logo/Scamper Logo.png`, referenced as `logo/Scamper%20Logo.png`
 - Tableau favicon/logo: `favicon/tableau.png`
 - ISC2 CC white badge: `badge/certified-in-cybersecurity-cc.1-white.png`
-- Social share card: `pic/og-card.jpg` (1200×630, from `pic/vitchakorn-wider.png`). Keep all content (label, photo, name, tagline, URL) centered within the middle 630×630 square — apps like LINE crop link-preview images to that center square, and content outside it gets cut off. No source HTML template is kept in-repo; regenerate by rebuilding the centered-layout HTML, rendering at 1200×630 via Playwright, and converting with `sips -s format jpeg -s formatOptions 82`.
+- Social share card: `pic/og-card.jpg` (1200×1200 square, full-bleed `pic/vitchakorn-wider.png` with a bottom gradient scrim and text overlaid directly on the photo — label, name, tagline, URL). Square + text-on-photo is deliberate: iOS's LinkPresentation framework (used by LINE, iMessage, Mail, etc. for rich link previews) does face-priority smart-cropping on `og:image` and was cutting the name/tagline out entirely when they lived in a separate region from the photo — a square source avoids the aspect-crop, and overlaying text on the same image layer as the face means a face-priority crop is far more likely to still catch nearby text. `og:image:width`/`height` must stay `1200`/`1200` if regenerated. No source HTML template is kept in-repo; rebuild the full-bleed-photo-with-scrim HTML, render at 1200×1200 via Playwright, and convert with `sips -s format jpeg -s formatOptions 80`.
 
 ## QA Checklist
 Run after meaningful edits:
