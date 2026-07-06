@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://vpoonyak.github.io/sitemap.xml
+Sitemap: https://vitchakorn.com/sitemap.xml
