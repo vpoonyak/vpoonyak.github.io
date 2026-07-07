@@ -321,6 +321,11 @@
       --nav-bg: rgba(13, 17, 23, 0.9);
       --selection-bg: rgba(47, 129, 247, 0.35);
       --success: #3fb950;
+      --stress: #e3b341;
+      --stress-rgb: 227, 179, 65;
+      --stress-muted: rgba(227, 179, 65, 0.12);
+      --stress-muted-strong: rgba(227, 179, 65, 0.22);
+      --stress-border: rgba(227, 179, 65, 0.4);
       --shadow-card: 0 1px 3px rgba(0,0,0,0.3);
     }
 
@@ -349,6 +354,11 @@
       --nav-bg: rgba(238, 243, 248, 0.94);
       --selection-bg: rgba(7, 87, 189, 0.22);
       --success: #1a7f37;
+      --stress: #9a6700;
+      --stress-rgb: 154, 103, 0;
+      --stress-muted: rgba(154, 103, 0, 0.1);
+      --stress-muted-strong: rgba(154, 103, 0, 0.18);
+      --stress-border: rgba(154, 103, 0, 0.42);
       --shadow-card: 0 1px 4px rgba(31, 35, 40, 0.1);
     }
 
@@ -1190,10 +1200,10 @@
       align-items: center;
       margin-left: 8px;
       padding: 1px 7px;
-      border: 1px solid var(--border-light);
+      border: 1px solid var(--stress-border);
       border-radius: 999px;
-      background: var(--bg-card);
-      color: var(--text-tertiary);
+      background: var(--stress-muted);
+      color: var(--stress);
       font-family: 'JetBrains Mono', monospace;
       font-size: 0.5625rem;
       font-weight: 700;
@@ -1937,10 +1947,10 @@
       display: inline-flex;
       align-items: center;
       padding: 2px 8px;
-      border: 1px solid var(--border-light);
+      border: 1px solid var(--stress-border);
       border-radius: 999px;
-      background: var(--bg-card);
-      color: var(--text-tertiary);
+      background: var(--stress-muted);
+      color: var(--stress);
       font-family: 'JetBrains Mono', monospace;
       font-size: 0.5625rem;
       font-weight: 700;
@@ -2788,7 +2798,7 @@
           <p class="t-body-large font-mono" style="font-size:0.8125rem;color:var(--accent-heading);margin-top:1.25rem;" hidden>
             Current_Focus: "National Vaccine Registry & Public Health Data Initiatives"
           </p>
-          <p class="t-body-large font-mono" style="font-size:0.8125rem;color:var(--accent-heading);margin-top:1.25rem;">
+          <p class="t-body-large font-mono" style="font-size:0.8125rem;color:var(--stress);margin-top:1.25rem;">
             Seeking_Internship: "Health Care Analytics & Management · USA, any state · Summer 2027 · May 11 – Aug 20 · 300+ hrs"
           </p>
           <div class="about-contact">
@@ -3380,36 +3390,36 @@
           <div class="skills-category">
             <div class="skills-category-title">Core Tools</div>
             <div class="skills-badges">
-              <img src="https://img.shields.io/badge/Python-3670A0.svg?style=for-the-badge&logo=python&logoColor=ffdd54" alt="Python">
-              <img src="https://img.shields.io/badge/R-%23276DC3.svg?style=for-the-badge&logo=r&logoColor=white" alt="R">
-              <img src="https://img.shields.io/badge/SQL-%2300758F.svg?style=for-the-badge&logo=postgresql&logoColor=white" alt="SQL">
-              <img src="https://img.shields.io/badge/Stata-%231A538A.svg?style=for-the-badge&logo=stata&logoColor=white" alt="Stata">
+              <img src="https://img.shields.io/badge/Python-566D80.svg?style=for-the-badge&logo=python&logoColor=CCBE87" alt="Python">
+              <img src="https://img.shields.io/badge/R-567294.svg?style=for-the-badge&logo=r&logoColor=white" alt="R">
+              <img src="https://img.shields.io/badge/SQL-2B5A64.svg?style=for-the-badge&logo=postgresql&logoColor=white" alt="SQL">
+              <img src="https://img.shields.io/badge/Stata-3C5268.svg?style=for-the-badge&logo=stata&logoColor=white" alt="Stata">
             </div>
           </div>
           <div class="skills-category">
             <div class="skills-category-title">Data Analysis &amp; Processing</div>
             <div class="skills-badges">
-              <img src="https://img.shields.io/badge/NumPy-%23013243.svg?style=for-the-badge&logo=numpy&logoColor=white" alt="NumPy">
-              <img src="https://img.shields.io/badge/Pandas-%23150458.svg?style=for-the-badge&logo=pandas&logoColor=white" alt="Pandas">
-              <img src="https://img.shields.io/badge/OpenCV-%235C3EE8.svg?style=for-the-badge&logo=opencv&logoColor=white" alt="OpenCV">
-              <img src="https://img.shields.io/badge/jamovi-215082.svg?style=for-the-badge&logo=jamovi&logoColor=white" alt="jamovi">
+              <img src="https://img.shields.io/badge/NumPy-15282F.svg?style=for-the-badge&logo=numpy&logoColor=white" alt="NumPy">
+              <img src="https://img.shields.io/badge/Pandas-241D3F.svg?style=for-the-badge&logo=pandas&logoColor=white" alt="Pandas">
+              <img src="https://img.shields.io/badge/OpenCV-7D71B5.svg?style=for-the-badge&logo=opencv&logoColor=white" alt="OpenCV">
+              <img src="https://img.shields.io/badge/jamovi-3E5165.svg?style=for-the-badge&logo=jamovi&logoColor=white" alt="jamovi">
             </div>
           </div>
           <div class="skills-category">
             <div class="skills-category-title">Applied ML &amp; AI</div>
             <div class="skills-badges">
-              <img src="https://img.shields.io/badge/YOLO-00FFFF.svg?style=for-the-badge&logo=ultralytics&logoColor=black" alt="YOLO">
-              <img src="https://img.shields.io/badge/Scikit--Learn-%23F7931E.svg?style=for-the-badge&logo=scikit-learn&logoColor=white" alt="Scikit-Learn">
-              <img src="https://img.shields.io/badge/PyTorch-%23EE4C2C.svg?style=for-the-badge&logo=pytorch&logoColor=white" alt="PyTorch">
-              <img src="https://img.shields.io/badge/TensorFlow-%23FF6F00.svg?style=for-the-badge&logo=tensorflow&logoColor=white" alt="TensorFlow">
+              <img src="https://img.shields.io/badge/YOLO-4DB2B2.svg?style=for-the-badge&logo=ultralytics&logoColor=black" alt="YOLO">
+              <img src="https://img.shields.io/badge/Scikit--Learn-B68E5F.svg?style=for-the-badge&logo=scikit-learn&logoColor=white" alt="Scikit-Learn">
+              <img src="https://img.shields.io/badge/PyTorch-B47366.svg?style=for-the-badge&logo=pytorch&logoColor=white" alt="PyTorch">
+              <img src="https://img.shields.io/badge/TensorFlow-B2794D.svg?style=for-the-badge&logo=tensorflow&logoColor=white" alt="TensorFlow">
             </div>
           </div>
           <div class="skills-category">
             <div class="skills-category-title">Large Language Model APIs</div>
             <div class="skills-badges">
               <span class="skill-logo-badge logo-invert"><img src="logo/OpenAI-logo-white.svg" alt="" aria-hidden="true">GPT</span>
-              <img src="https://img.shields.io/badge/Claude-D97757.svg?style=for-the-badge&logo=anthropic&logoColor=white" alt="Claude API">
-              <img src="https://img.shields.io/badge/Gemini-4285F4.svg?style=for-the-badge&logo=googlegemini&logoColor=white" alt="Gemini API">
+              <img src="https://img.shields.io/badge/Claude-B28B7E.svg?style=for-the-badge&logo=anthropic&logoColor=white" alt="Claude API">
+              <img src="https://img.shields.io/badge/Gemini-7792BF.svg?style=for-the-badge&logo=googlegemini&logoColor=white" alt="Gemini API">
               <span class="skill-logo-badge"><img src="logo/Z.ai-logo.svg" alt="" aria-hidden="true">GLM</span>
               <span class="skill-logo-badge logo-invert"><img src="logo/xAI-logo.svg" alt="" aria-hidden="true">Grok</span>
               <span class="skill-logo-badge"><img src="logo/ThaiLLM-logo-white.svg" alt="" aria-hidden="true">ThaiLLM</span>
@@ -3418,43 +3428,43 @@
           <div class="skills-category">
             <div class="skills-category-title">Cloud &amp; Infrastructure</div>
             <div class="skills-badges">
-              <img src="https://img.shields.io/badge/Google_Cloud-%234285F4.svg?style=for-the-badge&logo=google-cloud&logoColor=white" alt="Google Cloud">
-              <img src="https://img.shields.io/badge/Firebase-039BE5.svg?style=for-the-badge&logo=firebase&logoColor=white" alt="Firebase">
-              <img src="https://img.shields.io/badge/Huawei_Cloud-FF0000.svg?style=for-the-badge&logo=huawei&logoColor=white" alt="Huawei Cloud">
+              <img src="https://img.shields.io/badge/Google_Cloud-7792BF.svg?style=for-the-badge&logo=google-cloud&logoColor=white" alt="Google Cloud">
+              <img src="https://img.shields.io/badge/Firebase-4784A1.svg?style=for-the-badge&logo=firebase&logoColor=white" alt="Firebase">
+              <img src="https://img.shields.io/badge/Huawei_Cloud-B24D4D.svg?style=for-the-badge&logo=huawei&logoColor=white" alt="Huawei Cloud">
             </div>
           </div>
           <div class="skills-category">
             <div class="skills-category-title">Visualization &amp; Design</div>
             <div class="skills-badges">
-              <span class="skill-logo-badge" style="--badge-bg:#1f2937;"><img src="favicon/tableau.png" alt="" aria-hidden="true">Tableau</span>
-              <span class="skill-logo-badge" style="--badge-bg:#f2c811;--badge-color:#1f2937;"><img src="logo/Power-BI.svg" alt="" aria-hidden="true">Power BI</span>
-              <span class="skill-logo-badge" style="--badge-bg:#ffffff;--badge-color:#1f2937;--badge-border:#d9e1ea;"><img src="logo/Matplotlib-logo.svg" alt="" aria-hidden="true">Matplotlib</span>
-              <span class="skill-logo-badge" style="--badge-bg:#315477;"><img src="logo/Seaborn-logo.svg" alt="" aria-hidden="true">Seaborn</span>
-              <span class="skill-logo-badge" style="--badge-bg:#001e36;--badge-color:#31a8ff;--badge-icon-bg:#0b2f55;--badge-icon-color:#31a8ff;"><span class="skill-initial">Ps</span>Adobe Photoshop</span>
-              <span class="skill-logo-badge" style="--badge-bg:#001e36;--badge-color:#31a8ff;--badge-icon-bg:#0b2f55;--badge-icon-color:#31a8ff;"><span class="skill-initial">Lr</span>Adobe Lightroom</span>
+              <span class="skill-logo-badge" style="--badge-bg:#262a30;"><img src="favicon/tableau.png" alt="" aria-hidden="true">Tableau</span>
+              <span class="skill-logo-badge" style="--badge-bg:#ae9e55;--badge-color:#262a30;"><img src="logo/Power-BI.svg" alt="" aria-hidden="true">Power BI</span>
+              <span class="skill-logo-badge" style="--badge-bg:#ffffff;--badge-color:#262a30;--badge-border:#d9e1ea;"><img src="logo/Matplotlib-logo.svg" alt="" aria-hidden="true">Matplotlib</span>
+              <span class="skill-logo-badge" style="--badge-bg:#465462;"><img src="logo/Seaborn-logo.svg" alt="" aria-hidden="true">Seaborn</span>
+              <span class="skill-logo-badge" style="--badge-bg:#101c26;--badge-color:#6f9ec1;--badge-icon-bg:#21303f;--badge-icon-color:#6f9ec1;"><span class="skill-initial">Ps</span>Adobe Photoshop</span>
+              <span class="skill-logo-badge" style="--badge-bg:#101c26;--badge-color:#6f9ec1;--badge-icon-bg:#21303f;--badge-icon-color:#6f9ec1;"><span class="skill-initial">Lr</span>Adobe Lightroom</span>
             </div>
           </div>
           <div class="skills-category">
             <div class="skills-category-title">Geospatial</div>
             <div class="skills-badges">
-              <img src="https://img.shields.io/badge/QGIS-589632.svg?style=for-the-badge&logo=qgis&logoColor=white" alt="QGIS">
+              <img src="https://img.shields.io/badge/QGIS-5F7850.svg?style=for-the-badge&logo=qgis&logoColor=white" alt="QGIS">
             </div>
           </div>
           <div class="skills-category">
             <div class="skills-category-title">Cybersecurity</div>
             <div class="skills-badges">
-              <img src="https://img.shields.io/badge/ISC2%20CC-00A4E4.svg?style=for-the-badge&logo=isc2&logoColor=white" alt="ISC2 CC">
-              <img src="https://img.shields.io/badge/Google%20Cybersecurity-4285F4.svg?style=for-the-badge&logo=google&logoColor=white" alt="Google Cybersecurity">
+              <img src="https://img.shields.io/badge/ISC2%20CC-4486A0.svg?style=for-the-badge&logo=isc2&logoColor=white" alt="ISC2 CC">
+              <img src="https://img.shields.io/badge/Google%20Cybersecurity-7792BF.svg?style=for-the-badge&logo=google&logoColor=white" alt="Google Cybersecurity">
             </div>
           </div>
           <div class="skills-category">
             <div class="skills-category-title">Research &amp; Computing Environments</div>
             <div class="skills-badges">
-              <img src="https://img.shields.io/badge/Colab-F9AB00.svg?style=for-the-badge&logo=googlecolab&logoColor=white" alt="Colab">
-              <img src="https://img.shields.io/badge/Jupyter-%23F37626.svg?style=for-the-badge&logo=jupyter&logoColor=white" alt="Jupyter">
-              <img src="https://img.shields.io/badge/Anaconda-%2344A833.svg?style=for-the-badge&logo=anaconda&logoColor=white" alt="Anaconda">
-              <img src="https://img.shields.io/badge/Linux-FCC624.svg?style=for-the-badge&logo=linux&logoColor=black" alt="Linux">
-              <img src="https://img.shields.io/badge/LANTA_HPC-1B1F23.svg?style=for-the-badge&logo=serverfault&logoColor=white" alt="LANTA HPC">
+              <img src="https://img.shields.io/badge/Colab-AE8F4B.svg?style=for-the-badge&logo=googlecolab&logoColor=white" alt="Colab">
+              <img src="https://img.shields.io/badge/Jupyter-B58463.svg?style=for-the-badge&logo=jupyter&logoColor=white" alt="Jupyter">
+              <img src="https://img.shields.io/badge/Anaconda-5D8556.svg?style=for-the-badge&logo=anaconda&logoColor=white" alt="Anaconda">
+              <img src="https://img.shields.io/badge/Linux-BBA665.svg?style=for-the-badge&logo=linux&logoColor=black" alt="Linux">
+              <img src="https://img.shields.io/badge/LANTA_HPC-1D1F21.svg?style=for-the-badge&logo=serverfault&logoColor=white" alt="LANTA HPC">
             </div>
           </div>
         </div>
