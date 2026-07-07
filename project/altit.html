@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Altitude Itinerary Analyzer | Vitchakorn Poonyakanok</title>
+  <meta name="description" content="Case study: an AI-assisted travel medicine tool that extracts and analyzes complex itineraries for high-altitude illness risk.">
+  <meta name="author" content="Vitchakorn Poonyakanok">
+  <link rel="canonical" href="https://vitchakorn.com/project/altit.html">
+  <link rel="icon" href="../favicon/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="../favicon/favicon-32x32.png" sizes="32x32" type="image/png">
+  <link rel="icon" href="../favicon/favicon-16x16.png" sizes="16x16" type="image/png">
+  <link rel="apple-touch-icon" href="../favicon/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root, [data-theme="dark"] {
+      --bg: #0d1117;
+      --bg-card: #161b22;
+      --text-primary: #e6edf3;
+      --text-secondary: #8b949e;
+      --text-tertiary: #6e7681;
+      --accent: #2f81f7;
+      --accent-heading: #58a6ff;
+      --accent-muted-strong: rgba(47, 129, 247, 0.22);
+      --accent-border: rgba(47, 129, 247, 0.4);
+      --border: #30363d;
+      --border-light: #21262d;
+      --nav-bg: rgba(13, 17, 23, 0.9);
+      --selection-bg: rgba(47, 129, 247, 0.35);
+      --cloud-bg: rgba(255, 255, 255, 0.015);
+    }
+
+    [data-theme="light"] {
+      --bg: #eef3f8;
+      --bg-card: #fbfcfe;
+      --text-primary: #1f2328;
+      --text-secondary: #3f4a56;
+      --text-tertiary: #687482;
+      --accent: #0757bd;
+      --accent-heading: #0757bd;
+      --accent-muted-strong: rgba(7, 87, 189, 0.18);
+      --accent-border: rgba(7, 87, 189, 0.42);
+      --border: #b8c3cf;
+      --border-light: #d7e0e8;
+      --nav-bg: rgba(238, 243, 248, 0.94);
+      --selection-bg: rgba(7, 87, 189, 0.22);
+      --cloud-bg: rgba(7, 87, 189, 0.02);
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 100%; overflow-x: hidden; }
+    body {
+      font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text-primary);
+      line-height: 1.6;
+      transition: background-color 0.35s ease, color 0.35s ease;
+    }
+    ::selection { background: var(--selection-bg); color: var(--text-primary); }
+    a { color: var(--accent-heading); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .font-mono { font-family: 'JetBrains Mono', monospace !important; }
+
+    .container-grid { max-width: 860px; margin: 0 auto; padding: 0 48px; }
+    @media (max-width: 768px) { .container-grid { padding: 0 24px; } }
+
+    .page-header {
+      position: sticky; top: 0; z-index: 10;
+      background: var(--nav-bg);
+      backdrop-filter: blur(20px) saturate(1.2);
+      -webkit-backdrop-filter: blur(20px) saturate(1.2);
+      border-bottom: 1px solid var(--border);
+    }
+    .page-header-inner {
+      max-width: 860px; margin: 0 auto; padding: 0 48px; height: 56px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    @media (max-width: 768px) { .page-header-inner { padding: 0 24px; } }
+
+    .back-link {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.06em;
+      text-transform: uppercase; color: var(--text-tertiary);
+    }
+    .back-link:hover { color: var(--accent-heading); text-decoration: none; }
+
+    .theme-toggle {
+      width: 36px; height: 36px;
+      border: 1px solid var(--border); border-radius: 6px;
+      background: var(--bg-card); color: var(--text-secondary);
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s ease;
+    }
+    .theme-toggle:hover { border-color: var(--accent); color: var(--accent-heading); background: var(--accent-muted-strong); }
+    .theme-toggle svg { width: 16px; height: 16px; }
+    [data-theme="dark"] .icon-sun { display: block; }
+    [data-theme="dark"] .icon-moon { display: none; }
+    [data-theme="light"] .icon-sun { display: none; }
+    [data-theme="light"] .icon-moon { display: block; }
+
+    .case-hero { padding-top: 48px; padding-bottom: 8px; }
+    .case-kicker {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent-heading);
+    }
+    .case-title {
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      font-weight: 800; letter-spacing: -0.02em; color: var(--text-primary);
+      margin-top: 0.5rem;
+    }
+    .case-sub {
+      color: var(--text-secondary); margin-top: 0.875rem;
+      max-width: 42rem; font-size: 0.9375rem; line-height: 1.75;
+    }
+    .case-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 1.25rem; }
+    .case-tag {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.6875rem; font-weight: 600;
+      letter-spacing: 0.02em; padding: 4px 10px; border-radius: 999px;
+      border: 1px solid var(--border); color: var(--text-secondary); background: var(--bg-card);
+    }
+    .case-cta { margin-top: 1.75rem; display: flex; gap: 12px; flex-wrap: wrap; }
+    .case-cta-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; font-weight: 700;
+      padding: 10px 18px; border-radius: 8px;
+      border: 1px solid var(--accent-border); color: var(--accent-heading);
+      background: var(--accent-muted-strong); transition: background 0.2s ease, border-color 0.2s ease;
+    }
+    .case-cta-btn:hover { background: var(--accent-border); text-decoration: none; }
+
+    .case-media {
+      margin-top: 2rem; border: 1px solid var(--border-light); border-radius: 14px;
+      overflow: hidden; background: var(--bg-card);
+    }
+    .case-media img { width: 100%; height: auto; display: block; }
+    .case-gallery { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 2rem; }
+    @media (max-width: 640px) { .case-gallery { grid-template-columns: 1fr; } }
+    .case-gallery .case-media { margin-top: 0; }
+
+    .case-section { padding: 2.25rem 0; border-top: 1px solid var(--border-light); }
+    .case-section-title {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.8125rem; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent-heading);
+      margin-bottom: 1rem;
+    }
+    .case-section p { color: var(--text-secondary); font-size: 0.9375rem; line-height: 1.8; max-width: 42rem; }
+    .case-section p + p { margin-top: 1rem; }
+
+    .case-note {
+      margin-top: 1.25rem; padding: 0.9rem 1.1rem; border-radius: 10px;
+      border: 1px solid var(--border-light); background: var(--cloud-bg);
+      font-size: 0.8125rem; color: var(--text-tertiary); max-width: 42rem;
+    }
+
+    .case-stack { display: flex; flex-wrap: wrap; gap: 10px; }
+    .case-stack-item {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; font-weight: 600;
+      padding: 7px 12px; border-radius: 8px; border: 1px solid var(--border);
+      background: var(--bg-card); color: var(--text-primary);
+    }
+
+    .case-stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 0.5rem; }
+    @media (max-width: 640px) { .case-stat-grid { grid-template-columns: 1fr; } }
+    .case-stat {
+      border: 1px solid var(--border-light); border-radius: 12px; background: var(--cloud-bg);
+      padding: 1rem 1.1rem;
+    }
+    .case-stat-num { font-size: 1.375rem; font-weight: 800; color: var(--text-primary); }
+    .case-stat-label { font-family: 'JetBrains Mono', monospace; font-size: 0.6875rem; color: var(--text-tertiary); margin-top: 0.25rem; }
+
+    .archive-footer { padding: 40px 0 72px; }
+    .archive-footer a { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--text-tertiary); }
+    .archive-footer a:hover { color: var(--accent-heading); }
+  </style>
+</head>
+<body data-theme="dark">
+  <header class="page-header">
+    <div class="page-header-inner">
+      <a href="../index.html#projects" class="back-link">&larr; Back to Portfolio</a>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+        <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+        <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <div class="container-grid case-hero">
+    <div class="case-kicker">AI Clinical Decision Support</div>
+    <h1 class="case-title">Altitude Itinerary Analyzer</h1>
+    <p class="case-sub">Turns a messy, multi-format travel itinerary into a clinician-reviewable altitude-illness risk profile — because the risk depends on where a traveler sleeps each night, not the landmark photo on the itinerary.</p>
+    <div class="case-tags">
+      <span class="case-tag">Live App</span>
+      <span class="case-tag">Artificial Intelligence</span>
+      <span class="case-tag">Clinical Decision Support</span>
+      <span class="case-tag">Travel Medicine</span>
+    </div>
+    <div class="case-cta">
+      <a href="https://altit.app/" target="_blank" rel="noopener noreferrer" class="case-cta-btn">Open Live App &nearr;</a>
+    </div>
+    <div class="case-gallery">
+      <div class="case-media">
+        <img src="altit1.jpeg" alt="Altitude Itinerary Analyzer itinerary review interface" loading="eager" width="2624" height="1574">
+      </div>
+      <div class="case-media">
+        <img src="altit2.png" alt="Altitude Itinerary Analyzer elevation profile and risk report" loading="lazy" width="2892" height="1716">
+      </div>
+    </div>
+  </div>
+
+  <div class="container-grid">
+    <section class="case-section">
+      <div class="case-section-title">Problem</div>
+      <p>Altitude illness (acute mountain sickness, and its more severe forms HACE and HAPE) is common and largely preventable — but the risk hinges on a detail commercial itineraries routinely bury: where a traveler actually sleeps each night, and how quickly that sleeping altitude climbs. A day titled "Visit Jade Dragon Snow Mountain" might have the traveler overnighting far lower, in Lijiang — but a real-world itinerary PDF mixes promotional copy, multilingual place names, ambiguous dates, and transit stops in with genuine overnight stays, so pulling out the true ascent profile by hand is feasible but slow.</p>
+      <p>A pre-travel-medicine study of Thai travelers (Harnnavachok et al., <em>JITMM Proceedings</em>, 2018, n=362) found acute mountain sickness incidence around 20% — the scale of the problem this tool targets.</p>
+    </section>
+
+    <section class="case-section">
+      <div class="case-section-title">Approach &amp; Architecture</div>
+      <p>A traveler uploads an itinerary as a PDF, image, or pasted text. A Vercel serverless API sends it to Google Gemini, using an iterated extraction prompt that performs "clinical semantic narrowing" — deliberately separating each day's sleeping location/altitude from its highest point reached, since those are clinically different numbers with different risk implications.</p>
+      <p>The output renders as an editable table plus an elevation-profile chart, and a clinician reviews and corrects every row before anything is finalized — the tool is built to assist judgment, not replace it, and never auto-diagnoses. Rule-based flags surface ascent-rate risk directly, for example more than 500 m/day of sleeping-altitude gain, or sleeping above 2,500 m.</p>
+    </section>
+
+    <section class="case-section">
+      <div class="case-section-title">Clinical Grounding</div>
+      <p>The extraction schema and risk flags follow the "climb high, sleep low" principle from established altitude-medicine guidance (Wilderness Medical Society altitude-illness guidelines; CDC Yellow Book altitude chapter): risk rises for unacclimatized travelers sleeping above roughly 2,500 m, and above roughly 3,000 m, sleeping-altitude gains are generally kept under ~500 m/night with a rest day roughly every 3&ndash;4 days or 1,000 m gained.</p>
+      <div class="case-note">This is a technical proof-of-concept, not yet a clinically validated tool — there is no specialist-adjudicated ground truth or regulatory clearance behind it. Every report is reviewed by a clinician before use.</div>
+    </section>
+
+    <section class="case-section">
+      <div class="case-section-title">Outcome &amp; Evaluation</div>
+      <p>As part of a Chulalongkorn Faculty of Medicine DigiHealth independent-study thesis, the extraction pipeline was benchmarked against 20 researcher-built itineraries across text, PDF, and image formats, comparing roughly 18 candidate models. The selected model performed best on altitude agreement within &plusmn;100 m of reference, at a mean latency of 4.8 seconds and roughly $0.0038 per call for text input.</p>
+      <p>A classical OCR-plus-gazetteer baseline scored far lower, supporting the conclusion that this task needs contextual language-model reasoning rather than lookup alone.</p>
+      <div class="case-stat-grid">
+        <div class="case-stat">
+          <div class="case-stat-num">84.9%</div>
+          <div class="case-stat-label">Altitude agreement (&plusmn;100m) — text input</div>
+        </div>
+        <div class="case-stat">
+          <div class="case-stat-num">79.7%</div>
+          <div class="case-stat-label">Altitude agreement (&plusmn;100m) — PDF input</div>
+        </div>
+        <div class="case-stat">
+          <div class="case-stat-num">77.4%</div>
+          <div class="case-stat-label">Altitude agreement (&plusmn;100m) — image input</div>
+        </div>
+      </div>
+      <div class="case-note">These are technical benchmark figures against a researcher-created dataset, not a validated measure of clinical accuracy. Future work targets specialist-adjudicated ground truth and clinician/traveler usability testing.</div>
+    </section>
+
+    <section class="case-section">
+      <div class="case-section-title">Tech Stack</div>
+      <div class="case-stack">
+        <span class="case-stack-item">React 19</span>
+        <span class="case-stack-item">Vite</span>
+        <span class="case-stack-item">Tailwind CSS</span>
+        <span class="case-stack-item">Recharts</span>
+        <span class="case-stack-item">Vercel Serverless Functions</span>
+        <span class="case-stack-item">Firebase (Auth / Firestore / Storage)</span>
+        <span class="case-stack-item">Google Gemini API</span>
+        <span class="case-stack-item">LangSmith</span>
+      </div>
+    </section>
+  </div>
+
+  <footer class="archive-footer">
+    <div class="container-grid">
+      <a href="../index.html#projects">&larr; Back to portfolio</a>
+    </div>
+  </footer>
+
+  <script>
+    const htmlEl = document.documentElement;
+    const bodyEl = document.body;
+    const themeToggle = document.getElementById('themeToggle');
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    htmlEl.setAttribute('data-theme', savedTheme);
+    bodyEl.setAttribute('data-theme', savedTheme);
+    themeToggle.addEventListener('click', function () {
+      const current = htmlEl.getAttribute('data-theme');
+      const next = current === 'dark' ? 'light' : 'dark';
+      htmlEl.setAttribute('data-theme', next);
+      bodyEl.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+    });
+  </script>
+</body>
+</html>

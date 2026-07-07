@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project Archive | Vitchakorn Poonyakanok</title>
+  <meta name="description" content="Full project archive for Vitchakorn Poonyakanok — deployed apps, dashboards, Kaggle notebooks, and GIS/cartography work, each with a case study.">
+  <meta name="author" content="Vitchakorn Poonyakanok">
+  <link rel="canonical" href="https://vitchakorn.com/project/">
+  <link rel="icon" href="../favicon/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="../favicon/favicon-32x32.png" sizes="32x32" type="image/png">
+  <link rel="icon" href="../favicon/favicon-16x16.png" sizes="16x16" type="image/png">
+  <link rel="apple-touch-icon" href="../favicon/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root, [data-theme="dark"] {
+      --bg: #0d1117; --bg-card: #161b22; --text-primary: #e6edf3; --text-secondary: #8b949e;
+      --text-tertiary: #6e7681; --accent: #2f81f7; --accent-heading: #58a6ff;
+      --accent-muted-strong: rgba(47, 129, 247, 0.22); --accent-border: rgba(47, 129, 247, 0.4);
+      --border: #30363d; --border-light: #21262d; --nav-bg: rgba(13, 17, 23, 0.9);
+      --selection-bg: rgba(47, 129, 247, 0.35); --cloud-bg: rgba(255, 255, 255, 0.015);
+    }
+    [data-theme="light"] {
+      --bg: #eef3f8; --bg-card: #fbfcfe; --text-primary: #1f2328; --text-secondary: #3f4a56;
+      --text-tertiary: #687482; --accent: #0757bd; --accent-heading: #0757bd;
+      --accent-muted-strong: rgba(7, 87, 189, 0.18); --accent-border: rgba(7, 87, 189, 0.42);
+      --border: #b8c3cf; --border-light: #d7e0e8; --nav-bg: rgba(238, 243, 248, 0.94);
+      --selection-bg: rgba(7, 87, 189, 0.22); --cloud-bg: rgba(7, 87, 189, 0.02);
+    }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 100%; overflow-x: hidden; }
+    body { font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: var(--bg); color: var(--text-primary); line-height: 1.6; transition: background-color 0.35s ease, color 0.35s ease; }
+    ::selection { background: var(--selection-bg); color: var(--text-primary); }
+    a { color: var(--accent-heading); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .container-grid { max-width: 1100px; margin: 0 auto; padding: 0 48px; }
+    @media (max-width: 768px) { .container-grid { padding: 0 24px; } }
+    .page-header { position: sticky; top: 0; z-index: 10; background: var(--nav-bg); backdrop-filter: blur(20px) saturate(1.2); -webkit-backdrop-filter: blur(20px) saturate(1.2); border-bottom: 1px solid var(--border); }
+    .page-header-inner { max-width: 1100px; margin: 0 auto; padding: 0 48px; height: 56px; display: flex; align-items: center; justify-content: space-between; }
+    @media (max-width: 768px) { .page-header-inner { padding: 0 24px; } }
+    .back-link { font-family: 'JetBrains Mono', monospace; font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-tertiary); }
+    .back-link:hover { color: var(--accent-heading); text-decoration: none; }
+    .theme-toggle { width: 36px; height: 36px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg-card); color: var(--text-secondary); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease; }
+    .theme-toggle:hover { border-color: var(--accent); color: var(--accent-heading); background: var(--accent-muted-strong); }
+    .theme-toggle svg { width: 16px; height: 16px; }
+    [data-theme="dark"] .icon-sun { display: block; } [data-theme="dark"] .icon-moon { display: none; }
+    [data-theme="light"] .icon-sun { display: none; } [data-theme="light"] .icon-moon { display: block; }
+
+    .archive-hero { padding-top: 56px; padding-bottom: 32px; }
+    .archive-title { font-size: clamp(1.75rem, 4vw, 2.5rem); font-weight: 800; letter-spacing: -0.02em; color: var(--text-primary); }
+    .archive-sub { color: var(--text-secondary); margin-top: 0.875rem; max-width: 42rem; font-size: 0.9375rem; line-height: 1.75; }
+
+    .proj-category { margin-bottom: 3rem; }
+    .proj-category-title {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.8125rem; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent-heading); margin-bottom: 1.25rem;
+    }
+    .proj-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+    @media (max-width: 720px) { .proj-grid { grid-template-columns: 1fr; } }
+
+    .proj-card {
+      display: block; border: 1px solid var(--border-light); border-radius: 14px;
+      background: var(--cloud-bg); overflow: hidden;
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease, box-shadow 0.25s ease;
+    }
+    .proj-card:hover, .proj-card:focus-visible {
+      transform: translateY(-3px); border-color: var(--accent-border);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.25); text-decoration: none; outline: none;
+    }
+    .proj-card-media { width: 100%; aspect-ratio: 16 / 10; overflow: hidden; background: var(--bg-card); }
+    .proj-card-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .proj-card-body { padding: 1.1rem 1.25rem 1.35rem; }
+    .proj-card-kicker {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.6875rem; font-weight: 700;
+      letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent-heading);
+    }
+    .proj-card-title { font-size: 1.0625rem; font-weight: 700; color: var(--text-primary); margin-top: 0.4rem; }
+    .proj-card-desc { color: var(--text-secondary); font-size: 0.8438rem; line-height: 1.6; margin-top: 0.5rem; }
+    .proj-card-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 0.85rem; }
+    .proj-card-tag {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.625rem; font-weight: 600;
+      padding: 3px 8px; border-radius: 999px; border: 1px solid var(--border);
+      color: var(--text-secondary); background: var(--bg-card);
+    }
+
+    .archive-footer { padding: 40px 0 72px; }
+    .archive-footer a { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--text-tertiary); }
+    .archive-footer a:hover { color: var(--accent-heading); }
+  </style>
+</head>
+<body data-theme="dark">
+  <header class="page-header">
+    <div class="page-header-inner">
+      <a href="../index.html#projects" class="back-link">&larr; Back to Portfolio</a>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+        <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+        <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <div class="container-grid archive-hero">
+    <h1 class="archive-title">Project Archive</h1>
+    <p class="archive-sub">Every project referenced from the <a href="../index.html#projects">Projects</a> section of my portfolio, plus a few smaller builds that don't make the top carousel — deployed apps, dashboards, Kaggle notebooks, and GIS/cartography work. Each has its own case study.</p>
+  </div>
+
+  <div class="container-grid" style="padding-bottom: 2rem;">
+
+    <div class="proj-category">
+      <div class="proj-category-title">Deployed Apps</div>
+      <div class="proj-grid">
+        <a href="ddschatbot.html" class="proj-card">
+          <div class="proj-card-media"><img src="ddschatbot.png" alt="DDS Chatbot preview" loading="lazy"></div>
+          <div class="proj-card-body">
+            <div class="proj-card-kicker">Public Health LLM</div>
+            <div class="proj-card-title">DDS Chatbot</div>
+            <p class="proj-card-desc">Guardrailed Thai disease-surveillance LLM assistant using tool-calling over a PII-free data mart.</p>
+            <div class="proj-card-tags"><span class="proj-card-tag">LLM</span><span class="proj-card-tag">PDPA-Aligned</span></div>
+          </div>
+        </a>
+        <a href="altit.html" class="proj-card">
+          <div class="proj-card-media"><img src="altit1-thumb.webp" alt="Altitude Itinerary Analyzer preview" loading="lazy"></div>
+          <div class="proj-card-body">
+            <div class="proj-card-kicker">AI Clinical Decision Support</div>
+            <div class="proj-card-title">Altitude Itinerary Analyzer</div>
+            <p class="proj-card-desc">Extracts and analyzes multi-format travel itineraries for high-altitude illness risk.</p>
+            <div class="proj-card-tags"><span class="proj-card-tag">AI</span><span class="proj-card-tag">Travel Medicine</span></div>
+          </div>
+        </a>
+        <a href="hospcode.html" class="proj-card">
+          <div class="proj-card-media"><img src="hospcode-thumb.webp" alt="Thai HospSearch preview" loading="lazy"></div>
+          <div class="proj-card-body">
+            <div class="proj-card-kicker">Health Data Tool</div>
+            <div class="proj-card-title">Thai HospSearch</div>
+            <p class="proj-card-desc">Geospatial drill-down navigator unifying Thailand's scattered facility and area codes.</p>
+            <div class="proj-card-tags"><span class="proj-card-tag">Geospatial</span><span class="proj-card-tag">Health Data</span></div>
+          </div>
+        </a>
+        <a href="hajjmens.html" class="proj-card">
+          <div class="proj-card-media"><img src="hajjmens-thumb.webp" alt="Hajj Menstrual Delay Planner preview" loading="lazy"></div>
+          <div class="proj-card-body">
+            <div class="proj-card-kicker">Clinical Planning Utility</div>
+            <div class="proj-card-title">Hajj Menstrual Delay Planner</div>
+            <p class="proj-card-desc">Calendar-based counseling tool for menstrual delay/suppression planning around Hajj ritual dates.</p>
+            <div class="proj-card-tags"><span class="proj-card-tag">Clinical Tool</span><span class="proj-card-tag">Travel Medicine</span></div>
+          </div>
+        </a>
+        <a href="th-numeral.html" class="proj-card">
+          <div class="proj-card-media"><img src="th-numeral-thumb.webp" alt="Thai Numeral Converter preview" loading="lazy"></div>
+          <div class="proj-card-body">
+            <div class="proj-card-kicker">Thai Documentation Utility</div>
+            <div class="proj-card-title">Thai Numeral Converter</div>
+            <p class="proj-card-desc">Word add-in that permanently converts Arabic to Thai numerals, preserving emails and URLs.</p>
+            <div class="proj-card-tags"><span class="proj-card-tag">Word Add-in</span><span class="proj-card-tag">Localization</span></div>
+          </div>
+        </a>
+        <a href="cda2558.html" class="proj-card">
+          <div class="proj-card-media"><img src="cda2558-thumb.png" alt="CDA 2558 App preview" loading="lazy"></div>
+          <div class="proj-card-body">
+            <div class="proj-card-kicker">Thai Legal Reference Tool</div>
+            <div class="proj-card-title">CDA 2558 App</div>
+            <p class="proj-card-desc">Searchable, numeral-flexible reader for Thailand's Communicable Disease Act B.E. 2558.</p>
+            <div class="proj-card-tags"><span class="proj-card-tag">Legal Reference</span><span class="proj-card-tag">Public Health</span></div>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <div class="proj-category">
+      <div class="proj-category-title">Dashboards &amp; Data Viz</div>
+      <div class="proj-grid">
+        <a href="yfmalaria.html" class="proj-card">
+          <div class="proj-card-media"><img src="yfmalaria-thumb.webp" alt="Yellow Fever and Malaria Dashboard preview" loading="lazy"></div>
+          <div class="proj-card-body">
+            <div class="proj-card-kicker">Clinical Dashboard</div>
+            <div class="proj-card-title">Yellow Fever &amp; Malaria Prevention Dashboard</div>
+            <p class="proj-card-desc">One country-clickable map combining vaccine and prophylaxis guidance, with seasonal detail.</p>
+            <div class="proj-card-tags"><span class="proj-card-tag">Tableau</span><span class="proj-card-tag">CDC Yellow Book</span></div>
+          </div>
+        </a>
+        <a href="pm2-5.html" class="proj-card">
+          <div class="proj-card-media"><img src="pm2-5-thumb.webp" alt="PM2.5 and Mental Health Dynamics preview" loading="lazy"></div>
+          <div class="proj-card-body">
+            <div class="proj-card-kicker">Tableau Public</div>
+            <div class="proj-card-title">PM2.5 &amp; Mental Health Dynamics</div>
+            <p class="proj-card-desc">Spatial-temporal story on air pollution vs. psychiatric visits using Interrupted Time Series.</p>
+            <div class="proj-card-tags"><span class="proj-card-tag">Academic</span><span class="proj-card-tag">Epidemiology</span></div>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <div class="proj-category">
+      <div class="proj-category-title">Kaggle Notebooks</div>
+      <div class="proj-grid">
+        <a href="cirrhosis.html" class="proj-card">
+          <div class="proj-card-media"><img src="cirrhosis-thumb.webp" alt="Cirrhosis Survival Prediction preview" loading="lazy"></div>
+          <div class="proj-card-body">
+            <div class="proj-card-kicker">Kaggle Notebook</div>
+            <div class="proj-card-title">Cirrhosis Survival Prediction</div>
+            <p class="proj-card-desc">Multi-class ensemble model (XGBoost/LightGBM) for cirrhosis survival and transplant outcomes.</p>
+            <div class="proj-card-tags"><span class="proj-card-tag">Machine Learning</span><span class="proj-card-tag">Clinical</span></div>
+          </div>
+        </a>
+        <a href="bnk48.html" class="proj-card">
+          <div class="proj-card-media"><img src="bnk48-thumb.webp" alt="BNK/CGM48 election predictive analysis preview" loading="lazy"></div>
+          <div class="proj-card-body">
+            <div class="proj-card-kicker">Kaggle Notebook</div>
+            <div class="proj-card-title">BNK/CGM48 4th General Election Predictive Analysis</div>
+            <p class="proj-card-desc">First end-to-end ML project, scraping to prediction, forecasting an entertainment-industry election.</p>
+            <div class="proj-card-tags"><span class="proj-card-tag">Web Scraping</span><span class="proj-card-tag">Prediction</span></div>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <div class="proj-category">
+      <div class="proj-category-title">GIS &amp; Cartography</div>
+      <div class="proj-grid">
+        <a href="sichuan-yunnan.html" class="proj-card">
+          <div class="proj-card-media"><img src="sichuan-yunnan-thumb.png" alt="Sichuan-Yunnan Altitude and Transit Map preview" loading="lazy"></div>
+          <div class="proj-card-body">
+            <div class="proj-card-kicker">Geospatial Reference Map</div>
+            <div class="proj-card-title">Sichuan-Yunnan Altitude &amp; Transit Map</div>
+            <p class="proj-card-desc">One bilingual map combining altitude, attractions, and transit for high-altitude travel consults.</p>
+            <div class="proj-card-tags"><span class="proj-card-tag">QGIS</span><span class="proj-card-tag">Travel Medicine</span></div>
+          </div>
+        </a>
+        <a href="countries-tiny.html" class="proj-card">
+          <div class="proj-card-media"><img src="countries-tiny-thumb.png" alt="Countries with Tiny Nations and Territories preview" loading="lazy"></div>
+          <div class="proj-card-body">
+            <div class="proj-card-kicker">QGIS &middot; GIS Data Engineering</div>
+            <div class="proj-card-title">Countries with Tiny Nations &amp; Territories</div>
+            <p class="proj-card-desc">Hand-corrected world shapefile restoring small nations standard basemaps drop.</p>
+            <div class="proj-card-tags"><span class="proj-card-tag">Shapefile</span><span class="proj-card-tag">CC0</span></div>
+          </div>
+        </a>
+      </div>
+    </div>
+
+  </div>
+
+  <footer class="archive-footer">
+    <div class="container-grid">
+      <a href="../index.html">&larr; Back to portfolio</a>
+    </div>
+  </footer>
+
+  <script>
+    const htmlEl = document.documentElement;
+    const bodyEl = document.body;
+    const themeToggle = document.getElementById('themeToggle');
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    htmlEl.setAttribute('data-theme', savedTheme);
+    bodyEl.setAttribute('data-theme', savedTheme);
+    themeToggle.addEventListener('click', function () {
+      const current = htmlEl.getAttribute('data-theme');
+      const next = current === 'dark' ? 'light' : 'dark';
+      htmlEl.setAttribute('data-theme', next);
+      bodyEl.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+    });
+  </script>
+</body>
+</html>
