@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2026-07-09] - Astro Migration, Markdown Blog, Standalone Pages, and Mobile UX Polish
+
+### Added
+- **Astro Migration**: Migrated the single-file HTML portfolio to a modern Astro structure, splitting sections into reusable components and layout templates.
+- **Markdown Blog Engine**: Configured content collections using Content Layer, implementing dynamic blog index listing (`/blog`) and markdown post pages (`/blog/[slug]`).
+- **Dedicated Contact Page**: Created a dynamic standalone Contact page at `/contact` with updated layout routing.
+- **Dynamic Sitemap Integration**: Configured `@astrojs/sitemap` to dynamically merge blog paths and legacy static project files.
+
+### Changed
+- **Mobile Menu Curation**: Cleaned up the mobile drawer links to display only Home, Blog, and Contact, avoiding redundancy with the permanently docked section indicator chips.
+
+### Fixed
+- **Globe Canvas & Role Swapper**: Fixed a critical `ReferenceError` for the `htmlEl` context variable in the modularized canvas component script.
+- **Pre-warmed Shapes Cache**: Pre-computed the coordinates of `thailand`, `chart`, and `network` shapes on page load to eliminate first-transition GC and calculation lag.
+- **Mobile Scroll Fading**: Added a CSS linear-gradient mask to horizontally scrollable nav section chips.
+- **Mobile Drawer Transitions**: Replaced the abrupt menu toggle with smooth slide-and-fade dropdown drawer transitions.
+
 ## [2026-07-04] - Transition Choreography, Social Card, SEO and Icon Cleanup
 
 ### Added
