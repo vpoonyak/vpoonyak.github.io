@@ -1,0 +1,28 @@
+---
+// Astro Component
+---
+
+<footer class="footer">
+    <div class="container-grid">
+      <div class="footer-inner">
+        <span class="footer-copy">© 2026 Vitchakorn Poonyakanok</span>
+        <div class="footer-status">
+          <span class="status-dot"></span>
+          <span>Bangkok, TH · <span id="localTime" class="font-mono">--:--</span></span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+<script>
+    // ── Bangkok Time ──
+    function updateTime() {
+      var now = new Date();
+      var options = { timeZone: 'Asia/Bangkok', hour: '2-digit', minute: '2-digit', hour12: false };
+      var timeStr = now.toLocaleTimeString('en-GB', options);
+      document.getElementById('localTime').textContent = timeStr;
+    }
+    updateTime();
+    setInterval(updateTime, 1000);
+
+</script>

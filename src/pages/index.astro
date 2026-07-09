@@ -1,0 +1,166 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navigation from '../components/Navigation.astro';
+import Hero from '../components/Hero.astro';
+import About from '../components/About.astro';
+import Experience from '../components/Experience.astro';
+import Expertise from '../components/Expertise.astro';
+import Projects from '../components/Projects.astro';
+import Publications from '../components/Publications.astro';
+import Training from '../components/Training.astro';
+import Capabilities from '../components/Capabilities.astro';
+import Contact from '../components/Contact.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout isHome={true}>
+  <Navigation />
+  <Hero />
+  <About />
+  <Experience />
+  <Expertise />
+  <Projects />
+  <Publications />
+  <Training />
+  <Capabilities />
+  <Contact />
+  <Footer />
+</Layout>
+
+<script>
+  if (document.getElementById('about')) {
+    // ── Scroll Reveal ──
+    function revealOnScroll() {
+      var elements = document.querySelectorAll('.fade-in');
+      for (var i = 0; i < elements.length; i++) {
+        var el = elements[i];
+        var rect = el.getBoundingClientRect();
+        var windowHeight = window.innerHeight || document.documentElement.clientHeight;
+        if (rect.top < windowHeight - 60) {
+          el.classList.add('visible');
+        }
+      }
+    }
+
+    // Run immediately so content is visible without waiting
+    revealOnScroll();
+    window.requestAnimationFrame(revealOnScroll);
+    window.addEventListener('load', revealOnScroll);
+    window.setTimeout(revealOnScroll, 100);
+
+    // Run on scroll
+    window.addEventListener('scroll', revealOnScroll, { passive: true });
+
+    // Run on resize
+    window.addEventListener('resize', revealOnScroll, { passive: true });
+
+    // ── Active Nav Link ──
+    var sectionIds = ['top', 'about', 'experience', 'projects', 'publications', 'training', 'skills', 'contact'];
+    var sectionLabels = {
+      top: 'Home',
+      about: 'About',
+      experience: 'Experience',
+      projects: 'Projects',
+      publications: 'Research',
+      training: 'Training',
+      skills: 'Capabilities',
+      contact: 'Contact'
+    };
+    
+    var navLinks = document.getElementById('navLinks');
+    if (navLinks) {
+      var navAnchors = navLinks.querySelectorAll('a');
+      var navSectionIndicator = document.getElementById('navSectionIndicator');
+      var activeSectionIndex = null;
+      var sectionIndicatorChips = [];
+
+      function setupSectionIndicator() {
+        if (!navSectionIndicator) return;
+        navSectionIndicator.textContent = '';
+        sectionIndicatorChips = [];
+
+        sectionIds.forEach(function(sectionId) {
+          var label = sectionLabels[sectionId];
+          var chip = document.createElement('a');
+
+          chip.className = 'section-chip';
+          chip.href = '#' + sectionId;
+          chip.textContent = label;
+          chip.title = label;
+          chip.setAttribute('aria-label', 'Go to ' + label + ' section');
+
+          sectionIndicatorChips.push(chip);
+          navSectionIndicator.appendChild(chip);
+        });
+      }
+
+      function updateSectionIndicator(activeIndex) {
+        if (!navSectionIndicator || !sectionIndicatorChips.length) return;
+        if (activeIndex === activeSectionIndex) return;
+
+        activeSectionIndex = activeIndex;
+        sectionIndicatorChips.forEach(function(chip, chipIndex) {
+          var isActive = chipIndex === activeIndex;
+          chip.classList.toggle('current', isActive);
+          if (isActive) {
+            chip.setAttribute('aria-current', 'location');
+            chip.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+          } else {
+            chip.removeAttribute('aria-current');
+          }
+        });
+      }
+
+      function updateActiveNav() {
+        var viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+        var readingLine = Math.min(viewportHeight * 0.62, 520);
+        var activeIndex = 0;
+
+        for (var i = sectionIds.length - 1; i >= 0; i--) {
+          var section = document.getElementById(sectionIds[i]);
+          if (!section) continue;
+
+          var rect = section.getBoundingClientRect();
+          if (rect.top <= readingLine && rect.bottom > readingLine) {
+            activeIndex = i;
+            break;
+          }
+        }
+
+        navAnchors.forEach(function(a) {
+          a.classList.remove('active');
+          a.removeAttribute('aria-current');
+        });
+
+        var target = navLinks.querySelector('a[href$="#' + sectionIds[activeIndex] + '"]');
+        if (target) {
+          target.classList.add('active');
+          target.setAttribute('aria-current', 'location');
+        }
+        updateSectionIndicator(activeIndex);
+
+        // per-section identity hooks: body attribute for CSS tints/motifs,
+        // scroll progress for the nav progress bar
+        document.body.setAttribute('data-active-section', sectionIds[activeIndex]);
+        var docEl = document.documentElement;
+        var maxScroll = Math.max(1, docEl.scrollHeight - viewportHeight);
+        docEl.style.setProperty('--scroll-progress', Math.min(1, (window.scrollY || docEl.scrollTop || 0) / maxScroll).toFixed(4));
+      }
+
+      document.querySelectorAll('.project-tags').forEach(function(tagGroup) {
+        tagGroup.addEventListener('click', function(event) {
+          event.preventDefault();
+          event.stopPropagation();
+        });
+      });
+
+      window.addEventListener('scroll', updateActiveNav, { passive: true });
+      setupSectionIndicator();
+      updateActiveNav();
+      window.requestAnimationFrame(updateActiveNav);
+      window.addEventListener('load', updateActiveNav);
+      window.setTimeout(updateActiveNav, 100);
+      window.setTimeout(updateActiveNav, 350);
+    }
+  }
+</script>

@@ -1,0 +1,191 @@
+---
+import Layout from './Layout.astro';
+import Navigation from '../components/Navigation.astro';
+import Footer from '../components/Footer.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  pubDate: Date;
+  updatedDate?: Date;
+  heroImage?: string;
+  tags?: string[];
+  canonicalUrl?: string;
+}
+
+const { title, description, pubDate, updatedDate, heroImage, tags, canonicalUrl } = Astro.props;
+
+const formattedDate = pubDate.toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+---
+
+<Layout title={`${title} | Vitchakorn Poonyakanok`} description={description} image={heroImage} canonicalUrl={canonicalUrl}>
+  <Navigation />
+  
+  <main class="blog-post-container section-alt-bg" style="min-height: 100vh; padding-top: 100px; padding-bottom: 80px;">
+    <div class="container-grid">
+      <article class="blog-post-article">
+        <!-- Back Link -->
+        <div class="blog-back-link">
+          <a href="/blog" class="t-mono" style="display: inline-flex; align-items: center; gap: 8px; color: var(--accent); text-decoration: none; font-size: 0.8125rem; font-weight: 500; text-transform: uppercase; margin-bottom: 2rem;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transform: rotate(180deg);"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            Back to Blog
+          </a>
+        </div>
+
+        {heroImage && (
+          <div class="blog-hero-image-container" style="border-radius: 6px; overflow: hidden; margin-bottom: 2.5rem; border: 1px solid var(--border); aspect-ratio: 16/9;">
+            <img src={heroImage} alt={title} style="width: 100%; height: 100%; object-fit: cover;" />
+          </div>
+        )}
+
+        <!-- Header -->
+        <header class="blog-post-header" style="margin-bottom: 2.5rem;">
+          <div class="blog-meta t-mono" style="font-size: 0.8125rem; color: var(--text-secondary); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+            <span>{formattedDate}</span>
+            {updatedDate && (
+              <>
+                <span style="color: var(--text-quaternary);">•</span>
+                <span>Updated: {updatedDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+              </>
+            )}
+          </div>
+          
+          <h1 class="t-hero" style="font-size: clamp(2rem, 5vw, 3.25rem); font-weight: 800; line-height: 1.15; color: var(--text-primary); margin: 0 0 1.5rem 0;">
+            {title}
+          </h1>
+
+          {tags && tags.length > 0 && (
+            <div class="blog-tags" style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 1.5rem;">
+              {tags.map((tag) => (
+                <span class="badge t-mono" style="font-size: 0.6875rem; padding: 4px 8px; border-radius: 4px; background: var(--bg-card); border: 1px solid var(--border); color: var(--text-secondary); font-weight: 500;">
+                  {tag}
+                </span>
+              ))}
+            </div>
+          )}
+
+          <div style="width: 100%; height: 1px; background: var(--border); margin-top: 2rem;"></div>
+        </header>
+
+        <!-- Content -->
+        <div class="blog-content markdown-body" style="font-size: 1.0625rem; line-height: 1.75; color: var(--text-primary);">
+          <slot />
+        </div>
+      </article>
+    </div>
+  </main>
+
+  <Footer />
+</Layout>
+
+<style is:global>
+  /* Markdown styling custom for article reading layout */
+  .blog-post-article {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+  
+  .markdown-body {
+    word-break: break-word;
+  }
+
+  .markdown-body p {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    font-weight: 400;
+  }
+
+  .markdown-body h2 {
+    font-size: 1.625rem;
+    font-weight: 700;
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+    line-height: 1.3;
+    letter-spacing: -0.015em;
+  }
+
+  .markdown-body h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+    color: var(--text-primary);
+    line-height: 1.4;
+  }
+
+  .markdown-body ul, .markdown-body ol {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    padding-left: 1.5rem;
+  }
+
+  .markdown-body li {
+    margin-bottom: 0.5rem;
+  }
+
+  .markdown-body a {
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.15s ease;
+  }
+
+  .markdown-body a:hover {
+    border-bottom-color: var(--accent);
+  }
+
+  .markdown-body blockquote {
+    margin: 1.5rem 0;
+    padding-left: 1.25rem;
+    border-left: 4px solid var(--accent);
+    color: var(--text-secondary);
+    font-style: italic;
+  }
+
+  .markdown-body pre {
+    background: var(--bg-code) !important;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1.25rem;
+    margin: 1.5rem 0;
+    overflow-x: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.875rem;
+  }
+
+  .markdown-body code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.875rem;
+    background: var(--bg-code);
+    padding: 2px 6px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+  }
+
+  .markdown-body pre code {
+    background: transparent;
+    padding: 0;
+    border-radius: 0;
+    border: none;
+  }
+
+  .markdown-body img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 6px;
+    margin: 2rem 0;
+    border: 1px solid var(--border);
+  }
+
+  .markdown-body hr {
+    height: 1px;
+    border: none;
+    background: var(--border);
+    margin: 2.5rem 0;
+  }
+</style>

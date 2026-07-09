@@ -1,0 +1,379 @@
+---
+// Astro Component
+---
+
+<section class="section" id="projects">
+    <div class="container-grid">
+      <div class="section-header fade-in">
+        <span class="t-section-number">03</span>
+        <div>
+          <h2 class="t-label section-title">Top Projects</h2>
+          <div class="section-header-rule"></div>
+        </div>
+      </div>
+      <div class="featured-project-carousel fade-in delay-1" id="projectCarousel" aria-label="Featured projects">
+        <div class="featured-project-header">
+          <span class="t-label">Featured Work</span>
+          <div class="featured-project-controls">
+            <button type="button" class="carousel-btn" id="projectPrev" aria-label="Previous featured project">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+            </button>
+            <button type="button" class="carousel-btn" id="projectNext" aria-label="Next featured project">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+          </div>
+        </div>
+        <article class="featured-project-slide active" aria-hidden="false">
+          <a href="project/ddschatbot.html" target="_blank" class="featured-project-media-link" rel="noopener noreferrer">
+            <div class="featured-project-media">
+              <img src="project/ddschatbot.png" alt="DDS Chatbot Thai disease surveillance interface preview" loading="eager" width="2192" height="1502">
+            </div>
+          </a>
+          <a href="project/ddschatbot.html" target="_blank" class="featured-project-copy-link" rel="noopener noreferrer">
+            <div class="featured-project-copy">
+            <div class="featured-project-kicker">Public Health LLM</div>
+            <h3 class="featured-project-title">DDS Chatbot</h3>
+            <p class="featured-project-desc">Guardrailed Thai disease-surveillance LLM assistant for DDC, using tool-calling over an aggregate, PII-free data mart — built to give surveillance staff safe self-service query access without exposing raw case-level records.</p>
+            <div class="project-tags"><span class="project-tag">Live Demo</span><span class="project-tag">LLM Tool Calling</span><span class="project-tag">Public Health</span><span class="project-tag">PDPA-Aligned</span></div>
+            </div>
+          </a>
+        </article>
+        <article class="featured-project-slide" aria-hidden="true">
+          <a href="project/altit.html" target="_blank" class="featured-project-media-link" rel="noopener noreferrer">
+            <div class="featured-project-media">
+              <img src="project/altit1-thumb.webp" alt="Altitude Itinerary Analyzer interface preview" loading="lazy" width="1400" height="840">
+            </div>
+          </a>
+          <a href="project/altit.html" target="_blank" class="featured-project-copy-link" rel="noopener noreferrer">
+            <div class="featured-project-copy">
+            <div class="featured-project-kicker">AI Clinical Decision Support</div>
+            <h3 class="featured-project-title">Altitude Itinerary Analyzer</h3>
+            <p class="featured-project-desc">AI-assisted travel medicine tool for extracting and analyzing complex itineraries for high-altitude risk assessment.</p>
+            <div class="project-tags"><span class="project-tag">Live App</span><span class="project-tag">Artificial Intelligence</span><span class="project-tag">Clinical Decision Support</span><span class="project-tag">Travel Medicine</span></div>
+            </div>
+          </a>
+        </article>
+        <article class="featured-project-slide" aria-hidden="true">
+          <a href="project/yfmalaria.html" target="_blank" class="featured-project-media-link" rel="noopener noreferrer">
+            <div class="featured-project-media">
+              <img src="project/yfmalaria-thumb.webp" alt="Yellow fever and malaria dashboard preview" loading="lazy" width="1400" height="1077">
+            </div>
+          </a>
+          <a href="project/yfmalaria.html" target="_blank" class="featured-project-copy-link" rel="noopener noreferrer">
+            <div class="featured-project-copy">
+            <div class="featured-project-kicker">Clinical Dashboard</div>
+            <h3 class="featured-project-title">Yellow Fever Vaccine &amp; Malaria Prevention Dashboard</h3>
+            <p class="featured-project-desc">Country-specific Tableau dashboard for immunization and prophylaxis guidance based on CDC Yellow Book travel health data.</p>
+            <div class="project-tags"><span class="project-tag">Dashboard</span><span class="project-tag">Tableau</span><span class="project-tag">CDC Yellow Book</span></div>
+            </div>
+          </a>
+        </article>
+        <article class="featured-project-slide" aria-hidden="true">
+          <a href="project/hospcode.html" target="_blank" class="featured-project-media-link" rel="noopener noreferrer">
+            <div class="featured-project-media">
+              <img src="project/hospcode-thumb.webp" alt="Thai HospSearch application preview" loading="lazy" width="1400" height="914">
+            </div>
+          </a>
+          <a href="project/hospcode.html" target="_blank" class="featured-project-copy-link" rel="noopener noreferrer">
+            <div class="featured-project-copy">
+            <div class="featured-project-kicker">Health Data Tool</div>
+            <h3 class="featured-project-title">Thai HospSearch</h3>
+            <p class="featured-project-desc">Navigator for Thai healthcare administrative hierarchy and facility code lookup from region to subdistrict.</p>
+            <div class="project-tags"><span class="project-tag">Live App</span><span class="project-tag">Health Data</span><span class="project-tag">Public Health</span></div>
+            </div>
+          </a>
+        </article>
+        <article class="featured-project-slide" aria-hidden="true">
+          <a href="project/hajjmens.html" target="_blank" class="featured-project-media-link" rel="noopener noreferrer">
+            <div class="featured-project-media">
+              <img src="project/hajjmens-thumb.webp" alt="Hajj Menstrual Delay Planner application preview" loading="lazy" width="1400" height="833">
+            </div>
+          </a>
+          <a href="project/hajjmens.html" target="_blank" class="featured-project-copy-link" rel="noopener noreferrer">
+            <div class="featured-project-copy">
+            <div class="featured-project-kicker">Clinical Planning Utility</div>
+            <h3 class="featured-project-title">Hajj Menstrual Delay Planner</h3>
+            <p class="featured-project-desc">Web utility for visualizing cycles and supporting menstrual delay or suppression planning for pilgrimage travel.</p>
+            <div class="project-tags"><span class="project-tag">Live App</span><span class="project-tag">Clinical Tool</span><span class="project-tag">Travel Medicine</span></div>
+            </div>
+          </a>
+        </article>
+        <article class="featured-project-slide" aria-hidden="true">
+          <a href="project/pm2-5.html" target="_blank" class="featured-project-media-link" rel="noopener noreferrer">
+            <div class="featured-project-media">
+              <img src="project/pm2-5-thumb.webp" alt="PM2.5 and Mental Health Dynamics Tableau story preview" loading="lazy" width="1400" height="773">
+            </div>
+          </a>
+          <a href="project/pm2-5.html" target="_blank" class="featured-project-copy-link" rel="noopener noreferrer">
+            <div class="featured-project-copy">
+            <div class="featured-project-kicker">Tableau Public</div>
+            <h3 class="featured-project-title">PM2.5 &amp; Mental Health Dynamics</h3>
+            <p class="featured-project-desc">Visualized spatial-temporal correlations between air pollution and psychiatric disorders using Interrupted Time Series (ITS) models.</p>
+            <div class="project-tags"><span class="project-tag">Data Viz</span><span class="project-tag">Epidemiology</span><span class="project-tag">Interrupted Time Series</span></div>
+            </div>
+          </a>
+        </article>
+        <article class="featured-project-slide" aria-hidden="true">
+          <a href="project/cirrhosis.html" target="_blank" class="featured-project-media-link" rel="noopener noreferrer">
+            <div class="featured-project-media">
+              <img src="project/cirrhosis-thumb.webp" alt="Cirrhosis Survival Prediction notebook preview" loading="lazy" width="1400" height="1178">
+            </div>
+          </a>
+          <a href="project/cirrhosis.html" target="_blank" class="featured-project-copy-link" rel="noopener noreferrer">
+            <div class="featured-project-copy">
+            <div class="featured-project-kicker">Kaggle Notebook</div>
+            <h3 class="featured-project-title">Cirrhosis Survival Prediction</h3>
+            <p class="featured-project-desc">Multi-class prediction model using Ensemble Learning (XGBoost/LightGBM) with engineered clinical features.</p>
+            <div class="project-tags"><span class="project-tag">Machine Learning</span><span class="project-tag">Clinical</span><span class="project-tag">Ensemble</span></div>
+            </div>
+          </a>
+        </article>
+        <article class="featured-project-slide" aria-hidden="true">
+          <a href="project/th-numeral.html" target="_blank" class="featured-project-media-link" rel="noopener noreferrer">
+            <div class="featured-project-media">
+              <img src="project/th-numeral-thumb.webp" alt="Thai Numeral Converter application preview" loading="lazy" width="1366" height="768">
+            </div>
+          </a>
+          <a href="project/th-numeral.html" target="_blank" class="featured-project-copy-link" rel="noopener noreferrer">
+            <div class="featured-project-copy">
+            <div class="featured-project-kicker">Thai Documentation Utility</div>
+            <h3 class="featured-project-title">Thai Numeral Converter</h3>
+            <p class="featured-project-desc">Automated utility for Thai government documentation, converting Arabic to Thai numerals while preserving email addresses and URLs.</p>
+            <div class="project-tags"><span class="project-tag">Utility</span><span class="project-tag">Localization</span></div>
+            </div>
+          </a>
+        </article>
+        <article class="featured-project-slide" aria-hidden="true">
+          <a href="project/bnk48.html" target="_blank" class="featured-project-media-link" rel="noopener noreferrer">
+            <div class="featured-project-media">
+              <img src="project/bnk48-thumb.webp" alt="BNK and CGM48 election predictive analysis notebook preview" loading="lazy" width="1400" height="1161">
+            </div>
+          </a>
+          <a href="project/bnk48.html" target="_blank" class="featured-project-copy-link" rel="noopener noreferrer">
+            <div class="featured-project-copy">
+            <div class="featured-project-kicker">Kaggle Notebook</div>
+            <h3 class="featured-project-title">BNK/CGM48 4th General Election Predictive Analysis</h3>
+            <p class="featured-project-desc">Technical case study using end-to-end ML (Scraping to Prediction) to forecast election outcomes in the entertainment industry.</p>
+            <div class="project-tags"><span class="project-tag">Machine Learning</span><span class="project-tag">Web Scraping</span><span class="project-tag">Prediction</span></div>
+            </div>
+          </a>
+        </article>
+        <div class="carousel-dots" aria-label="Featured project selector">
+          <button type="button" class="carousel-dot" data-project-slide="0" aria-label="Show DDS Chatbot" aria-current="true"></button>
+          <button type="button" class="carousel-dot" data-project-slide="1" aria-label="Show Altitude Itinerary Analyzer" aria-current="false"></button>
+          <button type="button" class="carousel-dot" data-project-slide="2" aria-label="Show Yellow Fever Vaccine and Malaria Prevention Dashboard" aria-current="false"></button>
+          <button type="button" class="carousel-dot" data-project-slide="3" aria-label="Show Thai HospSearch" aria-current="false"></button>
+          <button type="button" class="carousel-dot" data-project-slide="4" aria-label="Show Hajj Menstrual Delay Planner" aria-current="false"></button>
+          <button type="button" class="carousel-dot" data-project-slide="5" aria-label="Show PM2.5 and Mental Health Dynamics" aria-current="false"></button>
+          <button type="button" class="carousel-dot" data-project-slide="6" aria-label="Show Cirrhosis Survival Prediction" aria-current="false"></button>
+          <button type="button" class="carousel-dot" data-project-slide="7" aria-label="Show Thai Numeral Converter" aria-current="false"></button>
+          <button type="button" class="carousel-dot" data-project-slide="8" aria-label="Show BNK/CGM48 4th General Election Predictive Analysis" aria-current="false"></button>
+        </div>
+      </div>
+      <div class="cert-archive-link-row">
+        <a href="project/" target="_blank" rel="noopener noreferrer" class="cert-archive-link">View full project archive &rarr;</a>
+      </div>
+    </div>
+  </section>
+
+<script>
+    // ── Featured Project Carousel ──
+    const projectCarousel = document.getElementById('projectCarousel');
+
+    if (projectCarousel) {
+      const projectSlides = projectCarousel.querySelectorAll('.featured-project-slide');
+      const projectDots = projectCarousel.querySelectorAll('.carousel-dot');
+      const projectDesktopDots = projectCarousel.querySelector(':scope > .carousel-dots');
+      const projectPrev = document.getElementById('projectPrev');
+      const projectNext = document.getElementById('projectNext');
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      let activeProjectSlide = 0;
+      let projectTimer = null;
+      let projectCarouselInView = false;
+      let projectTouchStartX = 0;
+      let projectTouchStartY = 0;
+      let suppressProjectClick = false;
+      const projectMobileNav = document.createElement('div');
+      const mobileDots = document.createElement('div');
+      projectMobileNav.className = 'featured-project-mobile-nav';
+      projectMobileNav.setAttribute('aria-label', 'Featured project mobile controls');
+      mobileDots.className = 'carousel-dots';
+
+      projectMobileNav.innerHTML = `
+        <button type="button" class="carousel-btn" data-project-action="prev" aria-label="Previous featured project">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+      `;
+
+      projectDots.forEach(function(dot) {
+        const mobileDot = dot.cloneNode(true);
+        mobileDots.appendChild(mobileDot);
+      });
+
+      projectMobileNav.appendChild(mobileDots);
+      projectMobileNav.insertAdjacentHTML('beforeend', `
+        <button type="button" class="carousel-btn" data-project-action="next" aria-label="Next featured project">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      `);
+
+      function updateProjectDots() {
+        projectCarousel.querySelectorAll('.carousel-dot').forEach(function(dot) {
+          dot.setAttribute('aria-current', parseInt(dot.getAttribute('data-project-slide'), 10) === activeProjectSlide ? 'true' : 'false');
+        });
+      }
+
+      function placeProjectMobileNav() {
+        const activeSlide = projectSlides[activeProjectSlide];
+        if (!activeSlide) return;
+
+        const mediaLink = activeSlide.querySelector('.featured-project-media-link');
+        if (mediaLink && projectMobileNav.parentNode !== activeSlide) {
+          mediaLink.insertAdjacentElement('afterend', projectMobileNav);
+        }
+      }
+
+      function showProjectSlide(index, direction) {
+        const previousProjectSlide = activeProjectSlide;
+        activeProjectSlide = (index + projectSlides.length) % projectSlides.length;
+        const slideDirection = direction || (activeProjectSlide >= previousProjectSlide ? 'next' : 'prev');
+
+        projectSlides.forEach(function(slide, slideIndex) {
+          const isActive = slideIndex === activeProjectSlide;
+          slide.classList.toggle('active', isActive);
+          slide.setAttribute('aria-hidden', isActive ? 'false' : 'true');
+          slide.classList.remove('slide-from-next', 'slide-from-prev');
+
+          if (isActive && activeProjectSlide !== previousProjectSlide && !reduceMotion) {
+            slide.classList.add(slideDirection === 'prev' ? 'slide-from-prev' : 'slide-from-next');
+            window.setTimeout(function() {
+              slide.classList.remove('slide-from-next', 'slide-from-prev');
+            }, 320);
+          }
+        });
+
+        updateProjectDots();
+        placeProjectMobileNav();
+      }
+
+      function nextProjectSlide() {
+        showProjectSlide(activeProjectSlide + 1, 'next');
+      }
+
+      function previousProjectSlide() {
+        showProjectSlide(activeProjectSlide - 1, 'prev');
+      }
+
+      function startProjectCarousel() {
+        if (reduceMotion || projectTimer || !projectCarouselInView) return;
+        projectTimer = window.setInterval(nextProjectSlide, 3500);
+      }
+
+      function stopProjectCarousel() {
+        if (!projectTimer) return;
+        window.clearInterval(projectTimer);
+        projectTimer = null;
+      }
+
+      if (projectPrev) {
+        projectPrev.addEventListener('click', function() {
+          stopProjectCarousel();
+          previousProjectSlide();
+          startProjectCarousel();
+        });
+      }
+
+      if (projectNext) {
+        projectNext.addEventListener('click', function() {
+          stopProjectCarousel();
+          nextProjectSlide();
+          startProjectCarousel();
+        });
+      }
+
+      projectDots.forEach(function(dot) {
+        dot.addEventListener('click', function() {
+          stopProjectCarousel();
+          showProjectSlide(parseInt(dot.getAttribute('data-project-slide'), 10));
+          startProjectCarousel();
+        });
+      });
+
+      projectCarousel.addEventListener('click', function(event) {
+        if (suppressProjectClick) {
+          event.preventDefault();
+          event.stopPropagation();
+          suppressProjectClick = false;
+          return;
+        }
+
+        const actionButton = event.target.closest('[data-project-action]');
+        if (actionButton) {
+          event.preventDefault();
+          stopProjectCarousel();
+          actionButton.getAttribute('data-project-action') === 'prev' ? previousProjectSlide() : nextProjectSlide();
+          startProjectCarousel();
+          return;
+        }
+
+        const dot = event.target.closest('.carousel-dot');
+        if (dot && !projectDesktopDots.contains(dot)) {
+          event.preventDefault();
+          stopProjectCarousel();
+          showProjectSlide(parseInt(dot.getAttribute('data-project-slide'), 10));
+          startProjectCarousel();
+        }
+      });
+
+      projectCarousel.addEventListener('touchstart', function(event) {
+        if (!window.matchMedia('(max-width: 768px)').matches || event.touches.length !== 1) return;
+        projectTouchStartX = event.touches[0].clientX;
+        projectTouchStartY = event.touches[0].clientY;
+      }, { passive: true });
+
+      projectCarousel.addEventListener('touchend', function(event) {
+        if (!window.matchMedia('(max-width: 768px)').matches || !event.changedTouches.length) return;
+
+        const deltaX = event.changedTouches[0].clientX - projectTouchStartX;
+        const deltaY = event.changedTouches[0].clientY - projectTouchStartY;
+
+        if (Math.abs(deltaX) > 48 && Math.abs(deltaX) > Math.abs(deltaY) * 1.3) {
+          stopProjectCarousel();
+          deltaX < 0 ? nextProjectSlide() : previousProjectSlide();
+          startProjectCarousel();
+          suppressProjectClick = true;
+          window.setTimeout(function() {
+            suppressProjectClick = false;
+          }, 250);
+        }
+      }, { passive: true });
+
+      projectCarousel.addEventListener('mouseenter', stopProjectCarousel);
+      projectCarousel.addEventListener('mouseleave', startProjectCarousel);
+      projectCarousel.addEventListener('focusin', stopProjectCarousel);
+      projectCarousel.addEventListener('focusout', startProjectCarousel);
+
+      showProjectSlide(0);
+
+      if ('IntersectionObserver' in window) {
+        const projectCarouselObserver = new IntersectionObserver(function(entries) {
+          entries.forEach(function(entry) {
+            projectCarouselInView = entry.isIntersecting;
+
+            if (projectCarouselInView) {
+              showProjectSlide(0);
+              startProjectCarousel();
+            } else {
+              stopProjectCarousel();
+            }
+          });
+        }, { threshold: 0.35 });
+
+        projectCarouselObserver.observe(projectCarousel);
+      } else {
+        projectCarouselInView = true;
+        startProjectCarousel();
+      }
+    }
+
+</script>
