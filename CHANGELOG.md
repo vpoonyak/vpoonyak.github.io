@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2026-07-09] - Project Page Social Cards, Thumbnail Optimization, and Map Wraparound
+
+### Added
+- **Project Page Social Cards**: Added `og:title`/`og:description`/`og:image`/`og:url`/`og:type` and `twitter:card`/`twitter:image` tags to every project case-study page (`altit`, `bnk48`, `cda2558`, `cirrhosis`, `countries-tiny`, `ddschatbot`, `hajjmens`, `hospcode`, `pm2-5`, `sichuan-yunnan`, `th-numeral`, `yfmalaria`), so links to individual projects now render rich previews instead of bare URLs.
+- **Mobile "Project Archive" Link**: Added a mobile-only nav entry to `/project/` alongside Blog and Contact.
+
+### Changed
+- **Project Thumbnail Optimization**: Recompressed all project preview thumbnails to `-thumb.webp` (resized to a 1200px-wide max, quality 75), roughly halving file size across the board; the Projects grid's DDS Chatbot preview now points at the optimized webp instead of the original PNG.
+
+### Fixed
+- **YF/Malaria Dashboard Map Wraparound**: Both Leaflet maps on the Yellow Fever & Malaria Prevention Dashboard now set `worldCopyJump: true`, so panning past the antimeridian jumps the view back by a world-width instead of dead-ending — the map now feels continuously scrollable in either direction.
+
 ## [2026-07-09] - Astro Migration, Markdown Blog, Standalone Pages, and Mobile UX Polish
 
 ### Added

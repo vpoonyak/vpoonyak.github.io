@@ -7,6 +7,13 @@
   <meta name="description" content="Case study: a Tableau dashboard combining yellow fever vaccination and malaria prophylaxis guidance on one country-clickable map, with seasonal detail.">
   <meta name="author" content="Vitchakorn Poonyakanok">
   <link rel="canonical" href="https://vitchakorn.com/project/yfmalaria.html">
+  <meta property="og:title" content="Yellow Fever &amp; Malaria Prevention Dashboard | Vitchakorn Poonyakanok">
+  <meta property="og:description" content="Case study: a Tableau dashboard combining yellow fever vaccination and malaria prophylaxis guidance on one country-clickable map, with seasonal detail.">
+  <meta property="og:image" content="https://vitchakorn.com/project/yfmalaria-thumb.webp">
+  <meta property="og:url" content="https://vitchakorn.com/project/yfmalaria.html">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://vitchakorn.com/project/yfmalaria-thumb.webp">
   <link rel="icon" href="../favicon/favicon.svg" type="image/svg+xml">
   <link rel="icon" href="../favicon/favicon-32x32.png" sizes="32x32" type="image/png">
   <link rel="icon" href="../favicon/favicon-16x16.png" sizes="16x16" type="image/png">
@@ -14,6 +21,11 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Leaflet Map CSS/JS CDN -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
   <style>
     :root, [data-theme="dark"] {
       --bg: #0d1117; --bg-card: #161b22; --text-primary: #e6edf3; --text-secondary: #8b949e;
@@ -56,8 +68,420 @@
     .case-cta { margin-top: 1.75rem; display: flex; gap: 12px; flex-wrap: wrap; }
     .case-cta-btn { display: inline-flex; align-items: center; gap: 6px; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; font-weight: 700; padding: 10px 18px; border-radius: 8px; border: 1px solid var(--accent-border); color: var(--accent-heading); background: var(--accent-muted-strong); transition: background 0.2s ease, border-color 0.2s ease; }
     .case-cta-btn:hover { background: var(--accent-border); text-decoration: none; }
-    .case-media { margin-top: 2rem; border: 1px solid var(--border-light); border-radius: 14px; overflow: hidden; background: var(--bg-card); }
-    .case-media img { width: 100%; height: auto; display: block; }
+    .dashboard-wrapper {
+      margin-top: 2rem;
+      border: 1px solid var(--border-light);
+      border-radius: 14px;
+      overflow: hidden;
+      background: var(--bg-card);
+      display: flex;
+      flex-direction: column;
+      transition: all 0.2s ease;
+    }
+    .dashboard-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px;
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border-light);
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .dashboard-title-bar {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .control-groups {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .layout-toggle-group {
+      display: flex;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+      background: var(--bg);
+    }
+    .control-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6875rem;
+      font-weight: 600;
+      padding: 6px 12px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--bg-card);
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .layout-toggle-group .control-btn {
+      border: none;
+      border-radius: 0;
+      background: transparent;
+    }
+    .layout-toggle-group .control-btn.active {
+      background: var(--accent-muted-strong);
+      color: var(--accent-heading);
+    }
+    .control-btn:hover:not(.active) {
+      color: var(--text-primary);
+      background: var(--bg-card-hover);
+      border-color: var(--accent);
+    }
+    .layout-toggle-group .control-btn:hover:not(.active) {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: transparent;
+    }
+    .search-container {
+      position: relative;
+      width: 260px;
+    }
+    .search-container input {
+      width: 100%;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.8125rem;
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text-primary);
+      outline: none;
+      transition: border-color 0.2s ease;
+    }
+    .search-container input:focus {
+      border-color: var(--accent);
+    }
+    .search-suggestions {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-top: none;
+      border-radius: 0 0 6px 6px;
+      max-height: 200px;
+      overflow-y: auto;
+      z-index: 1000;
+      display: none;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    .suggestion-item {
+      padding: 8px 12px;
+      font-size: 0.8125rem;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+    .suggestion-item:hover {
+      background: var(--border-light);
+      color: var(--text-primary);
+    }
+
+    .dashboard-body {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+    }
+    .dashboard-body.layout-split {
+      flex-direction: row;
+    }
+    .map-section {
+      display: flex;
+      flex-direction: column;
+      background: var(--bg-card);
+    }
+    .map-section.border-top {
+      border-top: 1px solid var(--border-light);
+    }
+    .map-section.border-left {
+      border-left: 1px solid var(--border-light);
+    }
+    .dashboard-body.layout-split .map-section {
+      flex: 1;
+      min-width: 0;
+    }
+    .map-section-header {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8125rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 10px 16px;
+      color: var(--accent-heading);
+    }
+    .yf-header {
+      background: rgba(219, 109, 40, 0.05);
+    }
+    .malaria-header {
+      background: rgba(120, 120, 168, 0.05);
+    }
+    .map-container {
+      width: 100%;
+      height: 400px;
+      background: var(--bg) !important;
+    }
+    .map-legend {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px 16px;
+      padding: 12px 16px;
+      background: var(--bg-card);
+      border-top: 1px solid var(--border-light);
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+    .legend-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      margin-right: 4px;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .legend-color {
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+      border: 1px solid rgba(0,0,0,0.15);
+      flex-shrink: 0;
+    }
+
+    /* Custom Leaflet Zoom Overrides */
+    .leaflet-control-zoom {
+      border: 1px solid var(--border) !important;
+      box-shadow: none !important;
+    }
+    .leaflet-bar a {
+      background-color: var(--bg-card) !important;
+      color: var(--text-primary) !important;
+      border-bottom: 1px solid var(--border) !important;
+      transition: background-color 0.2s;
+    }
+    .leaflet-bar a:hover {
+      background-color: var(--border-light) !important;
+    }
+    .leaflet-bar a.leaflet-disabled {
+      background-color: var(--bg) !important;
+      color: var(--text-tertiary) !important;
+    }
+
+    /* Custom Leaflet Popup Styling */
+    .leaflet-popup-content-wrapper {
+      background: var(--bg-card) !important;
+      color: var(--text-primary) !important;
+      border: 1px solid var(--border) !important;
+      border-radius: 8px !important;
+      font-family: 'Inter', sans-serif !important;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.2) !important;
+    }
+    .leaflet-popup-tip {
+      background: var(--bg-card) !important;
+      border: 1px solid var(--border) !important;
+    }
+    .leaflet-popup-content {
+      margin: 0 !important;
+      line-height: 1.5 !important;
+      font-size: 0.8125rem !important;
+    }
+    .popup-card {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      width: 280px;
+      max-height: 220px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 14px;
+      box-sizing: border-box;
+      word-wrap: break-word;
+      word-break: break-word;
+    }
+    .popup-card::-webkit-scrollbar {
+      width: 4px;
+    }
+    .popup-card::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .popup-card::-webkit-scrollbar-thumb {
+      background: var(--border-light);
+      border-radius: 4px;
+    }
+    .popup-header {
+      border-bottom: 1px solid var(--border-light);
+      padding-bottom: 6px;
+      margin-bottom: 2px;
+    }
+    .popup-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .popup-subtitle {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.625rem;
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      margin-top: 1px;
+    }
+    .popup-group {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .popup-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6875rem;
+      font-weight: 700;
+      color: var(--accent-heading);
+      text-transform: uppercase;
+      margin-top: 4px;
+      border-bottom: 1px solid var(--border-light);
+      padding-bottom: 2px;
+    }
+    .popup-desc {
+      color: var(--text-secondary);
+      font-size: 0.75rem;
+    }
+    .popup-desc strong {
+      color: var(--text-primary);
+    }
+    .popup-desc ul, .popup-desc ol {
+      margin-left: 12px;
+      margin-top: 2px;
+    }
+    .popup-desc li {
+      margin-bottom: 2px;
+    }
+
+    /* Fullscreen Mode Styling */
+    .dashboard-wrapper.is-fullscreen {
+      width: 100vw !important;
+      height: 100vh !important;
+      border-radius: 0 !important;
+      border: none !important;
+      margin: 0 !important;
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      z-index: 99999 !important;
+      display: flex;
+      flex-direction: column;
+    }
+    .dashboard-wrapper.is-fullscreen .dashboard-body {
+      flex: 1;
+      min-height: 0;
+    }
+    .dashboard-wrapper.is-fullscreen .map-section {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+    }
+    .dashboard-wrapper.is-fullscreen .map-container {
+      flex: 1;
+      height: 100%;
+    }
+
+    .filter-group {
+      display: flex;
+      gap: 6px;
+    }
+    .filter-select {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.75rem;
+      padding: 6px 10px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      color: var(--text-secondary);
+      outline: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .filter-select:hover, .filter-select:focus {
+      border-color: var(--accent);
+      color: var(--text-primary);
+    }
+
+    .dashboard-wrapper.view-yf-only #sectionMalaria {
+      display: none !important;
+    }
+    .dashboard-wrapper.view-malaria-only #sectionYF {
+      display: none !important;
+    }
+    .dashboard-wrapper.view-yf-only #map-yf,
+    .dashboard-wrapper.view-malaria-only #map-malaria {
+      height: 550px;
+    }
+    .dashboard-wrapper.is-fullscreen.view-yf-only #map-yf,
+    .dashboard-wrapper.is-fullscreen.view-malaria-only #map-malaria {
+      height: 100%;
+    }
+
+    /* Custom scrollable map popups */
+    .custom-map-popup .leaflet-popup-content-wrapper {
+      background: var(--bg-card) !important;
+      color: var(--text-primary) !important;
+      border: 1px solid var(--border) !important;
+      border-radius: 10px !important;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3) !important;
+      padding: 0 !important;
+    }
+    .custom-map-popup .leaflet-popup-content {
+      margin: 0 !important;
+      padding: 0 !important;
+      font-family: 'Inter', sans-serif !important;
+    }
+    .custom-map-popup .leaflet-popup-tip-container {
+      display: none !important;
+    }
+    .custom-map-popup .leaflet-popup-close-button {
+      color: var(--text-tertiary) !important;
+      padding: 6px 6px 0 0 !important;
+    }
+    .custom-map-popup .leaflet-popup-close-button:hover {
+      color: var(--text-primary) !important;
+    }
+
+    @media (max-width: 1024px) {
+      .dashboard-body.layout-split {
+        flex-direction: column;
+      }
+      .dashboard-body.layout-split .map-section.border-left {
+        border-left: none;
+        border-top: 1px solid var(--border-light);
+      }
+      .control-groups {
+        width: 100%;
+        justify-content: space-between;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .map-container {
+        height: 300px;
+      }
+      .map-legend {
+        gap: 8px 12px;
+        padding: 10px 12px;
+      }
+    }
     .case-section { padding: 2.25rem 0; border-top: 1px solid var(--border-light); }
     .case-section-title { font-family: 'JetBrains Mono', monospace; font-size: 0.8125rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent-heading); margin-bottom: 1rem; }
     .case-section p { color: var(--text-secondary); font-size: 0.9375rem; line-height: 1.8; max-width: 42rem; }
@@ -93,8 +517,76 @@
     <div class="case-cta">
       <a href="https://public.tableau.com/app/profile/vitchakorn.poonyakanok/viz/yf_malaria/CDC" target="_blank" rel="noopener noreferrer" class="case-cta-btn">Open on Tableau Public &nearr;</a>
     </div>
-    <div class="case-media">
-      <img src="yfmalaria.png" alt="Yellow fever and malaria dashboard showing per-country vaccine and prophylaxis guidance" loading="eager" width="1400" height="1077">
+    <div class="case-media dashboard-wrapper">
+      <div class="dashboard-controls">
+        <div class="dashboard-title-bar desktop-only">
+          <span class="t-label">Interactive Travel Health Map</span>
+        </div>
+        <div class="control-groups">
+          <div class="layout-toggle-group" id="viewModeGroup">
+            <button class="control-btn active" id="viewBothBtn" title="Show both maps side-by-side or stacked">Both</button>
+            <button class="control-btn" id="viewYFBtn" title="Show only Yellow Fever map">YF Only</button>
+            <button class="control-btn" id="viewMalariaBtn" title="Show only Malaria map">Malaria Only</button>
+          </div>
+          <div class="layout-toggle-group" id="layoutToggleGroup">
+            <button class="control-btn active" id="layoutStackBtn" title="Stack maps vertically">
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="7" rx="2"/><rect x="3" y="14" width="18" height="7" rx="2"/></svg>
+              <span>Stack</span>
+            </button>
+            <button class="control-btn" id="layoutSplitBtn" title="Place maps side-by-side">
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="18" rx="2"/><rect x="14" y="3" width="7" height="18" rx="2"/></svg>
+              <span>Split</span>
+            </button>
+          </div>
+          <button class="control-btn" id="fullscreenBtn" title="Toggle fullscreen mode">
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
+            <span>Fullscreen</span>
+          </button>
+          <div class="filter-group">
+            <select id="continentFilter" class="filter-select" aria-label="Filter by Continent">
+              <option value="all">All Continents</option>
+            </select>
+            <select id="subregionFilter" class="filter-select" aria-label="Filter by Subregion">
+              <option value="all">All Subregions</option>
+            </select>
+          </div>
+        </div>
+        <div class="search-container">
+          <input type="text" id="countrySearch" placeholder="Search country..." autocomplete="off">
+          <div id="searchSuggestions" class="search-suggestions"></div>
+        </div>
+      </div>
+
+      <div class="dashboard-body" id="dashboardBody">
+        <!-- Yellow Fever Map Section -->
+        <div class="map-section" id="sectionYF">
+          <div class="map-section-header yf-header">Yellow Fever Vaccine Guidance</div>
+          <div id="map-yf" class="map-container"></div>
+          <div class="map-legend">
+            <div class="legend-title">Entry Category:</div>
+            <div class="legend-item"><span class="legend-color" style="background: #afafaf;"></span>Vaccine is not required</div>
+            <div class="legend-item"><span class="legend-color" style="background: #eba0b0;"></span>Other</div>
+            <div class="legend-item"><span class="legend-color" style="background: #f5d061;"></span>Arriving from some countries</div>
+            <div class="legend-item"><span class="legend-color" style="background: #f5964f;"></span>Travel from countries with risk</div>
+            <div class="legend-item"><span class="legend-color" style="background: #d95362;"></span>Vaccine is required</div>
+          </div>
+        </div>
+
+        <!-- Malaria Map Section -->
+        <div class="map-section border-top" id="sectionMalaria">
+          <div class="map-section-header malaria-header">Malaria Prophylaxis Guidance</div>
+          <div id="map-malaria" class="map-container"></div>
+          <div class="map-legend">
+            <div class="legend-title">Resistance Type:</div>
+            <div class="legend-item"><span class="legend-color" style="background: #afafaf;"></span>No Malaria</div>
+            <div class="legend-item"><span class="legend-color" style="background: #6aa8a8;"></span>Other</div>
+            <div class="legend-item"><span class="legend-color" style="background: #68a368;"></span>No Resist</div>
+            <div class="legend-item"><span class="legend-color" style="background: #9bc3eb;"></span>Previous CQ</div>
+            <div class="legend-item"><span class="legend-color" style="background: #c39bcb;"></span>CQ Resist</div>
+            <div class="legend-item"><span class="legend-color" style="background: #7878a8;"></span>CQ&MQ Resist</div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -147,6 +639,747 @@
       htmlEl.setAttribute('data-theme', next);
       bodyEl.setAttribute('data-theme', next);
       localStorage.setItem('theme', next);
+    });
+
+    // Leaflet Dashboard Logic
+    document.addEventListener("DOMContentLoaded", function() {
+      const mapYFEl = document.getElementById('map-yf');
+      const mapMalariaEl = document.getElementById('map-malaria');
+      if (!mapYFEl || !mapMalariaEl) return;
+
+      // Initialize mapYF
+      const mapYF = L.map('map-yf', {
+        center: [15, 0],
+        zoom: 2,
+        minZoom: 1.5,
+        maxZoom: 7,
+        zoomControl: true,
+        attributionControl: false
+      });
+
+      // Initialize mapMalaria
+      const mapMalaria = L.map('map-malaria', {
+        center: [15, 0],
+        zoom: 2,
+        minZoom: 1.5,
+        maxZoom: 7,
+        zoomControl: true,
+        attributionControl: false
+      });
+
+      // Cross-sync views
+      let isSyncing = false;
+      function sync(mapSrc, mapDst) {
+        mapSrc.on('move', () => {
+          if (!isSyncing) {
+            isSyncing = true;
+            mapDst.setView(mapSrc.getCenter(), mapSrc.getZoom(), { animate: false });
+            isSyncing = false;
+          }
+        });
+        mapSrc.on('zoomend', () => {
+          if (!isSyncing) {
+            isSyncing = true;
+            mapDst.setView(mapSrc.getCenter(), mapSrc.getZoom(), { animate: false });
+            isSyncing = false;
+          }
+        });
+      }
+      sync(mapYF, mapMalaria);
+      sync(mapMalaria, mapYF);
+
+      // GeoJSON layer stores
+      let yfLayer, malariaLayer;
+      let mapData = null;
+      let selectedFeatureId = null;
+      let tinyMarkers = [];
+
+      // Colors matching Tableau reference
+      const colorsYF = {
+        'Vaccine is not required': '#afafaf',
+        'Other': '#eba0b0',
+        'Arriving from some countries': '#f5d061',
+        'Travel from countries with risk for YF virus transmission': '#f5964f',
+        'Vaccine is required for all arriving travelers': '#d95362'
+      };
+
+      const colorsMalaria = {
+        'No Malaria': '#afafaf',
+        'Other': '#6aa8a8',
+        'No Resist': '#68a368',
+        'Previous CQ': '#9bc3eb',
+        'CQ Resist': '#c39bcb',
+        'CQ&MQ Resist': '#7878a8'
+      };
+
+      function getYFStyle(properties) {
+        const theme = document.documentElement.getAttribute('data-theme') || 'dark';
+        const isDark = theme === 'dark';
+
+        let fillColor = isDark ? '#161b22' : '#fbfcfe';
+        let fillOpacity = 0.75;
+        let weight = 0.8;
+        let color = isDark ? '#444c56' : '#8a99a8'; // Increased border contrast
+
+        const cat = properties.entryCategory;
+        if (cat in colorsYF) {
+          fillColor = colorsYF[cat];
+        }
+
+        if (selectedFeatureId !== null && properties.vkpCode === selectedFeatureId) {
+          weight = 2.0;
+          color = isDark ? '#58a6ff' : '#0757bd';
+        }
+
+        return {
+          fillColor: fillColor,
+          fillOpacity: fillOpacity,
+          weight: weight,
+          color: color
+        };
+      }
+
+      function getMalariaStyle(properties) {
+        const theme = document.documentElement.getAttribute('data-theme') || 'dark';
+        const isDark = theme === 'dark';
+
+        let fillColor = isDark ? '#161b22' : '#fbfcfe';
+        let fillOpacity = 0.75;
+        let weight = 0.8;
+        let color = isDark ? '#444c56' : '#8a99a8'; // Increased border contrast
+
+        const res = properties.resistanceType;
+        if (res in colorsMalaria) {
+          fillColor = colorsMalaria[res];
+        }
+
+        if (selectedFeatureId !== null && properties.vkpCode === selectedFeatureId) {
+          weight = 2.0;
+          color = isDark ? '#58a6ff' : '#0757bd';
+        }
+
+        return {
+          fillColor: fillColor,
+          fillOpacity: fillOpacity,
+          weight: weight,
+          color: color
+        };
+      }
+
+      function updateMapStyle() {
+        if (yfLayer) {
+          yfLayer.eachLayer(layer => {
+            yfLayer.resetStyle(layer);
+          });
+        }
+        if (malariaLayer) {
+          malariaLayer.eachLayer(layer => {
+            malariaLayer.resetStyle(layer);
+          });
+        }
+        // Update tiny markers colors and selection borders
+        tinyMarkers.forEach(m => {
+          const isSelected = m.vkpCode === selectedFeatureId;
+          const theme = document.documentElement.getAttribute('data-theme') || 'dark';
+          const isDark = theme === 'dark';
+
+          let color = isSelected ? (isDark ? '#58a6ff' : '#0757bd') : '#333';
+          let weight = isSelected ? 2.5 : 1.0;
+          let radius = isSelected ? 8 : 6;
+
+          let fillColor;
+          if (m.mapType === 'yf') {
+            fillColor = getYFStyle(m.properties).fillColor;
+          } else {
+            fillColor = getMalariaStyle(m.properties).fillColor;
+          }
+
+          m.marker.setStyle({
+            fillColor: fillColor,
+            color: color,
+            weight: weight,
+            radius: radius
+          });
+        });
+      }
+
+      // Filter matching check
+      function matchesFilters(feature) {
+        const continentSelect = document.getElementById('continentFilter');
+        const subregionSelect = document.getElementById('subregionFilter');
+        if (!continentSelect || !subregionSelect) return true;
+
+        const selectedContinent = continentSelect.value;
+        const selectedSubregion = subregionSelect.value;
+
+        const cont = feature.properties.continent;
+        const sub = feature.properties.subregion;
+
+        if (selectedContinent !== 'all' && cont !== selectedContinent) {
+          return false;
+        }
+        if (selectedSubregion !== 'all' && sub !== selectedSubregion) {
+          return false;
+        }
+        return true;
+      }
+
+      // Update layers and rebuild tiny markers based on active filters
+      function updateFilter() {
+        mapYF.closePopup();
+        mapMalaria.closePopup();
+
+        tinyMarkers.forEach(m => {
+          m.marker.remove();
+        });
+        tinyMarkers = [];
+
+        if (yfLayer) yfLayer.clearLayers();
+        if (malariaLayer) malariaLayer.clearLayers();
+
+        if (mapData) {
+          yfLayer.addData(mapData);
+          malariaLayer.addData(mapData);
+        }
+
+        // Fit bounds around the filtered features if there are any
+        const continentSelect = document.getElementById('continentFilter');
+        const subregionSelect = document.getElementById('subregionFilter');
+        const selectedContinent = continentSelect ? continentSelect.value : 'all';
+        const selectedSubregion = subregionSelect ? subregionSelect.value : 'all';
+
+        if (selectedContinent === 'all' && selectedSubregion === 'all') {
+          // Reset to global view
+          mapYF.setView([15, 0], 2, { animate: false });
+        } else if (yfLayer && yfLayer.getLayers().length > 0) {
+          try {
+            const bounds = yfLayer.getBounds();
+            if (bounds.isValid()) {
+              mapYF.fitBounds(bounds, { padding: [40, 40], maxZoom: 5, animate: false });
+            }
+          } catch(e) {
+            console.error("Error fitting bounds:", e);
+          }
+        }
+      }
+
+      // Dynamic dropdown population based on GeoJSON properties
+      function populateFilterDropdowns() {
+        const continentSelect = document.getElementById('continentFilter');
+        const subregionSelect = document.getElementById('subregionFilter');
+        if (!continentSelect || !subregionSelect) return;
+
+        const continents = new Set();
+        const subregionsMap = {};
+
+        mapData.features.forEach(f => {
+          const cont = f.properties.continent;
+          const sub = f.properties.subregion;
+
+          if (cont) {
+            continents.add(cont);
+            if (!subregionsMap[cont]) {
+              subregionsMap[cont] = new Set();
+            }
+            if (sub) {
+              subregionsMap[cont].add(sub);
+            }
+          }
+        });
+
+        // Sort and populate Continent
+        Array.from(continents).sort().forEach(c => {
+          const opt = document.createElement('option');
+          opt.value = c;
+          opt.textContent = c;
+          continentSelect.appendChild(opt);
+        });
+
+        // Listen to continent select changes to filter subregions
+        continentSelect.addEventListener('change', function() {
+          const selectedContinent = this.value;
+          subregionSelect.innerHTML = '<option value="all">All Subregions</option>';
+
+          let availableSubregions = [];
+          if (selectedContinent === 'all') {
+            const allSubs = new Set();
+            Object.values(subregionsMap).forEach(set => {
+              set.forEach(s => allSubs.add(s));
+            });
+            availableSubregions = Array.from(allSubs);
+          } else {
+            availableSubregions = Array.from(subregionsMap[selectedContinent] || []);
+          }
+
+          availableSubregions.sort().forEach(s => {
+            const opt = document.createElement('option');
+            opt.value = s;
+            opt.textContent = s;
+            subregionSelect.appendChild(opt);
+          });
+
+          updateFilter();
+        });
+
+        subregionSelect.addEventListener('change', function() {
+          updateFilter();
+        });
+      }
+
+      // Fetch GeoJSON data
+      fetch('data/yf_malaria_map.geojson')
+        .then(response => response.json())
+        .then(data => {
+          mapData = data;
+          initMapLayers();
+          initSearchAutocomplete();
+          populateFilterDropdowns();
+        })
+        .catch(err => console.error("Error loading map GeoJSON:", err));
+
+      function createYFPopupHTML(props) {
+        const cat = props.entryCategory || 'Vaccine is not required';
+        const badgeColor = colorsYF[cat] || '#afafaf';
+
+        let label = 'YF: Not Required';
+        if (cat === 'Vaccine is required for all arriving travelers') {
+          label = 'YF: Required';
+        } else if (cat === 'Travel from countries with risk for YF virus transmission') {
+          label = 'YF: Risk countries';
+        } else if (cat === 'Arriving from some countries') {
+          label = 'YF: Conditional';
+        } else if (cat === 'Other') {
+          label = 'YF: Other';
+        }
+
+        const yfBadge = `<span class="detail-badge" style="background: ${badgeColor}1a; color: ${badgeColor}; border-color: ${badgeColor}4d">${label}</span>`;
+
+        return `
+          <div class="popup-card">
+            <div class="popup-header">
+              <div class="popup-title">${props.countryName}</div>
+              <div class="popup-subtitle">${props.subregion || ''}, ${props.continent || ''}</div>
+              <div class="detail-badge-group">
+                ${yfBadge}
+              </div>
+            </div>
+            <div class="popup-group">
+              <div class="popup-label">Yellow Fever Vaccine Guidance</div>
+              <div class="popup-desc"><strong>Requirements:</strong> ${props.yfEntryRequirements || 'No data'}</div>
+              <div class="popup-desc" style="margin-top: 2px;"><strong>Recommendations:</strong> ${props.yfRecommendations || 'No data'}</div>
+            </div>
+            ${props.otherVaccinesToConsider ? `
+              <div class="popup-group">
+                <div class="popup-label">Other Considerations</div>
+                <div class="popup-desc">${props.otherVaccinesToConsider}</div>
+              </div>
+            ` : ''}
+          </div>
+        `;
+      }
+
+      function createMalariaPopupHTML(props) {
+        let malariaBadge = `<span class="detail-badge badge-malaria-no" style="background: rgba(175,175,175,0.12); color: #888; border-color: rgba(175,175,175,0.3)">Malaria: No Risk</span>`;
+        if (props.malariaHasTransmission) {
+          const resType = props.resistanceType || 'No Resist';
+          const badgeColor = colorsMalaria[resType] || '#68a368';
+          malariaBadge = `<span class="detail-badge" style="background: ${badgeColor}1a; color: ${badgeColor}; border-color: ${badgeColor}4d">Malaria: ${resType}</span>`;
+        }
+
+        return `
+          <div class="popup-card">
+            <div class="popup-header">
+              <div class="popup-title">${props.countryName}</div>
+              <div class="popup-subtitle">${props.subregion || ''}, ${props.continent || ''}</div>
+              <div class="detail-badge-group">
+                ${malariaBadge}
+              </div>
+            </div>
+            <div class="popup-group">
+              <div class="popup-label">Malaria Prophylaxis Guidance</div>
+              ${props.malariaHasTransmission ? `
+                <div class="popup-desc"><strong>Risk Areas:</strong> ${props.malariaAreasOfRisk}</div>
+                <div class="popup-desc" style="margin-top: 2px;"><strong>Prophylaxis:</strong> ${props.malariaRecommendedChemoprophylaxis}</div>
+                <div class="popup-desc" style="margin-top: 2px;"><strong>Species:</strong> ${props.malariaSpecies}</div>
+                <div class="popup-desc" style="margin-top: 2px;"><strong>Seasonality:</strong> ${props.malariaSeasonRange}</div>
+                ${props.malariaPeakMonths ? `<div class="popup-desc" style="margin-top: 2px;"><strong>Peaks:</strong> ${props.malariaPeakMonths}</div>` : ''}
+              ` : `
+                <div class="popup-desc">No active malaria transmission. Prophylaxis not recommended.</div>
+              `}
+            </div>
+          </div>
+        `;
+      }
+
+      function initMapLayers() {
+        // 1. Render Yellow Fever Map
+        yfLayer = L.geoJSON(mapData, {
+          filter: function(feature) {
+            return matchesFilters(feature);
+          },
+          style: function(feature) {
+            return getYFStyle(feature.properties);
+          },
+          onEachFeature: function(feature, layer) {
+            bindInteractions(layer, feature, 'yf', mapYF);
+            addCentroidMarker(layer, feature, 'yf', mapYF);
+          }
+        }).addTo(mapYF);
+
+        // 2. Render Malaria Map
+        malariaLayer = L.geoJSON(mapData, {
+          filter: function(feature) {
+            return matchesFilters(feature);
+          },
+          style: function(feature) {
+            return getMalariaStyle(feature.properties);
+          },
+          onEachFeature: function(feature, layer) {
+            bindInteractions(layer, feature, 'malaria', mapMalaria);
+            addCentroidMarker(layer, feature, 'malaria', mapMalaria);
+          }
+        }).addTo(mapMalaria);
+      }
+
+      function bindInteractions(layer, feature, mapType, currentMap) {
+        const vkpCode = feature.properties.vkpCode;
+        layer.on({
+          mouseover: function(e) {
+            highlightFeature(vkpCode);
+          },
+          mouseout: function(e) {
+            resetFeatureHighlight();
+          },
+          click: function(e) {
+            selectCountry(vkpCode, e.latlng);
+          }
+        });
+      }
+
+      const mainlandExclusions = new Set([
+        'RWA', 'BDI', 'SWZ', 'LSO', 'LUX', 'AND', 'LIE', 'SMR', 'VAT', 'DJI',
+        'XKX', 'MNE', 'LBN', 'QAT', 'KWT', 'BRN', 'GMB', 'SLV', 'PSE'
+      ]);
+
+      function addCentroidMarker(layer, feature, mapType, currentMap) {
+        const vkpCode = feature.properties.vkpCode;
+        if (mainlandExclusions.has(vkpCode)) {
+          return; // Skip drawing redundant dot for small mainland countries
+        }
+
+        const bounds = layer.getBounds();
+        const latSpan = Math.abs(bounds.getNorth() - bounds.getSouth());
+        const lngSpan = Math.abs(bounds.getWest() - bounds.getEast());
+
+        // If it's a tiny region, add a visual circle marker at centroid
+        if (latSpan < 1.8 && lngSpan < 1.8) {
+          const centroid = bounds.getCenter();
+          const style = mapType === 'yf' ? getYFStyle(feature.properties) : getMalariaStyle(feature.properties);
+
+          const marker = L.circleMarker(centroid, {
+            radius: 6,
+            weight: 1.0,
+            color: '#333',
+            fillColor: style.fillColor,
+            fillOpacity: 0.85
+          });
+
+          marker.on({
+            mouseover: function(e) {
+              highlightFeature(vkpCode);
+            },
+            mouseout: function(e) {
+              resetFeatureHighlight();
+            },
+            click: function(e) {
+              selectCountry(vkpCode, e.latlng);
+            }
+          });
+
+          marker.addTo(currentMap);
+          tinyMarkers.push({
+            vkpCode: vkpCode,
+            mapType: mapType,
+            properties: feature.properties,
+            marker: marker
+          });
+        }
+      }
+
+      function highlightFeature(vkpCode) {
+        const theme = document.documentElement.getAttribute('data-theme') || 'dark';
+        const highlightColor = theme === 'dark' ? '#58a6ff' : '#0757bd';
+
+        // Apply hover highlight to polygons on both maps
+        yfLayer.eachLayer(l => {
+          if (l.feature.properties.vkpCode === vkpCode) {
+            l.setStyle({
+              weight: 2.2,
+              color: highlightColor,
+              fillOpacity: Math.min(1.0, getYFStyle(l.feature.properties).fillOpacity + 0.15)
+            });
+            if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+              l.bringToFront();
+            }
+          }
+        });
+
+        malariaLayer.eachLayer(l => {
+          if (l.feature.properties.vkpCode === vkpCode) {
+            l.setStyle({
+              weight: 2.2,
+              color: highlightColor,
+              fillOpacity: Math.min(1.0, getMalariaStyle(l.feature.properties).fillOpacity + 0.15)
+            });
+            if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+              l.bringToFront();
+            }
+          }
+        });
+      }
+
+      function resetFeatureHighlight() {
+        if (yfLayer) {
+          yfLayer.eachLayer(l => {
+            yfLayer.resetStyle(l);
+          });
+        }
+        if (malariaLayer) {
+          malariaLayer.eachLayer(l => {
+            malariaLayer.resetStyle(l);
+          });
+        }
+      }
+
+      function selectCountry(vkpCode, latlng = null) {
+        selectedFeatureId = vkpCode;
+        updateMapStyle();
+
+        // Find matching feature properties
+        let properties = null;
+        let targetLayerYF = null;
+        let targetLayerMalaria = null;
+
+        yfLayer.eachLayer(l => {
+          if (l.feature.properties.vkpCode === vkpCode) {
+            properties = l.feature.properties;
+            targetLayerYF = l;
+          }
+        });
+
+        malariaLayer.eachLayer(l => {
+          if (l.feature.properties.vkpCode === vkpCode) {
+            targetLayerMalaria = l;
+          }
+        });
+
+        if (properties) {
+          const popupLatLng = latlng || targetLayerYF.getBounds().getCenter();
+
+          // Close existing popups first
+          mapYF.closePopup();
+          mapMalaria.closePopup();
+
+          // Open YF popup on Map YF
+          L.popup({
+            maxWidth: 280,
+            className: 'custom-map-popup',
+            autoPan: false
+          })
+            .setLatLng(popupLatLng)
+            .setContent(createYFPopupHTML(properties))
+            .openOn(mapYF);
+
+          // Open Malaria popup on Map Malaria
+          L.popup({
+            maxWidth: 280,
+            className: 'custom-map-popup',
+            autoPan: false
+          })
+            .setLatLng(popupLatLng)
+            .setContent(createMalariaPopupHTML(properties))
+            .openOn(mapMalaria);
+
+          // Calculate center offset so the popup is centered in the map container
+          const zoom = Math.max(mapYF.getZoom(), 4);
+          const offsetLat = 120 / Math.pow(2, zoom);
+          const centerLatLng = L.latLng(popupLatLng.lat + offsetLat, popupLatLng.lng);
+
+          // Center maps on the offset center (tooltip center) instantly
+          mapYF.setView(centerLatLng, zoom, { animate: false });
+          mapMalaria.setView(centerLatLng, zoom, { animate: false });
+        }
+      }
+
+      // Autocomplete Search Engine
+      function initSearchAutocomplete() {
+        const input = document.getElementById('countrySearch');
+        const suggestionsContainer = document.getElementById('searchSuggestions');
+
+        // Compile search list
+        const countriesList = mapData.features.map(f => ({
+          name: f.properties.countryName,
+          code: f.properties.vkpCode
+        })).filter((v, i, a) => a.findIndex(t => t.code === v.code) === i) // Unique
+           .sort((a, b) => a.name.localeCompare(b.name));
+
+        input.addEventListener('input', function() {
+          const val = this.value.toLowerCase().trim();
+          suggestionsContainer.innerHTML = '';
+
+          if (!val) {
+            suggestionsContainer.style.display = 'none';
+            return;
+          }
+
+          const filtered = countriesList.filter(c =>
+            c.name.toLowerCase().includes(val) || c.code.toLowerCase().includes(val)
+          ).slice(0, 8);
+
+          if (filtered.length === 0) {
+            suggestionsContainer.style.display = 'none';
+            return;
+          }
+
+          filtered.forEach(c => {
+            const div = document.createElement('div');
+            div.className = 'suggestion-item';
+            div.textContent = `${c.name} (${c.code})`;
+            div.addEventListener('click', function() {
+              input.value = c.name;
+              suggestionsContainer.style.display = 'none';
+              selectCountry(c.code);
+            });
+            suggestionsContainer.appendChild(div);
+          });
+
+          suggestionsContainer.style.display = 'block';
+        });
+
+        // Hide suggestions when clicking outside
+        document.addEventListener('click', function(e) {
+          if (e.target !== input && e.target !== suggestionsContainer) {
+            suggestionsContainer.style.display = 'none';
+          }
+        });
+      }
+
+      // View focus controls (Both, YF Only, Malaria Only)
+      const viewBothBtn = document.getElementById('viewBothBtn');
+      const viewYFBtn = document.getElementById('viewYFBtn');
+      const viewMalariaBtn = document.getElementById('viewMalariaBtn');
+      const layoutToggleGroup = document.getElementById('layoutToggleGroup');
+      const wrapper = document.querySelector('.dashboard-wrapper');
+
+      viewBothBtn.addEventListener('click', () => {
+        viewBothBtn.classList.add('active');
+        viewYFBtn.classList.remove('active');
+        viewMalariaBtn.classList.remove('active');
+
+        wrapper.classList.remove('view-yf-only', 'view-malaria-only');
+        layoutToggleGroup.style.display = 'inline-flex';
+
+        setTimeout(() => {
+          mapYF.invalidateSize();
+          mapMalaria.invalidateSize();
+        }, 150);
+      });
+
+      viewYFBtn.addEventListener('click', () => {
+        viewYFBtn.classList.add('active');
+        viewBothBtn.classList.remove('active');
+        viewMalariaBtn.classList.remove('active');
+
+        wrapper.classList.add('view-yf-only');
+        wrapper.classList.remove('view-malaria-only');
+        layoutToggleGroup.style.display = 'none';
+
+        setTimeout(() => {
+          mapYF.invalidateSize();
+        }, 150);
+      });
+
+      viewMalariaBtn.addEventListener('click', () => {
+        viewMalariaBtn.classList.add('active');
+        viewBothBtn.classList.remove('active');
+        viewYFBtn.classList.remove('active');
+
+        wrapper.classList.add('view-malaria-only');
+        wrapper.classList.remove('view-yf-only');
+        layoutToggleGroup.style.display = 'none';
+
+        setTimeout(() => {
+          mapMalaria.invalidateSize();
+        }, 150);
+      });
+
+      // Layout Split/Stack Controls
+      const layoutStackBtn = document.getElementById('layoutStackBtn');
+      const layoutSplitBtn = document.getElementById('layoutSplitBtn');
+      const dashboardBody = document.getElementById('dashboardBody');
+      const sectionMalaria = document.getElementById('sectionMalaria');
+
+      layoutStackBtn.addEventListener('click', () => {
+        layoutStackBtn.classList.add('active');
+        layoutSplitBtn.classList.remove('active');
+        dashboardBody.classList.remove('layout-split');
+        sectionMalaria.classList.remove('border-left');
+        sectionMalaria.classList.add('border-top');
+        setTimeout(() => {
+          mapYF.invalidateSize();
+          mapMalaria.invalidateSize();
+        }, 150);
+      });
+
+      layoutSplitBtn.addEventListener('click', () => {
+        layoutSplitBtn.classList.add('active');
+        layoutStackBtn.classList.remove('active');
+        dashboardBody.classList.add('layout-split');
+        sectionMalaria.classList.remove('border-top');
+        sectionMalaria.classList.add('border-left');
+        setTimeout(() => {
+          mapYF.invalidateSize();
+          mapMalaria.invalidateSize();
+        }, 150);
+      });
+
+      // Fullscreen Controls
+      const fullscreenBtn = document.getElementById('fullscreenBtn');
+
+      fullscreenBtn.addEventListener('click', () => {
+        if (!document.fullscreenElement) {
+          wrapper.requestFullscreen().then(() => {
+            wrapper.classList.add('is-fullscreen');
+          }).catch(err => {
+            console.error(`Error attempting to enable fullscreen: ${err.message}`);
+          });
+        } else {
+          document.exitFullscreen().then(() => {
+            wrapper.classList.remove('is-fullscreen');
+          });
+        }
+      });
+
+      document.addEventListener('fullscreenchange', () => {
+        if (document.fullscreenElement) {
+          wrapper.classList.add('is-fullscreen');
+          fullscreenBtn.classList.add('active');
+          fullscreenBtn.querySelector('span').textContent = 'Exit Full';
+        } else {
+          wrapper.classList.remove('is-fullscreen');
+          fullscreenBtn.classList.remove('active');
+          fullscreenBtn.querySelector('span').textContent = 'Fullscreen';
+        }
+        setTimeout(() => {
+          mapYF.invalidateSize();
+          mapMalaria.invalidateSize();
+        }, 150);
+      });
+
+      // Listen for theme toggle events to adjust map layers dynamically
+      themeToggle.addEventListener('click', function() {
+        setTimeout(updateMapStyle, 50);
+      });
     });
   </script>
 </body>
