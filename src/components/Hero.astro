@@ -933,6 +933,11 @@
 
       resizeGlobe();
       startGlobe();
+
+      // Pre-warm the shapes cache to eliminate first-transition GC / calculation lag
+      getShape('thailand');
+      getShape('chart');
+      getShape('network');
     })();
 
     // ── Hero Role Cycle ──
