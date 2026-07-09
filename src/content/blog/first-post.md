@@ -2,7 +2,7 @@
 title: "Bridging Medicine and Artificial Intelligence: A Resident's Perspective"
 description: "How clinical informatics, public health datasets, and modern AI algorithms intersect to optimize patient pathways and diagnostic pipelines."
 pubDate: "2026-07-09"
-heroImage: "/project/altit-thumb.webp"
+heroImage: "/project/altit/altit1-thumb.webp"
 tags: ["Clinical AI", "Public Health", "Travel Medicine"]
 draft: false
 lang: en

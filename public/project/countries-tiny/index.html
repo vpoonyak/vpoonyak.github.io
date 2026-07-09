@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Countries with Tiny Nations &amp; Territories | Vitchakorn Poonyakanok</title>
+  <meta name="description" content="Case study: a hand-corrected world boundary shapefile that restores small nations and territories standard basemaps drop, built in QGIS for disease-mapping work.">
+  <meta name="author" content="Vitchakorn Poonyakanok">
+  <link rel="canonical" href="https://vitchakorn.com/project/countries-tiny/">
+  <meta property="og:title" content="Countries with Tiny Nations &amp; Territories | Vitchakorn Poonyakanok">
+  <meta property="og:description" content="Case study: a hand-corrected world boundary shapefile that restores small nations and territories standard basemaps drop, built in QGIS for disease-mapping work.">
+  <meta property="og:image" content="https://vitchakorn.com/project/countries-tiny/countries-tiny-thumb.webp">
+  <meta property="og:url" content="https://vitchakorn.com/project/countries-tiny/">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://vitchakorn.com/project/countries-tiny/countries-tiny-thumb.webp">
+  <link rel="icon" href="../../favicon/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="../../favicon/favicon-32x32.png" sizes="32x32" type="image/png">
+  <link rel="icon" href="../../favicon/favicon-16x16.png" sizes="16x16" type="image/png">
+  <link rel="apple-touch-icon" href="../../favicon/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root, [data-theme="dark"] {
+      --bg: #0d1117; --bg-card: #161b22; --text-primary: #e6edf3; --text-secondary: #8b949e;
+      --text-tertiary: #6e7681; --accent: #2f81f7; --accent-heading: #58a6ff;
+      --accent-muted-strong: rgba(47, 129, 247, 0.22); --accent-border: rgba(47, 129, 247, 0.4);
+      --border: #30363d; --border-light: #21262d; --nav-bg: rgba(13, 17, 23, 0.9);
+      --selection-bg: rgba(47, 129, 247, 0.35); --cloud-bg: rgba(255, 255, 255, 0.015);
+    }
+    [data-theme="light"] {
+      --bg: #eef3f8; --bg-card: #fbfcfe; --text-primary: #1f2328; --text-secondary: #3f4a56;
+      --text-tertiary: #687482; --accent: #0757bd; --accent-heading: #0757bd;
+      --accent-muted-strong: rgba(7, 87, 189, 0.18); --accent-border: rgba(7, 87, 189, 0.42);
+      --border: #b8c3cf; --border-light: #d7e0e8; --nav-bg: rgba(238, 243, 248, 0.94);
+      --selection-bg: rgba(7, 87, 189, 0.22); --cloud-bg: rgba(7, 87, 189, 0.02);
+    }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 100%; overflow-x: hidden; }
+    body { font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: var(--bg); color: var(--text-primary); line-height: 1.6; transition: background-color 0.35s ease, color 0.35s ease; }
+    ::selection { background: var(--selection-bg); color: var(--text-primary); }
+    a { color: var(--accent-heading); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .container-grid { max-width: 860px; margin: 0 auto; padding: 0 48px; }
+    @media (max-width: 768px) { .container-grid { padding: 0 24px; } }
+    .page-header { position: sticky; top: 0; z-index: 10; background: var(--nav-bg); backdrop-filter: blur(20px) saturate(1.2); -webkit-backdrop-filter: blur(20px) saturate(1.2); border-bottom: 1px solid var(--border); }
+    .page-header-inner { max-width: 860px; margin: 0 auto; padding: 0 48px; height: 56px; display: flex; align-items: center; justify-content: space-between; }
+    @media (max-width: 768px) { .page-header-inner { padding: 0 24px; } }
+    .back-link { font-family: 'JetBrains Mono', monospace; font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-tertiary); }
+    .back-link:hover { color: var(--accent-heading); text-decoration: none; }
+    .theme-toggle { width: 36px; height: 36px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg-card); color: var(--text-secondary); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease; }
+    .theme-toggle:hover { border-color: var(--accent); color: var(--accent-heading); background: var(--accent-muted-strong); }
+    .theme-toggle svg { width: 16px; height: 16px; }
+    [data-theme="dark"] .icon-sun { display: block; } [data-theme="dark"] .icon-moon { display: none; }
+    [data-theme="light"] .icon-sun { display: none; } [data-theme="light"] .icon-moon { display: block; }
+    .case-hero { padding-top: 48px; padding-bottom: 8px; }
+    .case-kicker { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent-heading); }
+    .case-title { font-size: clamp(1.75rem, 4vw, 2.5rem); font-weight: 800; letter-spacing: -0.02em; color: var(--text-primary); margin-top: 0.5rem; }
+    .case-sub { color: var(--text-secondary); margin-top: 0.875rem; max-width: 42rem; font-size: 0.9375rem; line-height: 1.75; }
+    .case-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 1.25rem; }
+    .case-tag { font-family: 'JetBrains Mono', monospace; font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.02em; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--border); color: var(--text-secondary); background: var(--bg-card); }
+    .case-cta { margin-top: 1.75rem; display: flex; gap: 12px; flex-wrap: wrap; }
+    .case-cta-btn { display: inline-flex; align-items: center; gap: 6px; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; font-weight: 700; padding: 10px 18px; border-radius: 8px; border: 1px solid var(--accent-border); color: var(--accent-heading); background: var(--accent-muted-strong); transition: background 0.2s ease, border-color 0.2s ease; }
+    .case-cta-btn:hover { background: var(--accent-border); text-decoration: none; }
+    .case-media { margin-top: 2rem; border: 1px solid var(--border-light); border-radius: 14px; overflow: hidden; background: var(--bg-card); }
+    .case-media img { width: 100%; height: auto; display: block; }
+    .case-section { padding: 2.25rem 0; border-top: 1px solid var(--border-light); }
+    .case-section-title { font-family: 'JetBrains Mono', monospace; font-size: 0.8125rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent-heading); margin-bottom: 1rem; }
+    .case-section p { color: var(--text-secondary); font-size: 0.9375rem; line-height: 1.8; max-width: 42rem; }
+    .case-section p + p { margin-top: 1rem; }
+    .case-note { margin-top: 1.25rem; padding: 0.9rem 1.1rem; border-radius: 10px; border: 1px solid var(--border-light); background: var(--cloud-bg); font-size: 0.8125rem; color: var(--text-tertiary); max-width: 42rem; }
+    .case-stack { display: flex; flex-wrap: wrap; gap: 10px; }
+    .case-stack-item { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; font-weight: 600; padding: 7px 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-card); color: var(--text-primary); }
+    .archive-footer { padding: 40px 0 72px; }
+    .archive-footer a { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--text-tertiary); }
+    .archive-footer a:hover { color: var(--accent-heading); }
+  </style>
+</head>
+<body data-theme="dark">
+  <header class="page-header">
+    <div class="page-header-inner">
+      <a href="../index.html" class="back-link">&larr; Back to Project Archive</a>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+        <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+        <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <div class="container-grid case-hero">
+    <div class="case-kicker">QGIS &middot; GIS Data Engineering</div>
+    <h1 class="case-title">Countries with Tiny Nations &amp; Territories</h1>
+    <p class="case-sub">A hand-corrected world boundary shapefile that restores the small island nations and territories standard basemaps simplify away — built because no off-the-shelf world map actually suited disease-distribution mapping work.</p>
+    <div class="case-tags">
+      <span class="case-tag">QGIS</span>
+      <span class="case-tag">Shapefile</span>
+      <span class="case-tag">CC0</span>
+    </div>
+    <div class="case-cta">
+      <a href="https://github.com/vpoonyak/countries-with-tiny-vkp" target="_blank" rel="noopener noreferrer" class="case-cta-btn">View on GitHub &nearr;</a>
+    </div>
+    <div class="case-media">
+      <img src="countries-tiny.png" alt="Countries with Tiny Nations and Territories world map preview" loading="eager" width="1200" height="569">
+    </div>
+  </div>
+
+  <div class="container-grid">
+    <section class="case-section">
+      <div class="case-section-title">Problem</div>
+      <p>Standard world-boundary datasets, simplified for lightweight rendering, routinely drop or under-represent micro-states and dependent territories — Pacific atolls, Caribbean island nations, European micro-states like Monaco and Liechtenstein, Gibraltar, Andorra, and similar small or contested territories. For a travel-medicine physician mapping malaria, yellow fever, and other mosquito-borne disease distributions, that's exactly where risk data needs to render — the base map was silently dropping the populations the visualization was meant to show. No existing world map suited that specific need, so this one was built to use directly.</p>
+    </section>
+
+    <section class="case-section">
+      <div class="case-section-title">Approach</div>
+      <p>Built in QGIS from the Natural Earth world-countries dataset, then hand-corrected feature by feature: adding back omitted micro-states, territories, and islands; separating administrative units that were nested inside larger countries where that hid them (French Guiana pulled out from France, for example); resolving overlapping/hidden features; and adding an exaggerated marker for at least one nation too small to survive standard simplification. Every feature — including ones without a standard country code — was given a stable join key so the shapefile joins cleanly onto other datasets (like the CDC Yellow Book country data behind the Yellow Fever &amp; Malaria dashboard), with geometry simplified for lightweight rendering.</p>
+    </section>
+
+    <section class="case-section">
+      <div class="case-section-title">Outcome</div>
+      <p>A versioned, openly licensed personal utility with an iterative changelog of real-use fixes — consistent with a tool that gets reused rather than a one-off export.</p>
+      <div class="case-note">Released under CC0 (public domain). Country/territory boundary and naming choices reflect standard basemap conventions inherited from the source dataset, adapted purely for rendering completeness in disease-distribution mapping &mdash; not a statement on political status.</div>
+    </section>
+
+    <section class="case-section">
+      <div class="case-section-title">Tech Stack</div>
+      <div class="case-stack">
+        <span class="case-stack-item">QGIS</span>
+        <span class="case-stack-item">Natural Earth (base dataset)</span>
+        <span class="case-stack-item">ESRI Shapefile (EPSG:4326)</span>
+      </div>
+    </section>
+  </div>
+
+  <footer class="archive-footer">
+    <div class="container-grid">
+      <a href="../index.html">&larr; Back to project archive</a>
+    </div>
+  </footer>
+
+  <script>
+    const htmlEl = document.documentElement;
+    const bodyEl = document.body;
+    const themeToggle = document.getElementById('themeToggle');
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    htmlEl.setAttribute('data-theme', savedTheme);
+    bodyEl.setAttribute('data-theme', savedTheme);
+    themeToggle.addEventListener('click', function () {
+      const current = htmlEl.getAttribute('data-theme');
+      const next = current === 'dark' ? 'light' : 'dark';
+      htmlEl.setAttribute('data-theme', next);
+      bodyEl.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+    });
+  </script>
+</body>
+</html>

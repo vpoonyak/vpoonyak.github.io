@@ -40,6 +40,13 @@ The `#expertise` section exists in markup but is hidden and excluded from naviga
 - ISC2 CC white badge: `badge/certified-in-cybersecurity-cc.1-white.png`
 - Social share card: `pic/og-card.jpg` (1200×1200 square, full-bleed `pic/vitchakorn-wider.png` with a bottom gradient scrim and text overlaid directly on the photo — label, name, tagline, URL). Square + text-on-photo is deliberate: iOS's LinkPresentation framework (used by LINE, iMessage, Mail, etc. for rich link previews) does face-priority smart-cropping on `og:image` and was cutting the name/tagline out entirely when they lived in a separate region from the photo — a square source avoids the aspect-crop, and overlaying text on the same image layer as the face means a face-priority crop is far more likely to still catch nearby text. `og:image:width`/`height` must stay `1200`/`1200` if regenerated. No source HTML template is kept in-repo; rebuild the full-bleed-photo-with-scrim HTML, render at 1200×1200 via Playwright, and convert with `sips -s format jpeg -s formatOptions 80`.
 
+## Project Case-Study Pages
+- Each project under `public/project/` lives in its own folder: `public/project/<slug>/index.html` plus that project's own assets (thumb, case images, any data files) alongside it. URLs are clean folder paths, e.g. `/project/yfmalaria/`.
+- The old flat `public/project/<slug>.html` paths were removed (no redirect stubs) — old bookmarks/backlinks to those URLs now 404. Don't recreate flat `<slug>.html` files; always use the `<slug>/index.html` folder form.
+- `public/project/index.html` (the Project Archive listing) and its per-card links/thumbs must stay in sync with the actual folder names.
+- New/renamed project URLs also need updating in `src/components/Projects.astro` (Top Projects carousel) and the `customPages` list in `astro.config.mjs` (sitemap).
+- `dist/` is a pure Astro build artifact (gitignored) — CI's `deploy.yml` runs `npm run build` fresh and deploys that, so never hand-edit anything under `dist/`; edit `public/`/`src/` and run `npx astro build` locally only to verify.
+
 ## QA Checklist
 Run after meaningful edits:
 

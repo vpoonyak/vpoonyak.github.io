@@ -4,3 +4,6 @@ firebase-debug.log
 docs/superpowers/
 .gitignore
 .DS_Store
+node_modules/
+/dist/
+/.astro/

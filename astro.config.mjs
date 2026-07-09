@@ -10,18 +10,18 @@ export default defineConfig({
       customPages: [
         'https://vitchakorn.com/credentials.html',
         'https://vitchakorn.com/project/',
-        'https://vitchakorn.com/project/ddschatbot.html',
-        'https://vitchakorn.com/project/altit.html',
-        'https://vitchakorn.com/project/yfmalaria.html',
-        'https://vitchakorn.com/project/hospcode.html',
-        'https://vitchakorn.com/project/hajjmens.html',
-        'https://vitchakorn.com/project/pm2-5.html',
-        'https://vitchakorn.com/project/cirrhosis.html',
-        'https://vitchakorn.com/project/th-numeral.html',
-        'https://vitchakorn.com/project/bnk48.html',
-        'https://vitchakorn.com/project/cda2558.html',
-        'https://vitchakorn.com/project/sichuan-yunnan.html',
-        'https://vitchakorn.com/project/countries-tiny.html'
+        'https://vitchakorn.com/project/ddschatbot/',
+        'https://vitchakorn.com/project/altit/',
+        'https://vitchakorn.com/project/yfmalaria/',
+        'https://vitchakorn.com/project/hospcode/',
+        'https://vitchakorn.com/project/hajjmens/',
+        'https://vitchakorn.com/project/pm2-5/',
+        'https://vitchakorn.com/project/cirrhosis/',
+        'https://vitchakorn.com/project/th-numeral/',
+        'https://vitchakorn.com/project/bnk48/',
+        'https://vitchakorn.com/project/cda2558/',
+        'https://vitchakorn.com/project/sichuan-yunnan/',
+        'https://vitchakorn.com/project/countries-tiny/'
       ]
     })
   ]
