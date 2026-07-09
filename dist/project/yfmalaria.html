@@ -272,13 +272,22 @@
       color: var(--text-primary) !important;
       border-bottom: 1px solid var(--border) !important;
       transition: background-color 0.2s;
+      text-decoration: none !important;
     }
-    .leaflet-bar a:hover {
+    .leaflet-bar a:hover,
+    .leaflet-bar a:focus,
+    .leaflet-bar a:active {
       background-color: var(--border-light) !important;
+      text-decoration: none !important;
     }
     .leaflet-bar a.leaflet-disabled {
       background-color: var(--bg) !important;
       color: var(--text-tertiary) !important;
+    }
+    .leaflet-control-home {
+      display: flex !important;
+      align-items: center;
+      justify-content: center;
     }
 
     /* Custom Leaflet Popup Styling */
@@ -492,6 +501,178 @@
     .archive-footer { padding: 40px 0 72px; }
     .archive-footer a { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--text-tertiary); }
     .archive-footer a:hover { color: var(--accent-heading); }
+
+    /* Hover Detail Panel (single floating panel, escapes map clipping) */
+    .hover-detail-panel {
+      position: fixed;
+      z-index: 100000;
+      display: none;
+      pointer-events: none;
+      width: max-content;
+      max-width: 320px;
+      background: var(--bg-card);
+      color: var(--text-primary);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.35);
+      font-family: 'Inter', sans-serif;
+    }
+    .hover-detail-panel.visible {
+      display: block;
+    }
+    .tooltip-card {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      width: 300px;
+      padding: 14px;
+      box-sizing: border-box;
+      word-wrap: break-word;
+      word-break: break-word;
+    }
+    /* Fullscreen has far more room, so let the hover panel widen with it
+       instead of staying pinned to the small embedded-card size. */
+    .dashboard-wrapper.is-fullscreen .hover-detail-panel {
+      max-width: clamp(320px, 34vw, 560px);
+    }
+    .dashboard-wrapper.is-fullscreen .tooltip-card {
+      width: clamp(300px, 34vw, 540px);
+    }
+    .detail-badge {
+      display: inline-flex;
+      align-items: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6875rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 999px;
+      border: 1px solid;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+    .detail-badge-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 6px;
+    }
+
+    /* Pin-to-trip button inside popups */
+    .pin-country-btn {
+      align-self: flex-start;
+      margin-top: 2px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6875rem;
+      font-weight: 600;
+      padding: 5px 10px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .pin-country-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent-heading);
+    }
+    .pin-country-btn.pinned {
+      border-color: var(--accent-border);
+      background: var(--accent-muted-strong);
+      color: var(--accent-heading);
+    }
+
+    /* Trip Itinerary Summary */
+    .trip-summary-panel {
+      border-top: 1px solid var(--border-light);
+      background: var(--bg-card);
+      padding: 14px 16px 16px;
+    }
+    .trip-summary-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      gap: 8px;
+    }
+    .trip-summary-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--text-primary);
+    }
+    .trip-summary-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .trip-card {
+      flex: 1 1 220px;
+      max-width: 300px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--bg);
+      padding: 10px 12px;
+    }
+    .trip-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding-bottom: 6px;
+      margin-bottom: 6px;
+      border-bottom: 1px solid var(--border-light);
+    }
+    .trip-card-title {
+      font-size: 0.875rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .trip-card-remove {
+      border: none;
+      background: transparent;
+      color: var(--text-tertiary);
+      font-size: 1.1rem;
+      line-height: 1;
+      cursor: pointer;
+      padding: 2px 4px;
+    }
+    .trip-card-remove:hover {
+      color: var(--accent-heading);
+    }
+    .trip-card-body {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .trip-card-desc {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+    .trip-card-desc strong {
+      color: var(--text-primary);
+    }
+    .trip-card-desc ul, .trip-card-desc ol {
+      margin-left: 12px;
+      margin-top: 2px;
+    }
+    .trip-card-desc li {
+      margin-bottom: 2px;
+    }
+
+    /* Data source attribution */
+    .data-source-note {
+      padding: 10px 16px;
+      border-top: 1px solid var(--border-light);
+      background: var(--bg-card);
+      font-size: 0.75rem;
+      color: var(--text-tertiary);
+    }
+    .data-source-note a {
+      color: var(--accent-heading);
+    }
   </style>
 </head>
 <body data-theme="dark">
@@ -587,6 +768,17 @@
           </div>
         </div>
       </div>
+
+      <div class="data-source-note">Data extracted from the <a href="https://www.cdc.gov/yellow-book/hcp/preparing-international-travelers/yellow-fever-vaccine-and-malaria-prevention-information-by-country.html" target="_blank" rel="noopener noreferrer">CDC Yellow Book 2026</a> — Yellow Fever Vaccine &amp; Malaria Prevention Information by Country.</div>
+
+      <div class="trip-summary-panel" id="tripSummaryPanel" style="display: none;">
+        <div class="trip-summary-header">
+          <span class="trip-summary-title">Trip Itinerary</span>
+          <button class="control-btn" id="tripClearBtn">Clear All</button>
+        </div>
+        <div class="trip-summary-list" id="tripSummaryList"></div>
+      </div>
+      <div class="hover-detail-panel" id="hoverDetailPanel"></div>
     </div>
   </div>
 
@@ -598,7 +790,7 @@
 
     <section class="case-section">
       <div class="case-section-title">Approach</div>
-      <p>Source data is pulled directly from CDC's own Yellow Book data service rather than transcribed by hand, capturing yellow fever recommendation/entry requirements, malaria transmission areas, drug resistance, <em>Plasmodium</em> species, and recommended chemoprophylaxis per country. A Python pipeline (pandas, BeautifulSoup) parses this into a country-keyed table, then fuzzy-matches CDC's country naming against a map-geography attribute table so every country joins cleanly onto Tableau's built-in map — the engineering behind turning many lookup pages into one map.</p>
+      <p>Source data is pulled directly from the <a href="https://www.cdc.gov/yellow-book/hcp/preparing-international-travelers/yellow-fever-vaccine-and-malaria-prevention-information-by-country.html" target="_blank" rel="noopener noreferrer">CDC Yellow Book 2026</a> data service rather than transcribed by hand, capturing yellow fever recommendation/entry requirements, malaria transmission areas, drug resistance, <em>Plasmodium</em> species, and recommended chemoprophylaxis per country. A Python pipeline (pandas, BeautifulSoup) parses this into a country-keyed table, then fuzzy-matches CDC's country naming against a map-geography attribute table so every country joins cleanly onto Tableau's built-in map — the engineering behind turning many lookup pages into one map.</p>
       <p>The published dashboard links two worksheets — yellow fever and malaria — so clicking any country surfaces both risk profiles together, plus dedicated seasonality fields showing not just whether malaria risk exists in a country, but when in the year it peaks.</p>
     </section>
 
@@ -647,6 +839,17 @@
       const mapMalariaEl = document.getElementById('map-malaria');
       if (!mapYFEl || !mapMalariaEl) return;
 
+      // Vertical pan limit (Mercator pole limit) - keeps worldCopyJump's
+      // horizontal wrap unbounded (Infinity lng) while stopping vertical
+      // panning into empty space above/below the poles.
+      const poleBounds = [[-85.06, -Infinity], [85.06, Infinity]];
+
+      // Canvas renderer with a generous padding: Leaflet's default canvas
+      // buffer only pre-paints ~10% beyond the viewport, so a fast drag
+      // outruns it and reveals raw unpainted canvas until moveend catches
+      // up. padding:1 pre-renders a full extra viewport in every direction.
+      const dashboardRenderer = () => L.canvas({ padding: 1 });
+
       // Initialize mapYF
       const mapYF = L.map('map-yf', {
         center: [15, 0],
@@ -654,7 +857,11 @@
         minZoom: 1.5,
         maxZoom: 7,
         zoomControl: true,
-        attributionControl: false
+        attributionControl: false,
+        worldCopyJump: true,
+        renderer: dashboardRenderer(),
+        maxBounds: poleBounds,
+        maxBoundsViscosity: 1.0
       });
 
       // Initialize mapMalaria
@@ -664,18 +871,26 @@
         minZoom: 1.5,
         maxZoom: 7,
         zoomControl: true,
-        attributionControl: false
+        attributionControl: false,
+        worldCopyJump: true,
+        renderer: dashboardRenderer(),
+        maxBounds: poleBounds,
+        maxBoundsViscosity: 1.0
       });
 
-      // Cross-sync views
+      // Cross-sync views (rAF-throttled so a drag doesn't queue a setView
+      // on the other map every mousemove/touchmove tick)
       let isSyncing = false;
       function sync(mapSrc, mapDst) {
+        let rafId = null;
         mapSrc.on('move', () => {
-          if (!isSyncing) {
+          if (isSyncing || rafId) return;
+          rafId = requestAnimationFrame(() => {
+            rafId = null;
             isSyncing = true;
             mapDst.setView(mapSrc.getCenter(), mapSrc.getZoom(), { animate: false });
             isSyncing = false;
-          }
+          });
         });
         mapSrc.on('zoomend', () => {
           if (!isSyncing) {
@@ -688,11 +903,23 @@
       sync(mapYF, mapMalaria);
       sync(mapMalaria, mapYF);
 
+      // Suppress hover-panel work (canvas hit-testing + a forced reflow on
+      // every mousemove) while a drag is in progress - see showHoverDetail.
+      let isMapDragging = false;
+      function markDragging() { isMapDragging = true; hideHoverDetail(); }
+      function markDragEnd() { isMapDragging = false; }
+      mapYF.on('dragstart', markDragging);
+      mapMalaria.on('dragstart', markDragging);
+      mapYF.on('dragend', markDragEnd);
+      mapMalaria.on('dragend', markDragEnd);
+
       // GeoJSON layer stores
       let yfLayer, malariaLayer;
       let mapData = null;
       let selectedFeatureId = null;
       let tinyMarkers = [];
+      let pinnedCountries = new Map();
+      const hoverPanel = document.getElementById('hoverDetailPanel');
 
       // Colors matching Tableau reference
       const colorsYF = {
@@ -853,7 +1080,15 @@
           mapYF.setView([15, 0], 2, { animate: false });
         } else if (yfLayer && yfLayer.getLayers().length > 0) {
           try {
-            const bounds = yfLayer.getBounds();
+            // Exclude dateline shadow copies from the bounds calc, or a
+            // filter that includes e.g. Tonga + Tuvalu would compute a
+            // bounding box stretching most of the way around the globe.
+            const bounds = L.latLngBounds([]);
+            yfLayer.eachLayer(l => {
+              if (!l.feature.properties._isDateLineCopy) {
+                bounds.extend(l.getBounds());
+              }
+            });
             if (bounds.isValid()) {
               mapYF.fitBounds(bounds, { padding: [40, 40], maxZoom: 5, animate: false });
             }
@@ -861,6 +1096,8 @@
             console.error("Error fitting bounds:", e);
           }
         }
+
+        syncStateToURL();
       }
 
       // Dynamic dropdown population based on GeoJSON properties
@@ -926,36 +1163,111 @@
         });
       }
 
+      // Antimeridian handling: GeoJSON polygons (unlike tile layers) don't
+      // automatically get a copy in each worldCopyJump repeat, so countries
+      // that sit right against +/-180 (Tonga at -175, Tuvalu at +179, only
+      // ~500km apart in reality) render on opposite edges of the map. Give
+      // near-dateline countries a shifted "shadow" copy so they always have
+      // a neighbor rendered nearby, regardless of which world copy is in view.
+      function shiftFeatureLng(feature, delta) {
+        const clone = JSON.parse(JSON.stringify(feature));
+        clone.properties._isDateLineCopy = true;
+        (function shiftCoords(coords) {
+          if (typeof coords[0] === 'number') {
+            coords[0] += delta;
+            return;
+          }
+          coords.forEach(shiftCoords);
+        })(clone.geometry.coordinates);
+        return clone;
+      }
+
+      function addDateLineCopies(featureCollection) {
+        // Full west (-360) and east (+360) copy of every country, not just
+        // the ones hugging the dateline - worldCopyJump only ever needs one
+        // extra copy on each side before it snaps back, so this is enough
+        // to make every country (not only Tonga/Tuvalu-style neighbors)
+        // reappear seamlessly as you pan into the adjacent world repeat,
+        // matching how the base tile layer already wraps.
+        const shadowFeatures = [];
+        featureCollection.features.forEach(f => {
+          const lons = [];
+          (function collectLons(coords) {
+            if (typeof coords[0] === 'number') { lons.push(coords[0]); return; }
+            coords.forEach(collectLons);
+          })(f.geometry.coordinates);
+          const lo = Math.min(...lons), hi = Math.max(...lons);
+          if (lo < -170 && hi > 170) return; // already spans both sides (e.g. Fiji, Russia, Kiribati)
+          shadowFeatures.push(shiftFeatureLng(f, 360));
+          shadowFeatures.push(shiftFeatureLng(f, -360));
+        });
+        featureCollection.features.push(...shadowFeatures);
+      }
+
       // Fetch GeoJSON data
       fetch('data/yf_malaria_map.geojson')
         .then(response => response.json())
         .then(data => {
+          addDateLineCopies(data);
           mapData = data;
           initMapLayers();
           initSearchAutocomplete();
           populateFilterDropdowns();
+          applyStateFromURL();
         })
         .catch(err => console.error("Error loading map GeoJSON:", err));
 
-      function createYFPopupHTML(props) {
+      function getYFShortLabel(props) {
+        const cat = props.entryCategory || 'Vaccine is not required';
+        if (cat === 'Vaccine is required for all arriving travelers') return 'Required';
+        if (cat === 'Travel from countries with risk for YF virus transmission') return 'From Risk countries';
+        if (cat === 'Arriving from some countries') return 'Conditional';
+        if (cat === 'Other') return 'Other';
+        return 'Not required';
+      }
+
+      function getMalariaShortLabel(props) {
+        if (!props.malariaHasTransmission) return 'No Risk';
+        return props.resistanceType || 'Risk present';
+      }
+
+      // CDC source fields use "\n- " prefixed lines as plain-text bullet
+      // lists (e.g. multiple entry-requirement clauses, multiple risk
+      // areas), and occasionally a nested "  • " sub-list under one of
+      // those dash items (e.g. India's YF entry requirements). Rendered as
+      // raw text these collapse into a run-on paragraph, so turn them into
+      // real nested <ul> markup when detected.
+      function formatDashList(text) {
+        if (!text) return '';
+        if (!/(^|\n)\s*-\s+/.test(text)) return text;
+
+        const items = [];
+        text.split('\n').forEach(raw => {
+          const trimmed = raw.trim();
+          if (!trimmed) return;
+          if (/^[•*]\s+/.test(trimmed)) {
+            const content = trimmed.replace(/^[•*]\s+/, '');
+            if (items.length > 0) items[items.length - 1].children.push(content);
+            else items.push({ text: content, children: [] });
+          } else if (/^-\s+/.test(trimmed)) {
+            items.push({ text: trimmed.replace(/^-\s+/, ''), children: [] });
+          } else if (items.length > 0) {
+            items[items.length - 1].text += ' ' + trimmed;
+          } else {
+            items.push({ text: trimmed, children: [] });
+          }
+        });
+
+        return `<ul>${items.map(item => `<li>${item.text}${item.children.length ? `<ul>${item.children.map(c => `<li>${c}</li>`).join('')}</ul>` : ''}</li>`).join('')}</ul>`;
+      }
+
+      function buildYFDetailContent(props) {
         const cat = props.entryCategory || 'Vaccine is not required';
         const badgeColor = colorsYF[cat] || '#afafaf';
-
-        let label = 'YF: Not Required';
-        if (cat === 'Vaccine is required for all arriving travelers') {
-          label = 'YF: Required';
-        } else if (cat === 'Travel from countries with risk for YF virus transmission') {
-          label = 'YF: Risk countries';
-        } else if (cat === 'Arriving from some countries') {
-          label = 'YF: Conditional';
-        } else if (cat === 'Other') {
-          label = 'YF: Other';
-        }
-
-        const yfBadge = `<span class="detail-badge" style="background: ${badgeColor}1a; color: ${badgeColor}; border-color: ${badgeColor}4d">${label}</span>`;
+        const label = getYFShortLabel(props);
+        const yfBadge = `<span class="detail-badge" style="background: ${badgeColor}1a; color: ${badgeColor}; border-color: ${badgeColor}4d">YF: ${label}</span>`;
 
         return `
-          <div class="popup-card">
             <div class="popup-header">
               <div class="popup-title">${props.countryName}</div>
               <div class="popup-subtitle">${props.subregion || ''}, ${props.continent || ''}</div>
@@ -965,20 +1277,13 @@
             </div>
             <div class="popup-group">
               <div class="popup-label">Yellow Fever Vaccine Guidance</div>
-              <div class="popup-desc"><strong>Requirements:</strong> ${props.yfEntryRequirements || 'No data'}</div>
-              <div class="popup-desc" style="margin-top: 2px;"><strong>Recommendations:</strong> ${props.yfRecommendations || 'No data'}</div>
+              <div class="popup-desc"><strong>Requirements:</strong> ${formatDashList(props.yfEntryRequirements) || 'No data'}</div>
+              <div class="popup-desc" style="margin-top: 2px;"><strong>Recommendations:</strong> ${formatDashList(props.yfRecommendations) || 'No data'}</div>
             </div>
-            ${props.otherVaccinesToConsider ? `
-              <div class="popup-group">
-                <div class="popup-label">Other Considerations</div>
-                <div class="popup-desc">${props.otherVaccinesToConsider}</div>
-              </div>
-            ` : ''}
-          </div>
         `;
       }
 
-      function createMalariaPopupHTML(props) {
+      function buildMalariaDetailContent(props) {
         let malariaBadge = `<span class="detail-badge badge-malaria-no" style="background: rgba(175,175,175,0.12); color: #888; border-color: rgba(175,175,175,0.3)">Malaria: No Risk</span>`;
         if (props.malariaHasTransmission) {
           const resType = props.resistanceType || 'No Resist';
@@ -987,7 +1292,6 @@
         }
 
         return `
-          <div class="popup-card">
             <div class="popup-header">
               <div class="popup-title">${props.countryName}</div>
               <div class="popup-subtitle">${props.subregion || ''}, ${props.continent || ''}</div>
@@ -998,17 +1302,160 @@
             <div class="popup-group">
               <div class="popup-label">Malaria Prophylaxis Guidance</div>
               ${props.malariaHasTransmission ? `
-                <div class="popup-desc"><strong>Risk Areas:</strong> ${props.malariaAreasOfRisk}</div>
-                <div class="popup-desc" style="margin-top: 2px;"><strong>Prophylaxis:</strong> ${props.malariaRecommendedChemoprophylaxis}</div>
-                <div class="popup-desc" style="margin-top: 2px;"><strong>Species:</strong> ${props.malariaSpecies}</div>
+                <div class="popup-desc"><strong>Risk Areas:</strong> ${formatDashList(props.malariaAreasOfRisk)}</div>
+                <div class="popup-desc" style="margin-top: 2px;"><strong>Prophylaxis:</strong> ${formatDashList(props.malariaRecommendedChemoprophylaxis)}</div>
+                <div class="popup-desc" style="margin-top: 2px;"><strong>Species:</strong> ${formatDashList(props.malariaSpecies)}</div>
                 <div class="popup-desc" style="margin-top: 2px;"><strong>Seasonality:</strong> ${props.malariaSeasonRange}</div>
                 ${props.malariaPeakMonths ? `<div class="popup-desc" style="margin-top: 2px;"><strong>Peaks:</strong> ${props.malariaPeakMonths}</div>` : ''}
               ` : `
                 <div class="popup-desc">No active malaria transmission. Prophylaxis not recommended.</div>
               `}
             </div>
-          </div>
         `;
+      }
+
+      function pinButtonHTML(props) {
+        const pinned = pinnedCountries.has(props.vkpCode);
+        return `<button class="pin-country-btn${pinned ? ' pinned' : ''}" data-vkp="${props.vkpCode}">${pinned ? '★ Remove from Trip' : '☆ Add to Trip'}</button>`;
+      }
+
+      function createYFPopupHTML(props) {
+        return `<div class="popup-card">${buildYFDetailContent(props)}${pinButtonHTML(props)}</div>`;
+      }
+
+      function createMalariaPopupHTML(props) {
+        return `<div class="popup-card">${buildMalariaDetailContent(props)}${pinButtonHTML(props)}</div>`;
+      }
+
+      // Multi-country trip pinning: lets a clinician build up a combined
+      // itinerary summary instead of looking up one country at a time.
+      function togglePinCountry(vkpCode) {
+        if (pinnedCountries.has(vkpCode)) {
+          pinnedCountries.delete(vkpCode);
+        } else {
+          let properties = null;
+          let fallback = null;
+          yfLayer.eachLayer(l => {
+            if (l.feature.properties.vkpCode === vkpCode) {
+              if (!l.feature.properties._isDateLineCopy) properties = l.feature.properties;
+              else if (!fallback) fallback = l.feature.properties;
+            }
+          });
+          properties = properties || fallback;
+          if (!properties) return;
+          pinnedCountries.set(vkpCode, properties);
+        }
+
+        document.querySelectorAll(`.pin-country-btn[data-vkp="${vkpCode}"]`).forEach(btn => {
+          const pinned = pinnedCountries.has(vkpCode);
+          btn.textContent = pinned ? '★ Remove from Trip' : '☆ Add to Trip';
+          btn.classList.toggle('pinned', pinned);
+        });
+
+        renderTripSummary();
+        syncStateToURL();
+      }
+
+      function renderTripSummary() {
+        const panel = document.getElementById('tripSummaryPanel');
+        const list = document.getElementById('tripSummaryList');
+        if (!panel || !list) return;
+
+        if (pinnedCountries.size === 0) {
+          panel.style.display = 'none';
+          list.innerHTML = '';
+          return;
+        }
+
+        panel.style.display = 'block';
+        list.innerHTML = Array.from(pinnedCountries.values()).map(props => {
+          const yfCat = props.entryCategory || 'Vaccine is not required';
+          const yfBadgeColor = colorsYF[yfCat] || '#afafaf';
+          const malariaBadgeColor = props.malariaHasTransmission ? (colorsMalaria[props.resistanceType] || '#68a368') : '#afafaf';
+
+          return `
+            <div class="trip-card">
+              <div class="trip-card-header">
+                <div class="trip-card-title">${props.countryName}</div>
+                <button class="trip-card-remove" data-vkp="${props.vkpCode}" aria-label="Remove ${props.countryName} from trip">&times;</button>
+              </div>
+              <div class="trip-card-body">
+                <span class="detail-badge" style="background: ${yfBadgeColor}1a; color: ${yfBadgeColor}; border-color: ${yfBadgeColor}4d">YF: ${getYFShortLabel(props)}</span>
+                <div class="trip-card-desc"><strong>Requirements:</strong> ${props.yfEntryRequirements || 'No data'}</div>
+                <span class="detail-badge" style="background: ${malariaBadgeColor}1a; color: ${malariaBadgeColor}; border-color: ${malariaBadgeColor}4d">Malaria: ${getMalariaShortLabel(props)}</span>
+                ${props.malariaHasTransmission
+                  ? `<div class="trip-card-desc"><strong>Prophylaxis:</strong> ${props.malariaRecommendedChemoprophylaxis}</div>`
+                  : `<div class="trip-card-desc">No active malaria transmission.</div>`}
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      // Delegated click handling for pin/unpin buttons rendered inside
+      // dynamically-created popup and trip-card markup.
+      document.addEventListener('click', function(e) {
+        const btn = e.target.closest('.pin-country-btn, .trip-card-remove');
+        if (btn) {
+          togglePinCountry(btn.dataset.vkp);
+        }
+      });
+
+      // Shareable state: filters, view mode, layout mode, and pinned trip
+      // are all reflected in the URL so a filtered/pinned view can be sent
+      // as a link instead of resetting for whoever opens it.
+      function syncStateToURL() {
+        const params = new URLSearchParams();
+        const cont = document.getElementById('continentFilter').value;
+        const sub = document.getElementById('subregionFilter').value;
+        if (cont && cont !== 'all') params.set('continent', cont);
+        if (sub && sub !== 'all') params.set('subregion', sub);
+
+        if (viewYFBtn.classList.contains('active')) params.set('view', 'yf');
+        else if (viewMalariaBtn.classList.contains('active')) params.set('view', 'malaria');
+
+        if (layoutSplitBtn.classList.contains('active')) params.set('layout', 'split');
+
+        if (pinnedCountries.size > 0) {
+          params.set('trip', Array.from(pinnedCountries.keys()).join(','));
+        }
+
+        const qs = params.toString();
+        history.replaceState(null, '', window.location.pathname + (qs ? '?' + qs : ''));
+      }
+
+      function applyStateFromURL() {
+        const params = new URLSearchParams(window.location.search);
+        const cont = params.get('continent');
+        const sub = params.get('subregion');
+        const view = params.get('view');
+        const layout = params.get('layout');
+        const trip = params.get('trip');
+
+        const continentSelect = document.getElementById('continentFilter');
+        const subregionSelect = document.getElementById('subregionFilter');
+
+        if (cont && Array.from(continentSelect.options).some(o => o.value === cont)) {
+          continentSelect.value = cont;
+          continentSelect.dispatchEvent(new Event('change'));
+        }
+        if (sub && Array.from(subregionSelect.options).some(o => o.value === sub)) {
+          subregionSelect.value = sub;
+          subregionSelect.dispatchEvent(new Event('change'));
+        }
+
+        if (view === 'yf') viewYFBtn.click();
+        else if (view === 'malaria') viewMalariaBtn.click();
+
+        if (layout === 'split') layoutSplitBtn.click();
+
+        if (trip) {
+          trip.split(',').filter(Boolean).forEach(code => {
+            const feature = mapData.features.find(f => f.properties.vkpCode === code && !f.properties._isDateLineCopy);
+            if (feature) pinnedCountries.set(code, feature.properties);
+          });
+          renderTripSummary();
+        }
       }
 
       function initMapLayers() {
@@ -1041,14 +1488,56 @@
         }).addTo(mapMalaria);
       }
 
+      // Single shared floating detail panel (position: fixed, so it escapes
+      // the map's overflow:hidden and is never clipped or truncated). Only
+      // one instance exists, so only one hover detail can ever be visible.
+      function showHoverDetail(mapType, feature, originalEvent) {
+        // Skip while actively dragging: Leaflet's canvas hit-testing plus
+        // the getBoundingClientRect() reflow below competes with the pan
+        // itself, visibly stuttering the pane under the cursor.
+        if (isMapDragging) return;
+        hoverPanel.innerHTML = `<div class="tooltip-card">${mapType === 'yf' ? buildYFDetailContent(feature.properties) : buildMalariaDetailContent(feature.properties)}</div>`;
+        hoverPanel.classList.add('visible');
+        positionHoverDetail(originalEvent);
+      }
+
+      function positionHoverDetail(originalEvent) {
+        if (!originalEvent || isMapDragging) return;
+        const padding = 16;
+        const rect = hoverPanel.getBoundingClientRect();
+        let left = originalEvent.clientX + 18;
+        let top = originalEvent.clientY + 18;
+
+        if (left + rect.width + padding > window.innerWidth) {
+          left = originalEvent.clientX - rect.width - 18;
+        }
+        if (top + rect.height + padding > window.innerHeight) {
+          top = window.innerHeight - rect.height - padding;
+        }
+        if (top < padding) top = padding;
+        if (left < padding) left = padding;
+
+        hoverPanel.style.left = left + 'px';
+        hoverPanel.style.top = top + 'px';
+      }
+
+      function hideHoverDetail() {
+        hoverPanel.classList.remove('visible');
+      }
+
       function bindInteractions(layer, feature, mapType, currentMap) {
         const vkpCode = feature.properties.vkpCode;
         layer.on({
           mouseover: function(e) {
             highlightFeature(vkpCode);
+            showHoverDetail(mapType, feature, e.originalEvent);
+          },
+          mousemove: function(e) {
+            positionHoverDetail(e.originalEvent);
           },
           mouseout: function(e) {
             resetFeatureHighlight();
+            hideHoverDetail();
           },
           click: function(e) {
             selectCountry(vkpCode, e.latlng);
@@ -1087,9 +1576,14 @@
           marker.on({
             mouseover: function(e) {
               highlightFeature(vkpCode);
+              showHoverDetail(mapType, feature, e.originalEvent);
+            },
+            mousemove: function(e) {
+              positionHoverDetail(e.originalEvent);
             },
             mouseout: function(e) {
               resetFeatureHighlight();
+              hideHoverDetail();
             },
             click: function(e) {
               selectCountry(vkpCode, e.latlng);
@@ -1155,23 +1649,42 @@
         selectedFeatureId = vkpCode;
         updateMapStyle();
 
-        // Find matching feature properties
+        // Find matching feature properties - prefer the primary (non-shadow)
+        // copy for centering/popup placement, so search or programmatic
+        // selection always lands on the real location, not a dateline shadow.
         let properties = null;
         let targetLayerYF = null;
         let targetLayerMalaria = null;
+        let fallbackLayerYF = null;
+        let fallbackLayerMalaria = null;
 
         yfLayer.eachLayer(l => {
           if (l.feature.properties.vkpCode === vkpCode) {
-            properties = l.feature.properties;
-            targetLayerYF = l;
+            if (!l.feature.properties._isDateLineCopy) {
+              properties = l.feature.properties;
+              targetLayerYF = l;
+            } else if (!fallbackLayerYF) {
+              fallbackLayerYF = l;
+            }
           }
         });
+        if (!targetLayerYF && fallbackLayerYF) {
+          targetLayerYF = fallbackLayerYF;
+          properties = fallbackLayerYF.feature.properties;
+        }
 
         malariaLayer.eachLayer(l => {
           if (l.feature.properties.vkpCode === vkpCode) {
-            targetLayerMalaria = l;
+            if (!l.feature.properties._isDateLineCopy) {
+              targetLayerMalaria = l;
+            } else if (!fallbackLayerMalaria) {
+              fallbackLayerMalaria = l;
+            }
           }
         });
+        if (!targetLayerMalaria && fallbackLayerMalaria) {
+          targetLayerMalaria = fallbackLayerMalaria;
+        }
 
         if (properties) {
           const popupLatLng = latlng || targetLayerYF.getBounds().getCenter();
@@ -1283,6 +1796,7 @@
           mapYF.invalidateSize();
           mapMalaria.invalidateSize();
         }, 150);
+        syncStateToURL();
       });
 
       viewYFBtn.addEventListener('click', () => {
@@ -1297,6 +1811,7 @@
         setTimeout(() => {
           mapYF.invalidateSize();
         }, 150);
+        syncStateToURL();
       });
 
       viewMalariaBtn.addEventListener('click', () => {
@@ -1311,6 +1826,7 @@
         setTimeout(() => {
           mapMalaria.invalidateSize();
         }, 150);
+        syncStateToURL();
       });
 
       // Layout Split/Stack Controls
@@ -1329,6 +1845,7 @@
           mapYF.invalidateSize();
           mapMalaria.invalidateSize();
         }, 150);
+        syncStateToURL();
       });
 
       layoutSplitBtn.addEventListener('click', () => {
@@ -1341,9 +1858,46 @@
           mapYF.invalidateSize();
           mapMalaria.invalidateSize();
         }, 150);
+        syncStateToURL();
       });
 
       // Fullscreen Controls
+      // Trip Itinerary clear-all
+      const tripClearBtn = document.getElementById('tripClearBtn');
+      tripClearBtn.addEventListener('click', () => {
+        pinnedCountries.clear();
+        document.querySelectorAll('.pin-country-btn.pinned').forEach(btn => {
+          btn.textContent = '☆ Add to Trip';
+          btn.classList.remove('pinned');
+        });
+        renderTripSummary();
+        syncStateToURL();
+      });
+
+      // Reset view (Home) - attached into each map's own zoom control
+      // stack, right below +/-, matching the Tableau reference layout
+      // rather than a separate labeled toolbar button.
+      function resetMapsView() {
+        mapYF.closePopup();
+        mapMalaria.closePopup();
+        mapYF.setView([15, 0], 2, { animate: false });
+        mapMalaria.setView([15, 0], 2, { animate: false });
+      }
+
+      function addHomeButtonToZoomControl(map) {
+        const zoomContainer = map.zoomControl.getContainer();
+        const homeLink = L.DomUtil.create('a', 'leaflet-control-home', zoomContainer);
+        homeLink.href = '#';
+        homeLink.title = 'Reset to default view';
+        homeLink.setAttribute('role', 'button');
+        homeLink.setAttribute('aria-label', 'Reset to default view');
+        homeLink.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>';
+        L.DomEvent.on(homeLink, 'click', L.DomEvent.stop).on(homeLink, 'click', resetMapsView);
+      }
+
+      addHomeButtonToZoomControl(mapYF);
+      addHomeButtonToZoomControl(mapMalaria);
+
       const fullscreenBtn = document.getElementById('fullscreenBtn');
 
       fullscreenBtn.addEventListener('click', () => {

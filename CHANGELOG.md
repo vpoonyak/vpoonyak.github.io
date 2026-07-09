@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2026-07-09] - YF/Malaria Dashboard: Trip Planning, Hover Detail Panel, and Map Rendering Fixes
+
+### Added
+- **Trip Itinerary Pinning**: Countries can now be pinned from either map's popup ("Add to Trip"); pinned countries appear as a combined YF + malaria summary panel below the maps, addressing the dashboard's original multi-country-comparison problem statement instead of only supporting one-country-at-a-time lookups.
+- **Shareable Dashboard State**: Continent/subregion filters, view mode (Both/YF/Malaria), layout mode (Stack/Split), and the pinned trip now sync to the URL via `history.replaceState`, so a filtered/pinned view round-trips correctly through a shared link instead of resetting.
+- **Single Floating Hover Detail Panel**: Hovering a country now shows one shared, `position: fixed` detail panel with the full (untruncated) YF or malaria guidance, positioned near the cursor and clamped to the viewport — escapes the map's `overflow: hidden` entirely rather than using per-map Leaflet tooltips, which would otherwise get clipped or duplicate.
+- **Home Control**: Added a reset-to-default-view icon button inside each map's own zoom-control stack (matching the Tableau reference layout), rather than a separate labeled toolbar button.
+- **CDC Yellow Book 2026 Citation**: Added a source-attribution line under the dashboard and linked it from the case study's Approach section.
+
+### Changed
+- **Antimeridian Shapefile Duplication**: Every country now gets a full ±360° longitude shadow copy (not just a curated dateline-adjacent subset), so panning into any `worldCopyJump` world-repeat shows real country shapes everywhere, not just near Tonga/Tuvalu.
+- **Map Rendering**: Switched both Leaflet maps to an explicit `L.canvas({ padding: 1 })` renderer instead of per-polygon SVG elements, and throttled the two maps' pan/zoom sync to avoid redundant cross-map `setView` calls — the main levers behind the dashboard feeling laggy with ~250 country polygons rendered twice.
+- **Dashed/Bulleted CDC Text**: CDC source fields use `\n- ` (and occasionally nested `• `) prefixed lines as plain-text bullet lists; these now render as real nested `<ul>`/`<li>` markup instead of collapsing into a run-on paragraph.
+- **Popup/Tooltip Content**: Dropped the "Other Considerations" field (243/251 countries had near-identical CDC boilerplate with no per-country value) and fixed the `.detail-badge` pill styling, which previously had no actual shape CSS (only inline colors, no border/padding/radius).
+- **YF Label Wording**: `YF: Risk countries` → `YF: From Risk countries`.
+
+### Fixed
+- **Map Wraparound**: Both maps set `worldCopyJump: true` and are now clamped to the Mercator pole limit (`maxBounds` at ±85.06° latitude, longitude unbounded), so panning past the antimeridian wraps seamlessly while vertical panning stops cleanly at the poles.
+- **Drag Rendering Gap**: Leaflet's canvas renderer only pre-paints ~10% beyond the viewport by default, so a fast drag could outrun that buffer and reveal raw unpainted canvas; the wider `padding: 1` buffer above fixes this.
+- **Zoom Button Underline**: Scoped `text-decoration: none` onto `.leaflet-bar a` so the site's global link-underline-on-hover rule no longer applies to the +/− zoom buttons.
+- **Fullscreen Hover Panel**: The hover detail panel was a DOM sibling of `.dashboard-wrapper`, so entering the Fullscreen API on the wrapper excluded it from the fullscreen render layer entirely; moved it to be a descendant so it renders (and widens responsively via `clamp()`) correctly in fullscreen.
+
 ## [2026-07-09] - Project Page Social Cards, Thumbnail Optimization, and Map Wraparound
 
 ### Added
