@@ -48,6 +48,7 @@
     // dots: precomputed offline from province polygons + hospital counts,
     // 3 bytes/dot (x, y, intensity tier). The canvas is non-interactive.
     (function () {
+      var htmlEl = document.documentElement;
       var canvas = document.getElementById('heroGlobe');
       if (!canvas || !canvas.getContext) return;
       var ctx = canvas.getContext('2d');
