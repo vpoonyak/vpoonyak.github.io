@@ -1,9 +1,12 @@
 ---
 import { getCollection, render } from 'astro:content';
 import BlogPost from '../../layouts/BlogPost.astro';
+import { getReadingTime } from '../../utils/readingTime';
 
 export async function getStaticPaths() {
-  const posts = await getCollection('blog');
+  const posts = await getCollection('blog', (post) => {
+    return !post.data.draft || !import.meta.env.PROD;
+  });
   return posts.map((post) => ({
     params: { slug: post.id },
     props: { post },
@@ -12,8 +15,9 @@ export async function getStaticPaths() {
 
 const { post } = Astro.props;
 const { Content } = await render(post);
+const readingTime = getReadingTime(post.body || '');
 ---
 
-<BlogPost {...post.data} canonicalUrl={`https://vitchakorn.com/blog/${post.id}`}>
+<BlogPost {...post.data} readingTime={readingTime} canonicalUrl={`https://vitchakorn.com/blog/${post.id}`}>
   <Content />
 </BlogPost>

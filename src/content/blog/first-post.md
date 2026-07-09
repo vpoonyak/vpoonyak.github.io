@@ -4,6 +4,8 @@ description: "How clinical informatics, public health datasets, and modern AI al
 pubDate: "2026-07-09"
 heroImage: "/project/altit-thumb.webp"
 tags: ["Clinical AI", "Public Health", "Travel Medicine"]
+draft: false
+lang: en
 ---
 
 Artificial Intelligence is transitioning from theoretical benchmarks to clinical environments. As a physician working at the intersection of travel medicine and data science, I am focused on how we can implement these technologies to solve real-world problems in our health systems.

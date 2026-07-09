@@ -25,6 +25,18 @@
         "type": "string"
       }
     },
+    "draft": {
+      "default": false,
+      "type": "boolean"
+    },
+    "lang": {
+      "default": "en",
+      "type": "string",
+      "enum": [
+        "en",
+        "th"
+      ]
+    },
     "$schema": {
       "type": "string"
     }
