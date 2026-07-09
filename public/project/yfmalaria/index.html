@@ -926,6 +926,13 @@
       let pinnedCountries = new Map();
       const hoverPanel = document.getElementById('hoverDetailPanel');
 
+      // Touch taps fire a synthetic mouseover just before click (Leaflet's
+      // tap-to-click shim), with no real mouseout ever following - so on
+      // touch devices the floating hover panel would open and then stay
+      // stuck on screen underneath the click popup. Hover detail only
+      // makes sense for devices that actually have hover, so gate it.
+      const supportsHoverDetail = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
       // Colors matching Tableau reference
       const colorsYF = {
         'Vaccine is not required': '#afafaf',
@@ -1499,6 +1506,8 @@
       // the map's overflow:hidden and is never clipped or truncated). Only
       // one instance exists, so only one hover detail can ever be visible.
       function showHoverDetail(mapType, feature, originalEvent) {
+        // Skip on touch devices - see supportsHoverDetail above.
+        if (!supportsHoverDetail) return;
         // Skip while actively dragging: Leaflet's canvas hit-testing plus
         // the getBoundingClientRect() reflow below competes with the pan
         // itself, visibly stuttering the pane under the cursor.
