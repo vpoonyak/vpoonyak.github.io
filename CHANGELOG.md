@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2026-07-10] - YF/Malaria Dashboard: Antimeridian Blink, Russia Teleport, and iPhone Fullscreen Fixes
+
+### Fixed
+- **Map Blink at the Antimeridian**: On phone-width viewports, panning across ±180° longitude blanked the dragged map until the swipe ended — Leaflet's `worldCopyJump` teleports the map pane a full world width mid-drag (`Map.Drag._onPreDragWrap`) without firing any event, and the canvas renderer only repaints on `moveend`, so the `padding: 1` buffer (one viewport each side) couldn't cover the ~1024px jump at zoom 2. Both maps now detect the wrap (center longitude jumping across the dateline between `move` ticks) and force the renderer to re-center its buffer and repaint immediately. Reproduced and verified headlessly at a 390px viewport (desktop widths never blanked because their wider buffer happens to cover the ≤512px half-world jump).
+- **Russia/Fiji/Antarctica Teleporting Across World Copies**: The antimeridian shadow-copy generator deliberately skipped shapes whose longitudes already span both sides of the dateline — exactly Russia, Fiji, and Antarctica, whose geometries are split at ±180° (Chukotka is stored at −180…−170 while Russia's main mass ends at +180). In the adjacent world repeat the main mass had no copy at all, so the shape visibly popped/teleported as the wrap crossed the dateline. These shapes now get the same ±360° shadow copies as everything else, rendering seamlessly across the Bering Strait from either world copy.
+- **Fullscreen on iPhone**: The Fullscreen button called `Element.requestFullscreen()`, which iPhone Safari does not implement at all (not even webkit-prefixed), so tapping it silently failed. When the API is missing the button now falls back to a pure-CSS overlay — toggling the existing `is-fullscreen` fixed-position class (with a `100dvh` height override so the collapsing Safari toolbar doesn't cover the bottom) plus a `body` scroll lock; iPad/older desktop Safari use the webkit-prefixed API, and other browsers keep native fullscreen.
+
 ## [2026-07-09] - YF/Malaria Dashboard: Trip Planning, Hover Detail Panel, and Map Rendering Fixes
 
 ### Added

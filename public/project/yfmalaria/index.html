@@ -379,9 +379,13 @@
     }
 
     /* Fullscreen Mode Styling */
+    body.fullscreen-lock {
+      overflow: hidden;
+    }
     .dashboard-wrapper.is-fullscreen {
       width: 100vw !important;
       height: 100vh !important;
+      height: 100dvh !important; /* iOS Safari: exclude the collapsing toolbar */
       border-radius: 0 !important;
       border: none !important;
       margin: 0 !important;
@@ -853,7 +857,8 @@
       // buffer only pre-paints ~10% beyond the viewport, so a fast drag
       // outruns it and reveals raw unpainted canvas until moveend catches
       // up. padding:1 pre-renders a full extra viewport in every direction.
-      const dashboardRenderer = () => L.canvas({ padding: 1 });
+      const yfRenderer = L.canvas({ padding: 1 });
+      const malariaRenderer = L.canvas({ padding: 1 });
 
       // Initialize mapYF
       const mapYF = L.map('map-yf', {
@@ -864,7 +869,7 @@
         zoomControl: true,
         attributionControl: false,
         worldCopyJump: true,
-        renderer: dashboardRenderer(),
+        renderer: yfRenderer,
         maxBounds: poleBounds,
         maxBoundsViscosity: 1.0
       });
@@ -878,7 +883,7 @@
         zoomControl: true,
         attributionControl: false,
         worldCopyJump: true,
-        renderer: dashboardRenderer(),
+        renderer: malariaRenderer,
         maxBounds: poleBounds,
         maxBoundsViscosity: 1.0
       });
@@ -907,6 +912,24 @@
       }
       sync(mapYF, mapMalaria);
       sync(mapMalaria, mapYF);
+
+      // worldCopyJump wraps mid-drag by teleporting the map pane a full
+      // world width (Map.Drag._onPreDragWrap) without firing any event,
+      // but L.Canvas only repaints on moveend - on phone-narrow viewports
+      // the padded buffer can't cover the jump, so the dragged map showed
+      // blank canvas until the swipe ended. Detect the wrap (center lng
+      // jumping across the dateline between move ticks) and force the
+      // renderer to re-center its buffer and repaint immediately.
+      function fixWorldWrapBlank(map, renderer) {
+        let lastLng = map.getCenter().lng;
+        map.on('move', () => {
+          const lng = map.getCenter().lng;
+          if (Math.abs(lng - lastLng) > 180) renderer._update();
+          lastLng = lng;
+        });
+      }
+      fixWorldWrapBlank(mapYF, yfRenderer);
+      fixWorldWrapBlank(mapMalaria, malariaRenderer);
 
       // Suppress hover-panel work (canvas hit-testing + a forced reflow on
       // every mousemove) while a drag is in progress - see showHoverDetail.
@@ -1200,16 +1223,14 @@
         // extra copy on each side before it snaps back, so this is enough
         // to make every country (not only Tonga/Tuvalu-style neighbors)
         // reappear seamlessly as you pan into the adjacent world repeat,
-        // matching how the base tile layer already wraps.
+        // matching how the base tile layer already wraps. Shapes split at
+        // the dateline (Russia, Fiji, Antarctica: Chukotka is stored at
+        // -180..-170 while Russia's main mass ends at +180) need the
+        // copies most of all - without them the far chunk renders a whole
+        // world width away from the rest, so the country visibly popped
+        // as the wrap jump crossed the dateline.
         const shadowFeatures = [];
         featureCollection.features.forEach(f => {
-          const lons = [];
-          (function collectLons(coords) {
-            if (typeof coords[0] === 'number') { lons.push(coords[0]); return; }
-            coords.forEach(collectLons);
-          })(f.geometry.coordinates);
-          const lo = Math.min(...lons), hi = Math.max(...lons);
-          if (lo < -170 && hi > 170) return; // already spans both sides (e.g. Fiji, Russia, Kiribati)
           shadowFeatures.push(shiftFeatureLng(f, 360));
           shadowFeatures.push(shiftFeatureLng(f, -360));
         });
@@ -1936,34 +1957,42 @@
 
       const fullscreenBtn = document.getElementById('fullscreenBtn');
 
-      fullscreenBtn.addEventListener('click', () => {
-        if (!document.fullscreenElement) {
-          wrapper.requestFullscreen().then(() => {
-            wrapper.classList.add('is-fullscreen');
-          }).catch(err => {
-            console.error(`Error attempting to enable fullscreen: ${err.message}`);
-          });
-        } else {
-          document.exitFullscreen().then(() => {
-            wrapper.classList.remove('is-fullscreen');
-          });
-        }
-      });
+      // iPhone Safari has no element Fullscreen API at all (not even
+      // prefixed), so there fall back to a fixed-position overlay driven
+      // by the is-fullscreen class alone. iPad/older desktop Safari only
+      // expose the API under a webkit prefix.
+      const fsRequest = wrapper.requestFullscreen || wrapper.webkitRequestFullscreen;
+      const fsExit = document.exitFullscreen || document.webkitExitFullscreen;
+      const fsElement = () => document.fullscreenElement || document.webkitFullscreenElement;
 
-      document.addEventListener('fullscreenchange', () => {
-        if (document.fullscreenElement) {
-          wrapper.classList.add('is-fullscreen');
-          fullscreenBtn.classList.add('active');
-          fullscreenBtn.querySelector('span').textContent = 'Exit Full';
-        } else {
-          wrapper.classList.remove('is-fullscreen');
-          fullscreenBtn.classList.remove('active');
-          fullscreenBtn.querySelector('span').textContent = 'Fullscreen';
-        }
+      function applyFullscreenUI(active) {
+        wrapper.classList.toggle('is-fullscreen', active);
+        bodyEl.classList.toggle('fullscreen-lock', active);
+        fullscreenBtn.classList.toggle('active', active);
+        fullscreenBtn.querySelector('span').textContent = active ? 'Exit Full' : 'Fullscreen';
         setTimeout(() => {
           mapYF.invalidateSize();
           mapMalaria.invalidateSize();
         }, 150);
+      }
+
+      fullscreenBtn.addEventListener('click', () => {
+        if (!fsRequest) {
+          applyFullscreenUI(!wrapper.classList.contains('is-fullscreen'));
+          return;
+        }
+        if (!fsElement()) {
+          Promise.resolve(fsRequest.call(wrapper)).catch(err => {
+            console.error(`Error attempting to enable fullscreen: ${err.message}`);
+            applyFullscreenUI(true);
+          });
+        } else {
+          Promise.resolve(fsExit.call(document));
+        }
+      });
+
+      ['fullscreenchange', 'webkitfullscreenchange'].forEach(evt => {
+        document.addEventListener(evt, () => applyFullscreenUI(!!fsElement()));
       });
 
       // Listen for theme toggle events to adjust map layers dynamically
