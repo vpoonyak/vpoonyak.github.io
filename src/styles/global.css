@@ -328,6 +328,27 @@
 
     .nav-actions { display: flex; align-items: center; gap: 8px; }
 
+    .nav-action-link {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-decoration: none;
+      text-transform: uppercase;
+      padding: 6px 12px;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      transition: all 0.2s ease;
+      letter-spacing: 0.05em;
+    }
+
+    .nav-action-link:hover {
+      color: var(--accent);
+      border-color: var(--accent);
+      background: var(--bg-card-hover);
+    }
+
     .theme-toggle {
       width: 36px; height: 36px;
       border: 1px solid var(--border);
