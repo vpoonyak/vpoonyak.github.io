@@ -14,10 +14,10 @@ export async function getStaticPaths() {
 }
 
 const { post } = Astro.props;
-const { Content } = await render(post);
+const { Content, headings } = await render(post);
 const readingTime = getReadingTime(post.body || '');
 ---
 
-<BlogPost {...post.data} readingTime={readingTime} canonicalUrl={`https://vitchakorn.com/blog/${post.id}`}>
+<BlogPost {...post.data} readingTime={readingTime} canonicalUrl={`https://vitchakorn.com/blog/${post.id}`} headings={headings}>
   <Content />
 </BlogPost>

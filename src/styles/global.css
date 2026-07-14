@@ -27,6 +27,7 @@
       --nav-bg: rgba(13, 17, 23, 0.9);
       --selection-bg: rgba(47, 129, 247, 0.35);
       --success: #3fb950;
+      --success-muted: rgba(63, 185, 80, 0.14);
       --stress: #e3b341;
       --stress-rgb: 227, 179, 65;
       --stress-muted: rgba(227, 179, 65, 0.12);
@@ -60,6 +61,7 @@
       --nav-bg: rgba(238, 243, 248, 0.94);
       --selection-bg: rgba(7, 87, 189, 0.22);
       --success: #1a7f37;
+      --success-muted: rgba(26, 127, 55, 0.12);
       --stress: #9a6700;
       --stress-rgb: 154, 103, 0;
       --stress-muted: rgba(154, 103, 0, 0.1);
@@ -87,7 +89,7 @@
 
     html, body {
       width: 100%;
-      overflow-x: hidden;
+      overflow-x: clip;
       margin: 0;
       padding: 0;
     }
@@ -751,6 +753,7 @@
     .section-title {
       display: block;
       margin: 0 0 0.5rem;
+      font-size: 0.9375rem;
     }
 
     @media (max-width: 768px) {

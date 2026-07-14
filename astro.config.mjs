@@ -1,6 +1,7 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
+import blogAdmin from './integrations/blog-admin.mjs';
 
 // https://astro.build/config
 export default defineConfig({
@@ -23,6 +24,7 @@ export default defineConfig({
         'https://vitchakorn.com/project/sichuan-yunnan/',
         'https://vitchakorn.com/project/countries-tiny/'
       ]
-    })
+    }),
+    blogAdmin()
   ]
 });

@@ -3,6 +3,12 @@ import Layout from './Layout.astro';
 import Navigation from '../components/Navigation.astro';
 import Footer from '../components/Footer.astro';
 
+interface Heading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+
 interface Props {
   title: string;
   description: string;
@@ -13,15 +19,20 @@ interface Props {
   canonicalUrl?: string;
   readingTime?: number;
   lang?: 'en' | 'th';
+  headings?: Heading[];
 }
 
-const { title, description, pubDate, updatedDate, heroImage, tags, canonicalUrl, readingTime, lang = 'en' } = Astro.props;
+const { title, description, pubDate, updatedDate, heroImage, tags, canonicalUrl, readingTime, lang = 'en', headings = [] } = Astro.props;
 
 const formattedDate = pubDate.toLocaleDateString('en-US', {
   year: 'numeric',
   month: 'long',
   day: 'numeric',
 });
+
+// Auto jump-nav: only worth showing once a post has enough h2 sections to actually need one.
+const sectionHeadings = headings.filter((h) => h.depth === 2);
+const showJumpNav = sectionHeadings.length >= 3;
 ---
 
 <Layout title={`${title} | Vitchakorn Poonyakanok`} description={description} image={heroImage} canonicalUrl={canonicalUrl}>
@@ -29,6 +40,27 @@ const formattedDate = pubDate.toLocaleDateString('en-US', {
   
   <main class="blog-post-container section-alt-bg" style="min-height: 100vh; padding-top: 100px; padding-bottom: 80px;">
     <div class="container-grid">
+      <div class={showJumpNav ? "blog-layout with-sidebar" : "blog-layout"}>
+        {showJumpNav && (
+          <div class="side-rail">
+            <nav class="jump-nav t-mono" aria-label="Section navigation">
+              {sectionHeadings.map((h, i) => (
+                <a href={`#${h.slug}`}>
+                  <span class="toc-num">{String(i + 1).padStart(2, '0')}</span>
+                  <span class="toc-text">{h.text}</span>
+                </a>
+              ))}
+            </nav>
+
+            <div class="rail-legend t-mono">
+              <p class="rail-legend-title">สัญลักษณ์</p>
+              <div class="rail-legend-item"><span class="rail-legend-swatch todo"></span>ต้องทำ</div>
+              <div class="rail-legend-item"><span class="rail-legend-swatch problem"></span>ปัญหาที่อาจเจอ</div>
+              <div class="rail-legend-item"><span class="rail-legend-swatch lesson"></span>บทเรียน</div>
+              <div class="rail-legend-item"><span class="rail-legend-swatch case"></span>เคสจริง</div>
+            </div>
+          </div>
+        )}
       <article class="blog-post-article">
         <!-- Back Link -->
         <div class="blog-back-link">
@@ -86,6 +118,7 @@ const formattedDate = pubDate.toLocaleDateString('en-US', {
           <slot />
         </div>
       </article>
+      </div>
     </div>
   </main>
 
@@ -94,11 +127,29 @@ const formattedDate = pubDate.toLocaleDateString('en-US', {
 
 <style is:global>
   /* Markdown styling custom for article reading layout */
-  .blog-post-article {
+  .blog-layout {
     max-width: 720px;
     margin: 0 auto;
   }
-  
+
+  .blog-layout.with-sidebar {
+    max-width: 960px;
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 2.5rem;
+    align-items: start;
+  }
+
+  @media (max-width: 900px) {
+    .blog-layout.with-sidebar {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .blog-post-article {
+    min-width: 0;
+  }
+
   .markdown-body {
     word-break: break-word;
   }
@@ -205,4 +256,334 @@ const formattedDate = pubDate.toLocaleDateString('en-US', {
     word-break: keep-all;
     overflow-wrap: break-word;
   }
+
+  /* Side rail: stats + clickable episode "timeline" + legend on desktop, part-stepper chips on mobile */
+  .side-rail {
+    z-index: 5;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  @media (min-width: 901px) {
+    .side-rail {
+      position: sticky;
+      top: 90px;
+      max-height: calc(100dvh - 110px);
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      padding-right: 4px;
+    }
+  }
+
+  /* Legend */
+  .rail-legend { display: none; }
+  @media (min-width: 901px) {
+    .rail-legend {
+      display: block;
+      border-top: 1px solid var(--border);
+      padding-top: 1rem;
+    }
+    .rail-legend-title {
+      margin: 0 0 0.65rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+    }
+    .rail-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.6rem;
+    }
+    .rail-legend-swatch {
+      width: 10px;
+      height: 10px;
+      border-radius: 3px;
+      flex: none;
+    }
+    .rail-legend-swatch.todo { background: var(--accent); }
+    .rail-legend-swatch.problem { background: var(--stress); }
+    .rail-legend-swatch.lesson { background: var(--success); }
+    .rail-legend-swatch.case { background: var(--text-tertiary); }
+  }
+
+  /* Part-stepper / TOC */
+  .jump-nav {
+    position: sticky;
+    top: 90px;
+    z-index: 5;
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding: 10px 0;
+    margin-bottom: 2rem;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+  }
+  .jump-nav::-webkit-scrollbar { display: none; }
+  .jump-nav a {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-decoration: none;
+    white-space: nowrap;
+    padding: 7px 11px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    transition: color 0.15s ease, border-color 0.15s ease;
+  }
+  .jump-nav .toc-num {
+    font-size: 0.75rem;
+    color: var(--text-quaternary);
+  }
+  .jump-nav a:hover, .jump-nav a:focus-visible {
+    color: var(--accent);
+    border-color: var(--accent-border);
+  }
+
+  .jump-nav a.active {
+    color: var(--accent);
+    border-color: var(--accent-border);
+    background: var(--accent-muted);
+  }
+  .jump-nav a.active .toc-num {
+    color: var(--accent);
+  }
+
+  @media (min-width: 901px) {
+    .side-rail .jump-nav {
+      position: static;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 2px;
+      overflow-x: visible;
+      max-height: none;
+      overflow-y: visible;
+      padding: 0;
+      margin-bottom: 0;
+      background: transparent;
+      border-bottom: none;
+      border-left: 1px solid var(--border);
+    }
+    .side-rail .jump-nav a {
+      white-space: normal;
+      border: none;
+      border-left: 2px solid transparent;
+      border-radius: 0;
+      background: transparent;
+      padding: 6px 0 6px 14px;
+      margin-left: -1px;
+      line-height: 1.35;
+      align-items: flex-start;
+    }
+    .side-rail .jump-nav .toc-num {
+      flex: none;
+      margin-top: 0.1em;
+    }
+    .side-rail .jump-nav a:hover,
+    .side-rail .jump-nav a:focus-visible,
+    .side-rail .jump-nav a.active {
+      border-left-color: var(--accent);
+      background: transparent;
+    }
+    .side-rail .jump-nav a.active {
+      color: var(--accent);
+      font-weight: 700;
+    }
+  }
+
+  /* Notion-style two/three-column layout, usable directly in markdown as raw HTML */
+  .markdown-body .columns {
+    display: grid;
+    grid-template-columns: repeat(var(--cols, 2), 1fr);
+    gap: 1.25rem;
+    margin: 1.75rem 0;
+  }
+  @media (max-width: 640px) {
+    .markdown-body .columns { grid-template-columns: 1fr; }
+  }
+  .markdown-body .columns > * { min-width: 0; }
+
+  /* GFM tables */
+  .markdown-body table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.75rem 0;
+    font-size: 0.9375rem;
+  }
+  .markdown-body th, .markdown-body td {
+    border: 1px solid var(--border);
+    padding: 8px 12px;
+    text-align: left;
+    vertical-align: top;
+  }
+  .markdown-body th {
+    background: var(--bg-card);
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+  .markdown-body tr:nth-child(even) td {
+    background: var(--bg-card);
+  }
+
+  /* GFM task list checkboxes */
+  .markdown-body li.task-list-item {
+    list-style: none;
+    margin-left: -1.5rem;
+    padding-left: 0.25rem;
+  }
+  .markdown-body li.task-list-item input[type="checkbox"] {
+    margin-right: 8px;
+    accent-color: var(--accent);
+  }
+
+  /* Callout boxes: todo / problem / case / lesson — colored header bar + icon */
+  .markdown-body .callout {
+    margin: 1.75rem 0;
+    padding: 0 1.25rem 1rem;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    overflow: hidden;
+  }
+  .markdown-body .callout > :last-child { margin-bottom: 0; }
+  .markdown-body .callout-label {
+    display: flex;
+    align-items: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin: 0 -1.25rem 0.85rem;
+    padding: 11px 1.25rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .markdown-body .callout-label::before {
+    display: inline-block;
+    margin-right: 7px;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+  }
+  .markdown-body .callout.todo .callout-label {
+    background: var(--accent-muted);
+    color: var(--accent);
+  }
+  .markdown-body .callout.todo .callout-label::before { content: "✓"; }
+  .markdown-body .callout.problem .callout-label {
+    background: var(--stress-muted);
+    color: var(--stress);
+  }
+  .markdown-body .callout.problem .callout-label::before { content: "▲"; }
+  .markdown-body .callout.lesson .callout-label {
+    background: var(--success-muted);
+    color: var(--success);
+  }
+  .markdown-body .callout.lesson .callout-label::before { content: "✦"; }
+  .markdown-body .callout.case .callout-label {
+    background: var(--bg-card-hover);
+    color: var(--text-tertiary);
+  }
+  .markdown-body .callout.case .callout-label::before { content: "◆"; }
+
+  /* Lightweight flow diagrams (แผนผัง) — theme-aware, no image assets needed */
+  .markdown-body .flow {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 1rem 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.9375rem;
+  }
+  .markdown-body .flow + .flow { margin-top: 0.6rem; }
+  .markdown-body .flow-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-tertiary);
+    flex: none;
+    width: 100%;
+    margin-bottom: 0.2rem;
+  }
+  .markdown-body .flow-step {
+    padding: 7px 13px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text-primary);
+    white-space: nowrap;
+  }
+  .markdown-body .flow-step.highlight {
+    border-color: var(--accent-border);
+    background: var(--accent-muted);
+    color: var(--accent);
+    font-weight: 600;
+  }
+  .markdown-body .flow-arrow {
+    color: var(--text-quaternary);
+  }
+  @media (max-width: 640px) {
+    .markdown-body .flow { font-size: 0.8125rem; }
+    .markdown-body .flow-step {
+      white-space: normal;
+      max-width: 100%;
+    }
+  }
+
+  /* Belt-and-suspenders: nothing inside the article should ever be able to
+     force the page wider than the viewport on mobile (long unbreakable pills,
+     wide tables, etc.) */
+  .markdown-body table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  @media (max-width: 900px) {
+    .blog-post-article, .markdown-body, .markdown-body .flow, .markdown-body pre {
+      max-width: 100%;
+    }
+  }
 </style>
+
+{showJumpNav && (
+  <script>
+    const navLinks = Array.from(document.querySelectorAll<HTMLAnchorElement>('.jump-nav a'));
+    const sections = navLinks
+      .map((link) => document.getElementById(decodeURIComponent(link.hash.slice(1))))
+      .filter((el): el is HTMLElement => el !== null);
+
+    if (sections.length > 0) {
+      const setActive = (id: string) => {
+        navLinks.forEach((link) => {
+          link.classList.toggle('active', decodeURIComponent(link.hash.slice(1)) === id);
+        });
+      };
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          const visible = entries
+            .filter((e) => e.isIntersecting)
+            .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+          if (visible.length > 0) {
+            setActive(visible[0].target.id);
+          }
+        },
+        { rootMargin: '-100px 0px -70% 0px', threshold: 0 }
+      );
+
+      sections.forEach((section) => observer.observe(section));
+      setActive(sections[0].id);
+    }
+  </script>
+)}
