@@ -1,0 +1,575 @@
+<!doctype html>
+<html lang="en" data-font="urbanist">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Design Prototype — Neural Nova inspired (typeface review)</title>
+<!--
+  Fonts confirmed straight from Neural Nova's own Framer export (saved HTML,
+  not guessed from screenshots): headings use Urbanist (500/600), the
+  "Neural Nova" wordmark uses Instrument Sans 700, body/label text uses
+  Plus Jakarta Sans (500/600), and a Fragment Mono is loaded for the
+  code-mockup UI -- the role our own JetBrains Mono already fills, so it's
+  left alone here.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root, [data-theme="dark"] {
+    --bg: #0d1117;
+    --bg-elevated: #0d1117;
+    --bg-card: #161b22;
+    --bg-card-hover: #1c2129;
+    --text-primary: #e6edf3;
+    --text-secondary: #8b949e;
+    --text-tertiary: #6e7681;
+    --text-quaternary: #484f58;
+    --accent: #2f81f7;
+    --accent-rgb: 47, 129, 247;
+    --accent-heading: #58a6ff;
+    --accent-muted: rgba(47, 129, 247, 0.12);
+    --accent-muted-strong: rgba(47, 129, 247, 0.22);
+    --accent-border: rgba(47, 129, 247, 0.4);
+    --border: #30363d;
+    --border-light: #21262d;
+    --blob-1: #2f81f7;
+    --blob-2: #58a6ff;
+    --blob-3: #7c5cff;
+    --blob-4: #22d3ee;
+    --pill-bg: var(--text-primary);
+    --pill-text: #0d1117;
+  }
+
+  [data-theme="light"] {
+    --bg: #eef3f8;
+    --bg-elevated: #f7f9fc;
+    --bg-card: #fbfcfe;
+    --bg-card-hover: #f0f5fa;
+    --text-primary: #1f2328;
+    --text-secondary: #3f4a56;
+    --text-tertiary: #687482;
+    --text-quaternary: #9aa7b5;
+    --accent: #0757bd;
+    --accent-rgb: 7, 87, 189;
+    --accent-heading: #0757bd;
+    --accent-muted: rgba(7, 87, 189, 0.1);
+    --accent-muted-strong: rgba(7, 87, 189, 0.18);
+    --accent-border: rgba(7, 87, 189, 0.42);
+    --border: #b8c3cf;
+    --border-light: #d7e0e8;
+    --blob-1: #0757bd;
+    --blob-2: #3f8cff;
+    --blob-3: #6e5bff;
+    --blob-4: #0fb5c9;
+    --pill-bg: #0d1117;
+    --pill-text: #f7f9fc;
+  }
+
+  html[data-font="urbanist"]      { --font-display: 'Urbanist', 'Inter', sans-serif; }
+  html[data-font="space-grotesk"] { --font-display: 'Space Grotesk', 'Inter', sans-serif; }
+  html[data-font="jakarta"]       { --font-display: 'Plus Jakarta Sans', 'Inter', sans-serif; }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text-primary);
+    font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    line-height: 1.6;
+    transition: background-color .3s ease, color .3s ease;
+  }
+
+  .mono { font-family: 'JetBrains Mono', monospace; }
+
+  .wrap {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+
+  @media (max-width: 640px) { .wrap { padding: 0 20px; } }
+
+  /* ── toolbar (prototype-only chrome, not part of the design itself) ── */
+  .proto-toolbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 20px;
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px dashed var(--border);
+  }
+
+  .proto-toolbar-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.625rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    margin-right: 4px;
+  }
+
+  .proto-btn-group { display: flex; gap: 6px; flex-wrap: wrap; }
+
+  .proto-btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6875rem;
+    padding: 6px 12px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all .15s ease;
+  }
+
+  .proto-btn:hover { border-color: var(--accent-border); color: var(--text-primary); }
+
+  .proto-btn.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+
+  .proto-spacer { flex: 1 1 auto; }
+
+  /* ── hero ── */
+  .hero {
+    position: relative;
+    padding: 100px 0 80px;
+    overflow: hidden;
+    text-align: center;
+  }
+
+  /* Nova's actual technique (lifted from its Framer export, not guessed from
+     a screenshot): a small circle painted with a full conic-gradient hue
+     sweep, then blurred -- a saturated core that reads as a soft aurora,
+     not a diffuse multi-radial blend. Their own secondary orbs already sit
+     inside our blue family (cyan -> azure -> indigo), so that exact stop
+     sequence is reused here rather than reinvented. */
+  .blob-wrap {
+    position: absolute;
+    z-index: 0;
+    top: 54%; left: 50%;
+    width: min(48vw, 420px);
+    aspect-ratio: 1;
+    transform: translate(-50%, -50%);
+    filter: blur(40px);
+    pointer-events: none;
+  }
+
+  .blob {
+    width: 100%; height: 100%;
+    border-radius: 50%;
+    opacity: 0.85;
+    background: conic-gradient(from 0deg at 50% 50%, rgb(166, 239, 255) 0deg, rgb(18, 173, 230) 180deg, rgb(76, 99, 252) 360deg);
+  }
+
+  [data-theme="light"] .blob { opacity: 0.6; }
+
+  .hero > :not(.blob-wrap) { position: relative; z-index: 1; }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6875rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent-heading);
+    background: var(--accent-muted);
+    border: 1px solid var(--accent-border);
+    padding: 6px 14px;
+    border-radius: 999px;
+    margin-bottom: 1.75rem;
+  }
+
+  .eyebrow-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent-heading); }
+
+  .hero h1 {
+    font-family: var(--font-display, 'Sora', sans-serif);
+    font-weight: 700;
+    font-size: clamp(2.4rem, 6vw, 4.6rem);
+    line-height: 1.06;
+    letter-spacing: -0.02em;
+    max-width: 15ch;
+    margin: 0 auto;
+  }
+
+  .hero p.sub {
+    max-width: 46rem;
+    margin: 1.75rem auto 0;
+    font-size: clamp(1rem, 1.6vw, 1.2rem);
+    color: var(--text-secondary);
+    line-height: 1.65;
+  }
+
+  .hero-actions {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 2.25rem;
+  }
+
+  .pill-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 13px 26px;
+    border-radius: 999px;
+    background: var(--pill-bg);
+    color: var(--pill-text);
+    font-family: var(--font-display, 'Sora', sans-serif);
+    font-weight: 600;
+    font-size: 0.9375rem;
+    text-decoration: none;
+    border: 1px solid transparent;
+    transition: transform .15s ease, opacity .15s ease;
+  }
+
+  .pill-btn:hover { transform: translateY(-1px); opacity: 0.92; }
+
+  .pill-btn .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent-heading); }
+
+  .pill-btn-outline {
+    background: transparent;
+    color: var(--text-primary);
+    border-color: var(--border);
+  }
+
+  .pill-btn-outline:hover { border-color: var(--accent-border); }
+
+  .hero-meta {
+    display: flex;
+    justify-content: center;
+    gap: 2.5rem;
+    flex-wrap: wrap;
+    margin-top: 3rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--text-tertiary);
+  }
+
+  .hero-meta strong { color: var(--text-secondary); font-weight: 600; }
+
+  /* ── section shared ── */
+  .section { padding: 90px 0; }
+  .section-kicker {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent-heading);
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+  .section h2 {
+    font-family: var(--font-display, 'Sora', sans-serif);
+    font-weight: 700;
+    font-size: clamp(1.6rem, 3.4vw, 2.4rem);
+    letter-spacing: -0.01em;
+    text-align: center;
+    max-width: 38rem;
+    margin: 0 auto 3.5rem;
+    line-height: 1.25;
+  }
+
+  /* ── pillar cards ── */
+  .pillars {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+  }
+
+  @media (max-width: 860px) { .pillars { grid-template-columns: 1fr; } }
+
+  .pillar-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-light);
+    border-radius: 20px;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+    /* Nova's own card elevation: a soft, near-transparent multi-layer stack
+       rather than one hard shadow -- kept here at the same layer ratios,
+       just recolored for a dark base. */
+    box-shadow:
+      0 5px 17px rgba(0, 0, 0, 0.05),
+      0 17px 58px rgba(0, 0, 0, 0.10),
+      0 75px 120px rgba(0, 0, 0, 0.15);
+    transition: border-color .2s ease, transform .2s ease;
+  }
+
+  .pillar-card:hover { border-color: var(--accent-border); transform: translateY(-3px); }
+
+  .pillar-icon {
+    width: 46px; height: 46px;
+    border-radius: 14px;
+    background: var(--accent-muted);
+    border: 1px solid var(--accent-border);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--accent-heading);
+  }
+
+  .pillar-icon svg { width: 22px; height: 22px; }
+
+  .pillar-card h3 {
+    font-family: var(--font-display, 'Sora', sans-serif);
+    font-weight: 700;
+    font-size: 1.15rem;
+  }
+
+  .pillar-card p {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    line-height: 1.65;
+  }
+
+  /* ── numbered list ── */
+  .numbered-panel {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-light);
+    border-radius: 28px;
+    padding: clamp(1.75rem, 4vw, 3rem);
+  }
+
+  .numbered-item {
+    display: flex;
+    align-items: baseline;
+    gap: 1.25rem;
+    padding: 1.4rem 0;
+    border-bottom: 1px solid var(--border-light);
+    cursor: default;
+  }
+
+  .numbered-item:last-child { border-bottom: none; }
+
+  .numbered-item .num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.875rem;
+    color: var(--text-quaternary);
+    flex-shrink: 0;
+    width: 2.4rem;
+  }
+
+  .numbered-item h4 {
+    font-family: var(--font-display, 'Sora', sans-serif);
+    font-weight: 600;
+    font-size: 1.05rem;
+  }
+
+  .numbered-item p {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    margin-top: 6px;
+    max-width: 42rem;
+  }
+
+  .numbered-item:hover .num,
+  .numbered-item.is-active .num {
+    color: var(--accent-heading);
+  }
+
+  .numbered-item:hover h4,
+  .numbered-item.is-active h4 {
+    color: var(--accent-heading);
+  }
+
+  /* ── stats ── */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--border-light);
+    border: 1px solid var(--border-light);
+    border-radius: 22px;
+    overflow: hidden;
+  }
+
+  @media (max-width: 700px) { .stats { grid-template-columns: repeat(2, 1fr); } }
+
+  .stat {
+    background: var(--bg-card);
+    padding: 2rem 1.5rem;
+    text-align: center;
+  }
+
+  .stat-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: 2rem;
+    color: var(--text-primary);
+  }
+
+  .stat-label {
+    margin-top: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.625rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+  }
+
+  /* ── closing cta ── */
+  .cta {
+    text-align: center;
+    padding: 100px 0 120px;
+  }
+
+  .cta h2 { margin-bottom: 2rem; }
+
+  footer {
+    text-align: center;
+    padding: 2rem 0 4rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6875rem;
+    color: var(--text-quaternary);
+  }
+</style>
+</head>
+<body data-theme="dark">
+
+  <div class="proto-toolbar">
+    <span class="proto-toolbar-label">Typeface</span>
+    <div class="proto-btn-group" id="fontGroup">
+      <button class="proto-btn active" data-font="urbanist">Urbanist (Nova's actual font)</button>
+      <button class="proto-btn" data-font="space-grotesk">Space Grotesk</button>
+      <button class="proto-btn" data-font="jakarta">Plus Jakarta Sans</button>
+    </div>
+    <div class="proto-spacer"></div>
+    <span class="proto-toolbar-label">Theme</span>
+    <div class="proto-btn-group" id="themeGroup">
+      <button class="proto-btn active" data-theme-btn="dark">Dark</button>
+      <button class="proto-btn" data-theme-btn="light">Light</button>
+    </div>
+  </div>
+
+  <section class="hero">
+    <div class="blob-wrap" aria-hidden="true"><div class="blob"></div></div>
+    <span class="eyebrow"><span class="eyebrow-dot"></span> Physician · Data Analyst · AI Engineer</span>
+    <h1>Bridging clinical practice and intelligent health systems.</h1>
+    <p class="sub">Vitchakorn Poonyakanok (Blue) — a Travel Medicine Resident at the Institute of Preventive Medicine, Thailand, building the data and AI infrastructure behind better clinical decisions.</p>
+    <div class="hero-actions">
+      <a class="pill-btn" href="#pillars"><span class="dot"></span> View the work</a>
+      <a class="pill-btn pill-btn-outline" href="mailto:vk.poonyakanok@gmail.com">Get in touch</a>
+    </div>
+    <div class="hero-meta">
+      <span><strong>Specialty</strong> · MD, Travel Medicine</span>
+      <span><strong>Location</strong> · Bangkok, Thailand</span>
+      <span><strong>Status</strong> · Seeking Summer 2027 Internship (USA)</span>
+    </div>
+  </section>
+
+  <section class="section" id="pillars">
+    <div class="wrap">
+      <p class="section-kicker">About</p>
+      <h2>Three disciplines, one practice: turning clinical questions into working systems.</h2>
+      <div class="pillars">
+        <div class="pillar-card">
+          <div class="pillar-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.51 4.04 3 5.5l7 7Z"/></svg>
+          </div>
+          <h3>Clinical Practice</h3>
+          <p>Travel Medicine Resident at the Institute of Preventive Medicine — six years of frontline clinical experience grounding every data decision in real patient care.</p>
+        </div>
+        <div class="pillar-card">
+          <div class="pillar-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18.4 8.6 12 15l-3.5-3.5L4 16"/></svg>
+          </div>
+          <h3>Data & Analytics</h3>
+          <p>Clinical statistics training from Chiang Mai University applied to public health datasets, translating messy records into decisions clinicians can trust.</p>
+        </div>
+        <div class="pillar-card">
+          <div class="pillar-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 2v2M15 2v2M9 20v2M15 20v2M2 9h2M2 15h2M20 9h2M20 15h2"/></svg>
+          </div>
+          <h3>AI & Health Systems</h3>
+          <p>MS in Digital &amp; AI Technologies in Health Systems (Chulalongkorn), continuing into Health Care Analytics &amp; IT at Carnegie Mellon's Heinz College in 2026.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="wrap">
+      <p class="section-kicker">How I Work</p>
+      <h2>From clinical question to deployed decision-support — without losing the clinician in the loop.</h2>
+      <div class="numbered-panel">
+        <div class="numbered-item">
+          <span class="num">01</span>
+          <div>
+            <h4>Define the clinical problem, not just the dataset</h4>
+            <p>Every project starts on the ward or in the clinic — the data work only earns its keep if it answers a question a clinician actually has.</p>
+          </div>
+        </div>
+        <div class="numbered-item is-active">
+          <span class="num">02</span>
+          <div>
+            <h4>Build and validate the pipeline against real records</h4>
+            <p>From national vaccine registries to hospital case data, models are checked against ground truth before they touch a workflow.</p>
+          </div>
+        </div>
+        <div class="numbered-item">
+          <span class="num">03</span>
+          <div>
+            <h4>Ship tools clinicians will actually keep using</h4>
+            <p>Interfaces are built for the pace of a clinic, not a data-science demo — legible, fast, and honest about uncertainty.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="stats">
+        <div class="stat"><div class="stat-num">6+</div><div class="stat-label">Years Clinical Practice</div></div>
+        <div class="stat"><div class="stat-num">4+</div><div class="stat-label">Years Data Analysis</div></div>
+        <div class="stat"><div class="stat-num">2</div><div class="stat-label">Publications</div></div>
+        <div class="stat"><div class="stat-num">6</div><div class="stat-label">Live Health Projects</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta">
+    <div class="wrap">
+      <p class="section-kicker">Let's talk</p>
+      <h2>Building the data layer for better clinical decisions — always open to a conversation.</h2>
+      <a class="pill-btn" href="mailto:vk.poonyakanok@gmail.com"><span class="dot"></span> vk.poonyakanok@gmail.com</a>
+    </div>
+  </section>
+
+  <footer>Design prototype — Neural Nova–inspired layout, site's existing blue palette · not linked from the live site</footer>
+
+<script>
+  const html = document.documentElement;
+  const body = document.body;
+
+  document.getElementById('fontGroup').addEventListener('click', (e) => {
+    const btn = e.target.closest('.proto-btn');
+    if (!btn) return;
+    html.setAttribute('data-font', btn.dataset.font);
+    document.querySelectorAll('#fontGroup .proto-btn').forEach(b => b.classList.toggle('active', b === btn));
+  });
+
+  document.getElementById('themeGroup').addEventListener('click', (e) => {
+    const btn = e.target.closest('.proto-btn');
+    if (!btn) return;
+    body.setAttribute('data-theme', btn.dataset.themeBtn);
+    document.querySelectorAll('#themeGroup .proto-btn').forEach(b => b.classList.toggle('active', b === btn));
+  });
+</script>
+</body>
+</html>
