@@ -1,6 +1,6 @@
 # Claude Guide: vpoonyak.github.io
 
-This repository is a static GitHub Pages portfolio for Vitchakorn Poonyakanok. The main implementation lives in `index.html`; there is no build step.
+This repository is a static GitHub Pages portfolio for Vitchakorn Poonyakanok, built with Astro (`src/pages/`, `src/components/`, `src/layouts/`) and deployed via `npm run build` in `.github/workflows/deploy.yml`. There is no root `index.html` anymore — the homepage is `src/pages/index.astro`.
 
 ## Working Principles
 - Keep edits tightly scoped and preserve the single-file site architecture unless the user asks for a larger refactor.
@@ -46,6 +46,14 @@ The `#expertise` section exists in markup but is hidden and excluded from naviga
 - `public/project/index.html` (the Project Archive listing) and its per-card links/thumbs must stay in sync with the actual folder names.
 - New/renamed project URLs also need updating in `src/components/Projects.astro` (Top Projects carousel) and the `customPages` list in `astro.config.mjs` (sitemap).
 - `dist/` is a pure Astro build artifact (gitignored) — CI's `deploy.yml` runs `npm run build` fresh and deploys that, so never hand-edit anything under `dist/`; edit `public/`/`src/` and run `npx astro build` locally only to verify.
+
+## Blog
+- "The blog" means the Astro-routed blog at `/blog/` — posts are `src/content/blog/<slug>.md` (Astro content collection, frontmatter: `title`, `description`, `pubDate`, `updatedDate`, `draft`, `lang`, `tags`, `heroImage`), rendered by `src/pages/blog/[slug].astro` + `src/layouts/BlogPost.astro`, listed at `src/pages/blog/index.astro`. Not related to any other "blog"/"post"/"article" wording elsewhere.
+- Each post's own images/PDFs live in `public/blog/<slug>/` (same one-folder-per-slug convention as project pages), referenced as `/blog/<slug>/<file>` in the markdown body.
+- There's a local-dev-only editor at `/admin/blog` (`integrations/blog-admin.mjs`) for creating/editing posts through a form instead of hand-editing the `.md` files — it only runs under `astro dev` (hooks `astro:server:setup`), never in the static build.
+- `BlogPost.astro` renders `<Navigation compact backHref="/blog" backLabel="Blog" />` — a distinct minimal nav variant from the full site nav (`src/components/Navigation.astro`), single-row at every viewport width, hamburger still expands the full section-link dropdown.
+- Reading time (`src/utils/readingTime.ts`) strips markdown/HTML syntax before counting, then estimates English words at 200 wpm and Thai characters at 900 chars/min (≈ same 200 wpm baseline, using ~4.5 chars/Thai word) — don't naively lower that constant back down, it was previously 450 and inflated estimates ~2x.
+- Sitemap `lastmod` for blog URLs is read directly from each post's own `updatedDate`/`pubDate` frontmatter (see `lastmodForBlogPost` in `astro.config.mjs`), not from git or filesystem mtime.
 
 ## QA Checklist
 Run after meaningful edits:

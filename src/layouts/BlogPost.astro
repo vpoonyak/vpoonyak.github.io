@@ -39,6 +39,15 @@ const articleImage = heroImage
   ? (heroImage.startsWith('http') ? heroImage : `${siteUrl}${heroImage}`)
   : `${siteUrl}/pic/og-card.jpg`;
 
+// The hero container is always cropped to 16:9 (see .blog-hero-image-container
+// below) regardless of the source file's native dimensions, so declare the
+// og:image size to match that displayed aspect ratio rather than the
+// homepage default's 1200x1200 square.
+const ogImageWidth = heroImage ? 1200 : undefined;
+const ogImageHeight = heroImage ? 675 : undefined;
+const ogImageAlt = heroImage ? `${title} — cover image` : undefined;
+const keywords = tags && tags.length > 0 ? tags.join(', ') : undefined;
+
 const articleSchema = {
   '@context': 'https://schema.org',
   '@type': 'BlogPosting',
@@ -54,7 +63,7 @@ const articleSchema = {
 };
 ---
 
-<Layout title={`${title} | Vitchakorn Poonyakanok`} description={description} image={heroImage} canonicalUrl={canonicalUrl}>
+<Layout title={`${title} | Vitchakorn Poonyakanok`} description={description} keywords={keywords} image={heroImage} imageWidth={ogImageWidth} imageHeight={ogImageHeight} imageAlt={ogImageAlt} canonicalUrl={canonicalUrl}>
   <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
   <Navigation compact backHref="/blog" backLabel="Blog" />
 
