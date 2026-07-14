@@ -1,16 +1,30 @@
 ---
-// Astro Component
+interface Props {
+  // On the homepage this is section 07 in the numbered scroll sequence.
+  // The standalone /contact page isn't part of that sequence, so a bare
+  // "07" there has no context to make sense of -- show the word instead.
+  standalone?: boolean;
+}
+
+const { standalone = false } = Astro.props;
 ---
 
 <section class="section section-alt-bg" id="contact">
     <div class="container-grid">
-      <div class="section-header fade-in">
-        <span class="t-section-number">07</span>
-        <div>
+      {standalone ? (
+        <div class="section-header standalone-header fade-in">
           <h2 class="t-label section-title">Contact</h2>
           <div class="section-header-rule"></div>
         </div>
-      </div>
+      ) : (
+        <div class="section-header fade-in">
+          <span class="t-section-number">07</span>
+          <div>
+            <h2 class="t-label section-title">Contact</h2>
+            <div class="section-header-rule"></div>
+          </div>
+        </div>
+      )}
       <div class="contact-grid">
         <div class="fade-in delay-1">
           <p class="contact-cta">Open to new ideas and collaborations in <span class="accent-word">health data initiatives</span>, medical informatics, travel medicine, and public health research.</p>

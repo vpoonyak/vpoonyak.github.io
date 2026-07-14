@@ -6,9 +6,12 @@ interface Props {
   compact?: boolean;
   backHref?: string;
   backLabel?: string;
+  // Omit the "Blog" item from the mobile hamburger dropdown — for the /blog
+  // listing page itself, where a link to itself is redundant.
+  hideBlogLink?: boolean;
 }
 
-const { compact = false, backHref = '/blog', backLabel = 'Blog' } = Astro.props;
+const { compact = false, backHref = '/blog', backLabel = 'Blog', hideBlogLink = false } = Astro.props;
 ---
 
 {compact ? (
@@ -58,7 +61,7 @@ const { compact = false, backHref = '/blog', backLabel = 'Blog' } = Astro.props;
         <li class="desktop-only"><a href="/#training">Training</a></li>
         <li class="desktop-only"><a href="/#skills">Capabilities</a></li>
         <li class="mobile-only"><a href="/project/">Project Archive</a></li>
-        <li class="mobile-only"><a href="/blog">Blog</a></li>
+        {!hideBlogLink && <li class="mobile-only"><a href="/blog">Blog</a></li>}
         <li class="mobile-only"><a href="/contact">Contact</a></li>
       </ul>
       <div class="nav-actions">

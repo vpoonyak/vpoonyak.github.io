@@ -767,6 +767,16 @@
 
     .section-header > div { min-width: 0; }
 
+    /* Standalone pages (e.g. /contact) aren't part of the homepage's
+       numbered scroll sequence, so there's no grid column for a number --
+       just stack the label and rule. */
+    .section-header.standalone-header {
+      display: block;
+    }
+    .section-header.standalone-header .section-title {
+      margin-bottom: 0.75rem;
+    }
+
     .section-title {
       display: block;
       margin: 0 0 0.5rem;
