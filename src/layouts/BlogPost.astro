@@ -39,10 +39,11 @@ const articleImage = heroImage
   ? (heroImage.startsWith('http') ? heroImage : `${siteUrl}${heroImage}`)
   : `${siteUrl}/pic/og-card.jpg`;
 
-// The hero container is always cropped to 16:9 (see .blog-hero-image-container
-// below) regardless of the source file's native dimensions, so declare the
-// og:image size to match that displayed aspect ratio rather than the
-// homepage default's 1200x1200 square.
+// og:image should describe the source file's own dimensions (roughly 16:9
+// for hero images so far), not the in-page banner crop below (which uses a
+// wider/shorter ratio purely for the on-page reading layout) -- external
+// crawlers do their own cropping from the declared size regardless of this
+// page's CSS.
 const ogImageWidth = heroImage ? 1200 : undefined;
 const ogImageHeight = heroImage ? 675 : undefined;
 const ogImageAlt = heroImage ? `${title} — cover image` : undefined;
@@ -92,8 +93,8 @@ const articleSchema = {
         )}
       <article class="blog-post-article">
         {heroImage && (
-          <div class="blog-hero-image-container" style="position: relative; border-radius: 6px; overflow: hidden; margin-bottom: 2.5rem; border: 1px solid var(--border); aspect-ratio: 16/9;">
-            <img src={heroImage} alt={title} style="width: 100%; height: 100%; object-fit: cover;" />
+          <div class="blog-hero-image-container" style="position: relative; border-radius: 6px; overflow: hidden; margin-bottom: 2.5rem; border: 1px solid var(--border); aspect-ratio: 5/2;">
+            <img src={heroImage} alt={title} style="width: 100%; height: 100%; object-fit: cover; object-position: center top;" />
             <div style="position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 55%, var(--bg-card) 100%); pointer-events: none;"></div>
           </div>
         )}
@@ -185,6 +186,24 @@ const articleSchema = {
     margin-top: 0;
     margin-bottom: 1.5rem;
     font-weight: 400;
+  }
+
+  /* Clicking a jump-nav link (or any #anchor to a heading) would otherwise
+     land the heading right at the viewport top, hidden under the fixed
+     compact nav — and on mobile/tablet, also under the sticky jump-nav pill
+     bar sitting right below it. */
+  .markdown-body h2,
+  .markdown-body h3 {
+    scroll-margin-top: 130px;
+  }
+
+  @media (min-width: 901px) {
+    /* Desktop: the jump-nav becomes a static sidebar (no longer sticky over
+       content), so headings only need to clear the fixed nav bar itself. */
+    .markdown-body h2,
+    .markdown-body h3 {
+      scroll-margin-top: 76px;
+    }
   }
 
   .markdown-body h2 {

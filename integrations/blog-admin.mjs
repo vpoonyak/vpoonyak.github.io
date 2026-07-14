@@ -260,14 +260,18 @@ export default function blogAdmin() {
               const existingSlug = params.get('existingSlug');
               const isNew = !existingSlug;
               const title = params.get('title') || '';
-              const description = params.get('description') || '';
+              const description = (params.get('description') || '').replace(/\r\n/g, '\n');
               const pubDateRaw = params.get('pubDate') || '';
               const updatedDateRaw = params.get('updatedDate') || '';
               const heroImage = params.get('heroImage') || '';
               const tagsRaw = params.get('tags') || '';
               const draft = params.get('draft') === 'on';
               const lang = params.get('lang') === 'th' ? 'th' : 'en';
-              const body = params.get('body') || '';
+              // Browser <textarea> form submissions use CRLF line endings,
+              // which would flip every unchanged line to CRLF on every save
+              // (and mix with LF from any other edit path) -- normalize to
+              // plain LF to match the rest of the repo.
+              const body = (params.get('body') || '').replace(/\r\n/g, '\n');
 
               const tags = tagsRaw
                 .split(',')

@@ -1,86 +1,25 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Navigation from '../components/Navigation.astro';
+import Contact from '../components/Contact.astro';
 import Footer from '../components/Footer.astro';
 ---
 
 <Layout title="Contact | Vitchakorn Poonyakanok" description="Get in touch for collaborations in clinical AI, travel medicine, and public health data systems." canonicalUrl="https://vitchakorn.com/contact/">
   <Navigation />
-  
-  <main class="contact-page-container section-alt-bg" style="min-height: 100vh; padding-top: 120px; padding-bottom: 80px; display: flex; align-items: center;">
-    <div class="container-grid" style="width: 100%;">
-      <div style="max-width: 800px; margin: 0 auto; width: 100%;">
-        <!-- Kicker & Title -->
-        <div style="margin-bottom: 3.5rem;">
-          <span class="section-kicker t-mono" style="color: var(--accent); font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase;">GET IN TOUCH</span>
-          <h1 class="t-hero" style="font-size: clamp(2.5rem, 6vw, 3.75rem); font-weight: 800; line-height: 1.1; margin-top: 0.5rem; margin-bottom: 1rem; color: var(--text-primary);">
-            Let's Collaborate
-          </h1>
-          <p style="font-size: 1.0625rem; color: var(--text-secondary); line-height: 1.6; max-width: 600px; margin: 0;">
-            Open to new ideas and collaborations in health data initiatives, medical informatics, travel medicine, and public health research.
-          </p>
-          <div style="width: 100%; height: 1px; background: var(--border); margin-top: 2.5rem;"></div>
-        </div>
-
-        <!-- Form and details -->
-        <div class="contact-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start;">
-          <div>
-            <p class="contact-cta" style="font-size: 1.125rem; line-height: 1.6; color: var(--text-primary); margin: 0 0 1rem 0;">
-              Actively seeking a Summer 2027 health care analytics internship in the United States — open to any state.
-            </p>
-            <div style="margin-top: 2rem;">
-              <span class="t-label" style="display:block; margin-bottom:0.5rem; color: var(--text-secondary); font-size: 0.75rem; text-transform: uppercase; font-family: 'JetBrains Mono', monospace; font-weight: 600;">Direct Email</span>
-              <a href="mailto:vk.poonyakanok@gmail.com" class="about-contact-email" style="font-size: 1.125rem; display: inline-flex; align-items: center; gap: 8px; color: var(--text-primary); text-decoration: none; font-weight: 500; transition: color 0.15s ease;">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-                vk.poonyakanok@gmail.com
-              </a>
-              <p style="margin-top: 1.5rem; font-size: 0.875rem; color: var(--text-secondary);">
-                For formal review: 
-                <a href="/cv.pdf" target="_blank" rel="noopener noreferrer" style="color: var(--accent); text-decoration: none; font-weight: 500;">CV</a> · 
-                <a href="/resume.pdf" target="_blank" rel="noopener noreferrer" style="color: var(--accent); text-decoration: none; font-weight: 500;">Resume</a>
-              </p>
-            </div>
-          </div>
-
-          <div>
-            <form action="https://formspree.io/f/myklppap" method="POST" class="contact-form" style="display: flex; flex-direction: column; gap: 1.5rem;">
-              <div class="form-group" style="display: flex; flex-direction: column; gap: 0.5rem;">
-                <label for="name" class="form-label" style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; font-weight: 500;">Name</label>
-                <input type="text" id="name" name="name" required placeholder="Your full name" class="form-input" style="width: 100%; padding: 12px; border-radius: 4px; border: 1px solid var(--border); background: var(--bg-card); color: var(--text-primary); font-family: inherit; font-size: 0.9375rem; box-sizing: border-box;">
-              </div>
-              <div class="form-group" style="display: flex; flex-direction: column; gap: 0.5rem;">
-                <label for="email" class="form-label" style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; font-weight: 500;">Email</label>
-                <input type="email" id="email" name="_replyto" required placeholder="Your email address" class="form-input" style="width: 100%; padding: 12px; border-radius: 4px; border: 1px solid var(--border); background: var(--bg-card); color: var(--text-primary); font-family: inherit; font-size: 0.9375rem; box-sizing: border-box;">
-              </div>
-              <div class="form-group" style="display: flex; flex-direction: column; gap: 0.5rem;">
-                <label for="message" class="form-label" style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; font-weight: 500;">Message</label>
-                <textarea id="message" name="message" required placeholder="How can I help you?" class="form-textarea" style="width: 100%; padding: 12px; border-radius: 4px; border: 1px solid var(--border); background: var(--bg-card); color: var(--text-primary); font-family: inherit; font-size: 0.9375rem; min-height: 120px; resize: vertical; box-sizing: border-box;"></textarea>
-              </div>
-              <button type="submit" class="submit-btn" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-family: 'JetBrains Mono', monospace; font-size: 0.8125rem; font-weight: 600; text-transform: uppercase; color: #fff; background: var(--accent); border: none; padding: 12px 24px; border-radius: 4px; cursor: pointer; transition: opacity 0.2s ease;">
-                <span>Send Message</span>
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-              </button>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-  </main>
-
+  <Contact />
   <Footer />
 </Layout>
 
-<style>
-  .about-contact-email:hover {
-    color: var(--accent) !important;
-  }
-  .submit-btn:hover {
-    opacity: 0.9;
-  }
-  @media (max-width: 768px) {
-    .contact-grid {
-      grid-template-columns: 1fr !important;
-      gap: 2rem !important;
-    }
-  }
-</style>
+<script>
+  // This page shows only the Contact section (no scroll-spy like the
+  // homepage), so mark it active directly to get the same accent-tinted
+  // section number/heading treatment Contact has when scrolled into view
+  // on the homepage.
+  document.body.dataset.activeSection = 'contact';
+
+  // Contact.astro's .fade-in elements start at opacity:0 and only get
+  // .visible from the homepage's scroll-reveal script -- this page has no
+  // such script, so reveal them directly instead of leaving them invisible.
+  document.querySelectorAll('.fade-in').forEach((el) => el.classList.add('visible'));
+</script>

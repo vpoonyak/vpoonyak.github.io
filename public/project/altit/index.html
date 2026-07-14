@@ -87,11 +87,13 @@
     @media (max-width: 768px) { .page-header-inner { padding: 0 24px; } }
 
     .back-link {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.06em;
-      text-transform: uppercase; color: var(--text-tertiary);
+      font-family: 'JetBrains Mono', monospace; font-size: 0.6875rem; font-weight: 600;
+      letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-tertiary);
+      display: inline-flex; align-items: center; padding: 12px 10px; margin: -12px -10px;
+      border-radius: 6px; transition: color 0.2s ease;
     }
     .back-link:hover { color: var(--accent-heading); text-decoration: none; }
+    .back-link:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
 
     .theme-toggle {
       width: 36px; height: 36px;
