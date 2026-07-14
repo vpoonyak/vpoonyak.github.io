@@ -33,9 +33,29 @@ const formattedDate = pubDate.toLocaleDateString('en-US', {
 // Auto jump-nav: only worth showing once a post has enough h2 sections to actually need one.
 const sectionHeadings = headings.filter((h) => h.depth === 2);
 const showJumpNav = sectionHeadings.length >= 3;
+
+const siteUrl = 'https://vitchakorn.com';
+const articleImage = heroImage
+  ? (heroImage.startsWith('http') ? heroImage : `${siteUrl}${heroImage}`)
+  : `${siteUrl}/pic/og-card.jpg`;
+
+const articleSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: title,
+  description,
+  image: articleImage,
+  datePublished: pubDate.toISOString(),
+  dateModified: (updatedDate ?? pubDate).toISOString(),
+  inLanguage: lang,
+  author: { '@type': 'Person', name: 'Vitchakorn Poonyakanok', url: siteUrl },
+  publisher: { '@type': 'Person', name: 'Vitchakorn Poonyakanok' },
+  mainEntityOfPage: { '@type': 'WebPage', '@id': canonicalUrl },
+};
 ---
 
 <Layout title={`${title} | Vitchakorn Poonyakanok`} description={description} image={heroImage} canonicalUrl={canonicalUrl}>
+  <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
   <Navigation />
   
   <main class="blog-post-container section-alt-bg" style="min-height: 100vh; padding-top: 100px; padding-bottom: 80px;">
