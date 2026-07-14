@@ -56,9 +56,9 @@ const articleSchema = {
 
 <Layout title={`${title} | Vitchakorn Poonyakanok`} description={description} image={heroImage} canonicalUrl={canonicalUrl}>
   <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
-  <Navigation />
-  
-  <main class="blog-post-container section-alt-bg" style="min-height: 100vh; padding-top: 100px; padding-bottom: 80px;">
+  <Navigation compact backHref="/blog" backLabel="Blog" />
+
+  <main class="blog-post-container section-alt-bg" style="min-height: 100vh; padding-top: 64px; padding-bottom: 80px;">
     <div class="container-grid">
       <div class={showJumpNav ? "blog-layout with-sidebar" : "blog-layout"}>
         {showJumpNav && (
@@ -82,17 +82,10 @@ const articleSchema = {
           </div>
         )}
       <article class="blog-post-article">
-        <!-- Back Link -->
-        <div class="blog-back-link">
-          <a href="/blog" class="t-mono" style="display: inline-flex; align-items: center; gap: 8px; color: var(--accent); text-decoration: none; font-size: 0.8125rem; font-weight: 500; text-transform: uppercase; margin-bottom: 2rem;">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transform: rotate(180deg);"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-            Back to Blog
-          </a>
-        </div>
-
         {heroImage && (
-          <div class="blog-hero-image-container" style="border-radius: 6px; overflow: hidden; margin-bottom: 2.5rem; border: 1px solid var(--border); aspect-ratio: 16/9;">
+          <div class="blog-hero-image-container" style="position: relative; border-radius: 6px; overflow: hidden; margin-bottom: 2.5rem; border: 1px solid var(--border); aspect-ratio: 16/9;">
             <img src={heroImage} alt={title} style="width: 100%; height: 100%; object-fit: cover;" />
+            <div style="position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 55%, var(--bg-card) 100%); pointer-events: none;"></div>
           </div>
         )}
 
@@ -130,7 +123,7 @@ const articleSchema = {
             </div>
           )}
 
-          <div style="width: 100%; height: 1px; background: var(--border); margin-top: 2rem;"></div>
+          <div style="width: 100%; height: 1px; background: var(--border); margin-top: 1rem;"></div>
         </header>
 
         <!-- Content -->
@@ -163,6 +156,11 @@ const articleSchema = {
   @media (max-width: 900px) {
     .blog-layout.with-sidebar {
       grid-template-columns: 1fr;
+      /* Stacked single-column layout: the jump-nav pill bar already has its
+         own border/margin as a visual divider, so the grid's column-gap
+         (meant for the desktop sidebar split) would double up as a row-gap
+         here and add a redundant ~40px. */
+      gap: 0;
     }
   }
 
@@ -256,11 +254,26 @@ const articleSchema = {
   }
 
   .markdown-body img {
+    display: block;
     max-width: 100%;
     height: auto;
     border-radius: 6px;
-    margin: 2rem 0;
+    margin: 2rem 0 0.5rem;
     border: 1px solid var(--border);
+  }
+
+  /* An image with no blank line before the next line (`![]()` immediately
+     followed by `*caption*`) lands in the same <p> as an inline sibling, not
+     a separate paragraph — style that caption tight under the image instead
+     of reading as body text. */
+  .markdown-body img + em {
+    display: block;
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    font-size: 0.875rem;
+    color: var(--text-tertiary);
+    text-align: center;
+    font-style: italic;
   }
 
   .markdown-body hr {
@@ -287,8 +300,8 @@ const articleSchema = {
   @media (min-width: 901px) {
     .side-rail {
       position: sticky;
-      top: 90px;
-      max-height: calc(100dvh - 110px);
+      top: 64px;
+      max-height: calc(100dvh - 84px);
       overflow-y: auto;
       display: flex;
       flex-direction: column;
@@ -336,15 +349,15 @@ const articleSchema = {
   /* Part-stepper / TOC */
   .jump-nav {
     position: sticky;
-    top: 90px;
+    top: 64px;
     z-index: 5;
     display: flex;
     gap: 4px;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
-    padding: 10px 0;
-    margin-bottom: 2rem;
+    padding: 8px 0;
+    margin-bottom: 1rem;
     background: var(--bg);
     border-bottom: 1px solid var(--border);
   }
