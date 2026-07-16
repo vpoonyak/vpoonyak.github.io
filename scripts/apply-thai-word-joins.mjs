@@ -1,10 +1,16 @@
 #!/usr/bin/env node
-// Postbuild step -- runs once at deploy/build time, never in a reader's
-// browser. Reads src/data/thai-word-joins.json (a small, hand-reviewed list
-// of Thai words the browser's own Intl.Segmenter mis-splits) and wraps them
-// -- plus every Maiyamok (ๆ) occurrence -- in `<span style="white-space:
-// nowrap">` in every built `lang="th"` post's rendered HTML, so no engine
-// has grounds to break inside them.
+// NOT wired into this site's `npm run build` -- deliberately not applied to
+// this site's own pages. Run manually via `npm run thai:apply-word-joins`
+// if that ever changes. Its only current use is backing the "with
+// word-joiner list" tab of the interactive demo in the Thai typography
+// post, which runs this exact same logic client-side (see BlogPost.astro)
+// purely to demonstrate the mechanism, not to apply it to real content.
+//
+// Reads src/data/thai-word-joins.json (a small, hand-reviewed list of Thai
+// words the browser's own Intl.Segmenter mis-splits) and wraps them -- plus
+// every Maiyamok (ๆ) occurrence -- in `<span style="white-space:nowrap">`
+// in every built `lang="th"` post's rendered HTML, so no engine has
+// grounds to break inside them.
 //
 // This used to insert U+2060 WORD JOINER between grapheme clusters instead
 // of wrapping in spans. That approach had a real bug: injecting WORD JOINER

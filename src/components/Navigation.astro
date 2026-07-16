@@ -9,9 +9,15 @@ interface Props {
   // Omit the "Blog" item from the mobile hamburger dropdown — for the /blog
   // listing page itself, where a link to itself is redundant.
   hideBlogLink?: boolean;
+  // Compact-nav only: renders a globe-icon link beside the theme toggle for
+  // switching to a blog post's other-language translation. Omitted (undefined)
+  // on every page except a blog post that has a translationSlug.
+  translationHref?: string;
+  translationLabel?: string;
+  translationTitle?: string;
 }
 
-const { compact = false, backHref = '/blog', backLabel = 'Blog', hideBlogLink = false } = Astro.props;
+const { compact = false, backHref = '/blog', backLabel = 'Blog', hideBlogLink = false, translationHref, translationLabel, translationTitle } = Astro.props;
 ---
 
 {compact ? (
@@ -29,6 +35,11 @@ const { compact = false, backHref = '/blog', backLabel = 'Blog', hideBlogLink = 
         <li><a href="/contact">Contact</a></li>
       </ul>
       <div class="nav-actions">
+        {translationHref && (
+          <a href={translationHref} class="lang-switcher" title={translationTitle}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>{translationLabel}
+          </a>
+        )}
         <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
           <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
           <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
@@ -131,6 +142,32 @@ const { compact = false, backHref = '/blog', backLabel = 'Blog', hideBlogLink = 
   }
   .nav-compact .menu-toggle {
     display: flex;
+  }
+
+  /* Matches .theme-toggle's box height so the two sit flush beside each
+     other in nav-actions; width is auto (icon + language label) rather
+     than a fixed square. */
+  .lang-switcher {
+    height: 44px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 0 10px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+  .lang-switcher:hover {
+    border-color: var(--accent);
+    color: var(--accent-heading);
+    background: var(--accent-muted);
+    text-decoration: none;
   }
 </style>
 

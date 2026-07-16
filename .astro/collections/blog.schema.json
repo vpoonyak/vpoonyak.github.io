@@ -37,6 +37,9 @@
         "th"
       ]
     },
+    "translationSlug": {
+      "type": "string"
+    },
     "$schema": {
       "type": "string"
     }

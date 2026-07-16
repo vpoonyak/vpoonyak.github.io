@@ -4,10 +4,12 @@ import Navigation from '../components/Navigation.astro';
 import Footer from '../components/Footer.astro';
 import thaiWordJoinsData from '../data/thai-word-joins.json';
 
-// Single source of truth shared with scripts/apply-thai-word-joins.mjs (the
-// real postbuild step) -- the interactive demo in the Thai typography post
-// reads this exact list, so it can never silently drift from what actually
-// ships.
+// Single source of truth shared with scripts/apply-thai-word-joins.mjs (a
+// script that exists but is NOT run as part of this site's own build --
+// see that file's header comment). The interactive demo in the Thai
+// typography post reads this exact list purely to demonstrate the
+// mechanism, so the demo can never silently drift from what that script
+// would do if it were ever wired in.
 const approvedThaiWords: string[] = thaiWordJoinsData.words;
 
 interface Heading {
@@ -83,7 +85,14 @@ const articleSchema = {
 
 <Layout title={`${title} | Vitchakorn Poonyakanok`} description={description} keywords={keywords} image={heroImage} imageWidth={ogImageWidth} imageHeight={ogImageHeight} imageAlt={ogImageAlt} canonicalUrl={canonicalUrl}>
   <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
-  <Navigation compact backHref="/blog" backLabel="Blog" />
+  <Navigation
+    compact
+    backHref="/blog"
+    backLabel="Blog"
+    translationHref={translationSlug ? `/blog/${translationSlug}/` : undefined}
+    translationLabel={otherLangLabel}
+    translationTitle={switcherText}
+  />
 
   <main class="blog-post-container section-alt-bg" style="min-height: 100vh; padding-top: 64px; padding-bottom: 80px;">
     <div class="container-grid">
@@ -120,16 +129,6 @@ const articleSchema = {
         <header class="blog-post-header" style="margin-bottom: 2.5rem;">
           <div class="blog-meta t-mono" style="font-size: 0.8125rem; color: var(--text-secondary); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
             <span style="font-size: 0.6875rem; font-weight: 600; text-transform: uppercase; color: var(--accent); border: 1px solid var(--border); padding: 2px 6px; border-radius: 4px; background: var(--bg-card);">{lang}</span>
-            {translationSlug && (
-              <a
-                href={`/blog/${translationSlug}/`}
-                class="lang-switcher t-mono"
-                title={switcherText}
-                style="font-size: 0.6875rem; font-weight: 600; padding: 2px 8px; border-radius: 4px; background: var(--bg-card); border: 1px solid var(--border); color: var(--text-secondary); text-decoration: none; display: inline-flex; align-items: center; gap: 4px;"
-              >
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>{otherLangLabel}
-              </a>
-            )}
             <span style="color: var(--text-quaternary);">•</span>
             <span>{formattedDate}</span>
             {updatedDate && (
@@ -176,10 +175,6 @@ const articleSchema = {
 </Layout>
 
 <style is:global>
-  .lang-switcher:hover {
-    border-color: var(--accent-border) !important;
-    color: var(--accent) !important;
-  }
 
   /* Markdown styling custom for article reading layout */
   .blog-layout {
@@ -322,6 +317,19 @@ const articleSchema = {
     border-radius: 6px;
     margin: 2rem 0 0.5rem;
     border: 1px solid var(--border);
+  }
+
+  /* Portrait phone screenshots (the Thai typography post's before/after
+     examples) look oversized at full article width -- cap and center them
+     instead of stretching to the column width like a landscape hero image.
+     Targeted by filename (not a class on the <img>) because giving the
+     markdown image its own raw HTML tag would break the `img + em` caption
+     rule below -- markdown only keeps `![]()` + the next `*caption*` line
+     in the same paragraph when the image is written as plain markdown. */
+  .markdown-body img[src*="/thai-web-typography/example-break-"] {
+    max-width: 320px;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   /* An image with no blank line before the next line (`![]()` immediately
@@ -513,7 +521,7 @@ const articleSchema = {
 
   /* GFM tables */
   .markdown-body table {
-    width: 100%;
+    min-width: 100%;
     border-collapse: collapse;
     margin: 1.75rem 0;
     font-size: 0.9375rem;
@@ -523,6 +531,15 @@ const articleSchema = {
     padding: 8px 12px;
     text-align: left;
     vertical-align: top;
+    /* Override the article-wide word-break: break-word (below) -- inside a
+       table it lets every cell wrap mid-word/mid-character to force-fit the
+       squeezed column width (e.g. "Tokenizer" -> "Tokeniz"/"er"), which also
+       means the table's content never actually exceeds the viewport, so the
+       overflow-x: auto scroll further down never engages either. Cells
+       should only wrap at real word boundaries; if that makes the table
+       wider than the screen, it scrolls instead of mangling text. */
+    word-break: normal;
+    overflow-wrap: normal;
   }
   .markdown-body th {
     background: var(--bg-card);
@@ -704,13 +721,28 @@ const articleSchema = {
     border: 1px solid var(--border);
     border-radius: 6px;
     padding: 1rem;
-    background: var(--bg);
+    /* Deliberately matches the outer .thai-demo panel's background, not the
+       input textarea's -- the textarea uses var(--bg) to read as an
+       editable field sitting "inside" the card; this box uses the card's
+       own background so it reads as part of the panel (output/display),
+       not a second editable control. */
+    background: var(--bg-card);
     max-width: 420px;
+    /* The narrow max-width is deliberate (it mimics a phone-width reading
+       column so the wrap behavior is visible even on desktop), but a
+       nowrap-joined word/token can still be wider than that -- especially
+       on the "full tokenizer" tab, which sometimes lumps a whole phrase
+       into one unbreakable span. Let this one box scroll horizontally
+       instead of forcing that content to squeeze/fit or leaking overflow
+       into the rest of the page. */
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
   .markdown-body .thai-demo-text {
     margin: 0;
     font-size: 1rem;
     line-height: 1.8;
+    color: var(--text-secondary);
   }
   .markdown-body .thai-demo-caption {
     margin: 0.75rem 0 0;
@@ -886,11 +918,11 @@ const articleSchema = {
 
   const CAPTIONS_TH: Record<string, string> = {
     broken:
-      'จำลอง: ถ้าไม่มีข้อมูลขอบเขตคำเลย ระบบจะตัดบรรทัดตรงไหนก็ได้ที่พอดีขอบจอ แม้อยู่กลางตัวอักษร (จำลองด้วย word-break: break-all เพื่อให้เห็นผลในทุกเบราว์เซอร์ -- ไม่ใช่การจำลองบั๊กจริงของ WebKit เป๊ะๆ ซึ่งเกิดจาก word-break: keep-all)',
+      'ถ้าไม่มีข้อมูลขอบเขตคำเลย ระบบจะตัดบรรทัดตรงไหนก็ได้ที่พอดีขอบจอ แม้อยู่กลางตัวอักษร (จำลองด้วย word-break: break-all เพื่อให้เห็นผลในทุกเบราว์เซอร์ -- ไม่ใช่การจำลองบั๊กจริงของ WebKit เป๊ะๆ ซึ่งเกิดจาก word-break: keep-all)',
     native:
       'นี่คือสิ่งที่เบราว์เซอร์ของคุณตัดคำเองตามค่าเริ่มต้น (หลังลบ word-break: keep-all แล้ว) -- ยังมีคำจริงๆ ที่ dictionary ของ browser เองก็ตัดผิด เกิดขึ้นจริงในทุกเบราว์เซอร์ ไม่ใช่แค่ WebKit',
     fixed:
-      `หลังห่อคำในรายการที่ตรวจสอบด้วยมือแล้ว ${approvedThaiWords.length} คำ (บวกกฎ Maiyamok ที่ ๆ ต้องไม่ขึ้นต้นบรรทัด) ด้วย white-space:nowrap span -- นี่คือ mechanism เดียวกับที่ postbuild script ใช้จริงบนเว็บนี้ (อ่านจากไฟล์เดียวกัน src/data/thai-word-joins.json) ลองพิมพ์ข้อความของตัวเองด้านบนดูได้เลย`,
+      `หลังห่อคำในรายการที่ตรวจสอบด้วยมือแล้ว ${approvedThaiWords.length} คำ (บวกกฎ Maiyamok ที่ ๆ ต้องไม่ขึ้นต้นบรรทัด) ด้วย white-space:nowrap span -- นี่คือ mechanism เดียวกับที่สคริปต์ scripts/apply-thai-word-joins.mjs ทำได้ (อ่านจากไฟล์เดียวกัน src/data/thai-word-joins.json) แต่สคริปต์นั้นไม่ได้ถูกใช้กับหน้าเว็บนี้จริง ๆ เป็นแค่การสาธิตในนี้เท่านั้น ลองพิมพ์ข้อความของตัวเองด้านบนดูได้เลย`,
     fullLoading: 'กำลังโหลด nlpo3-newmm-typescript (~314KB, ครั้งเดียว)...',
     fullError: 'โหลดไม่สำเร็จ (อาจเป็นปัญหาเครือข่ายชั่วคราว) -- กดแท็บนี้อีกครั้งเพื่อลองใหม่',
     full:
@@ -899,11 +931,11 @@ const articleSchema = {
 
   const CAPTIONS_EN: Record<string, string> = {
     broken:
-      "Simulated: with zero word-boundary information, a renderer can break a line anywhere it happens to fit -- even mid-character. (Forced here with word-break: break-all so it's visible in every browser -- this is NOT a literal replay of the real WebKit bug, which came from word-break: keep-all.)",
+      "With zero word-boundary information, a renderer can break a line anywhere it happens to fit -- even mid-character. (Forced here with word-break: break-all so it's visible in every browser -- this is NOT a literal replay of the real WebKit bug, which came from word-break: keep-all.)",
     native:
       "This is what your own browser does with its default Thai segmentation (after removing word-break: keep-all) -- there are still real words the browser's own dictionary splits wrong. Happens in every browser, not just WebKit.",
     fixed:
-      `After wrapping the ${approvedThaiWords.length}-word hand-reviewed list (plus every Maiyamok ๆ) in white-space:nowrap spans -- this is the exact same mechanism the postbuild script uses in production (reads the same src/data/thai-word-joins.json). Try typing your own text above.`,
+      `After wrapping the ${approvedThaiWords.length}-word hand-reviewed list (plus every Maiyamok ๆ) in white-space:nowrap spans -- this is the exact same mechanism scripts/apply-thai-word-joins.mjs implements (reads the same src/data/thai-word-joins.json), but that script isn't run against this site's own pages; you're only seeing it here, in the demo. Try typing your own text above.`,
     fullLoading: 'Loading nlpo3-newmm-typescript (~314KB, one-time)...',
     fullError: 'Failed to load (possibly a transient network issue) -- click this tab again to retry.',
     full:
