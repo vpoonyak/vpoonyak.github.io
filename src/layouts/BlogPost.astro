@@ -68,6 +68,19 @@ const ogImageHeight = heroImage ? 675 : undefined;
 const ogImageAlt = heroImage ? `${title} (cover image)` : undefined;
 const keywords = tags && tags.length > 0 ? tags.join(', ') : undefined;
 
+// Ties the TH/EN pair together as language alternates of one article for
+// crawlers -- previously this relationship only existed as an in-page UI
+// switcher, invisible to search engines. x-default points at the English
+// side since English is this blog's primary language.
+const translationUrl = translationSlug ? `${siteUrl}/blog/${translationSlug}/` : undefined;
+const alternates = translationUrl
+  ? [
+      { hreflang: lang, href: canonicalUrl },
+      { hreflang: otherLangLabel.toLowerCase(), href: translationUrl },
+      { hreflang: 'x-default', href: lang === 'en' ? canonicalUrl : translationUrl },
+    ]
+  : undefined;
+
 const articleSchema = {
   '@context': 'https://schema.org',
   '@type': 'BlogPosting',
@@ -83,7 +96,7 @@ const articleSchema = {
 };
 ---
 
-<Layout title={`${title} | Vitchakorn Poonyakanok`} description={description} keywords={keywords} image={heroImage} imageWidth={ogImageWidth} imageHeight={ogImageHeight} imageAlt={ogImageAlt} canonicalUrl={canonicalUrl}>
+<Layout title={`${title} | Vitchakorn Poonyakanok`} description={description} keywords={keywords} image={heroImage} imageWidth={ogImageWidth} imageHeight={ogImageHeight} imageAlt={ogImageAlt} canonicalUrl={canonicalUrl} alternates={alternates}>
   <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
   <Navigation
     compact
