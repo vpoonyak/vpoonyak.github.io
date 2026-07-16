@@ -2,6 +2,13 @@
 import Layout from './Layout.astro';
 import Navigation from '../components/Navigation.astro';
 import Footer from '../components/Footer.astro';
+import thaiWordJoinsData from '../data/thai-word-joins.json';
+
+// Single source of truth shared with scripts/apply-thai-word-joins.mjs (the
+// real postbuild step) -- the interactive demo in the Thai typography post
+// reads this exact list, so it can never silently drift from what actually
+// ships.
+const approvedThaiWords: string[] = thaiWordJoinsData.words;
 
 interface Heading {
   depth: number;
@@ -20,9 +27,13 @@ interface Props {
   readingTime?: number;
   lang?: 'en' | 'th';
   headings?: Heading[];
+  translationSlug?: string;
 }
 
-const { title, description, pubDate, updatedDate, heroImage, tags, canonicalUrl, readingTime, lang = 'en', headings = [] } = Astro.props;
+const { title, description, pubDate, updatedDate, heroImage, tags, canonicalUrl, readingTime, lang = 'en', headings = [], translationSlug } = Astro.props;
+
+const otherLangLabel = lang === 'en' ? 'TH' : 'EN';
+const switcherText = lang === 'en' ? 'Read in Thai' : 'อ่านภาษาอังกฤษ';
 
 const formattedDate = pubDate.toLocaleDateString('en-US', {
   year: 'numeric',
@@ -33,6 +44,12 @@ const formattedDate = pubDate.toLocaleDateString('en-US', {
 // Auto jump-nav: only worth showing once a post has enough h2 sections to actually need one.
 const sectionHeadings = headings.filter((h) => h.depth === 2);
 const showJumpNav = sectionHeadings.length >= 3;
+
+// Sidebar legend explaining the callout swatch colors -- must match the
+// post's own language, not just default to Thai regardless of `lang`.
+const legendText = lang === 'en'
+  ? { title: 'Legend', todo: 'Action item', problem: 'Potential problem', lesson: 'Lesson', case: 'Real case' }
+  : { title: 'สัญลักษณ์', todo: 'ต้องทำ', problem: 'ปัญหาที่อาจเจอ', lesson: 'บทเรียน', case: 'เคสจริง' };
 
 const siteUrl = 'https://vitchakorn.com';
 const articleImage = heroImage
@@ -46,7 +63,7 @@ const articleImage = heroImage
 // page's CSS.
 const ogImageWidth = heroImage ? 1200 : undefined;
 const ogImageHeight = heroImage ? 675 : undefined;
-const ogImageAlt = heroImage ? `${title} — cover image` : undefined;
+const ogImageAlt = heroImage ? `${title} (cover image)` : undefined;
 const keywords = tags && tags.length > 0 ? tags.join(', ') : undefined;
 
 const articleSchema = {
@@ -83,11 +100,11 @@ const articleSchema = {
             </nav>
 
             <div class="rail-legend t-mono">
-              <p class="rail-legend-title">สัญลักษณ์</p>
-              <div class="rail-legend-item"><span class="rail-legend-swatch todo"></span>ต้องทำ</div>
-              <div class="rail-legend-item"><span class="rail-legend-swatch problem"></span>ปัญหาที่อาจเจอ</div>
-              <div class="rail-legend-item"><span class="rail-legend-swatch lesson"></span>บทเรียน</div>
-              <div class="rail-legend-item"><span class="rail-legend-swatch case"></span>เคสจริง</div>
+              <p class="rail-legend-title">{legendText.title}</p>
+              <div class="rail-legend-item"><span class="rail-legend-swatch todo"></span>{legendText.todo}</div>
+              <div class="rail-legend-item"><span class="rail-legend-swatch problem"></span>{legendText.problem}</div>
+              <div class="rail-legend-item"><span class="rail-legend-swatch lesson"></span>{legendText.lesson}</div>
+              <div class="rail-legend-item"><span class="rail-legend-swatch case"></span>{legendText.case}</div>
             </div>
           </div>
         )}
@@ -103,6 +120,16 @@ const articleSchema = {
         <header class="blog-post-header" style="margin-bottom: 2.5rem;">
           <div class="blog-meta t-mono" style="font-size: 0.8125rem; color: var(--text-secondary); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
             <span style="font-size: 0.6875rem; font-weight: 600; text-transform: uppercase; color: var(--accent); border: 1px solid var(--border); padding: 2px 6px; border-radius: 4px; background: var(--bg-card);">{lang}</span>
+            {translationSlug && (
+              <a
+                href={`/blog/${translationSlug}/`}
+                class="lang-switcher t-mono"
+                title={switcherText}
+                style="font-size: 0.6875rem; font-weight: 600; padding: 2px 8px; border-radius: 4px; background: var(--bg-card); border: 1px solid var(--border); color: var(--text-secondary); text-decoration: none; display: inline-flex; align-items: center; gap: 4px;"
+              >
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>{otherLangLabel}
+              </a>
+            )}
             <span style="color: var(--text-quaternary);">•</span>
             <span>{formattedDate}</span>
             {updatedDate && (
@@ -149,6 +176,11 @@ const articleSchema = {
 </Layout>
 
 <style is:global>
+  .lang-switcher:hover {
+    border-color: var(--accent-border) !important;
+    color: var(--accent) !important;
+  }
+
   /* Markdown styling custom for article reading layout */
   .blog-layout {
     max-width: 720px;
@@ -269,6 +301,7 @@ const articleSchema = {
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.875rem;
     background: var(--bg-code);
+    color: #eb5757;
     padding: 2px 6px;
     border-radius: 4px;
     border: 1px solid var(--border);
@@ -276,6 +309,7 @@ const articleSchema = {
 
   .markdown-body pre code {
     background: transparent;
+    color: inherit;
     padding: 0;
     border-radius: 0;
     border: none;
@@ -314,7 +348,6 @@ const articleSchema = {
   /* Thai typography adjustments for spacing and word-breaking */
   .markdown-body[lang="th"] {
     line-height: 1.8;
-    word-break: keep-all;
     overflow-wrap: break-word;
   }
 
@@ -606,6 +639,85 @@ const articleSchema = {
     }
   }
 
+  /* Interactive "before/after" word-wrap demo (used in the Thai typography
+     post). Purely presentational -- the toggle logic lives in the gated
+     script below, a no-op on any page without a [data-thai-demo] element. */
+  .markdown-body .thai-demo {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.25rem;
+    margin: 1.75rem 0;
+    background: var(--bg-card);
+  }
+  .markdown-body .thai-demo-input-label {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--text-tertiary);
+    margin-bottom: 0.4rem;
+  }
+  .markdown-body .thai-demo-input {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    resize: vertical;
+    min-height: 5.5rem;
+    margin-bottom: 1rem;
+    padding: 0.75rem;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--text-primary);
+    font-family: inherit;
+    font-size: 0.9375rem;
+    line-height: 1.7;
+  }
+  .markdown-body .thai-demo-input:focus {
+    outline: none;
+    border-color: var(--accent-border);
+  }
+  .markdown-body .thai-demo-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 1rem;
+  }
+  .markdown-body .thai-demo-tab {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    padding: 6px 10px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-secondary);
+    cursor: pointer;
+    line-height: 1.4;
+  }
+  .markdown-body .thai-demo-tab:hover { border-color: var(--accent-border); }
+  .markdown-body .thai-demo-tab.active {
+    border-color: var(--accent-border);
+    background: var(--accent-muted);
+    color: var(--accent);
+    font-weight: 600;
+  }
+  .markdown-body .thai-demo-box {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1rem;
+    background: var(--bg);
+    max-width: 420px;
+  }
+  .markdown-body .thai-demo-text {
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.8;
+  }
+  .markdown-body .thai-demo-caption {
+    margin: 0.75rem 0 0;
+    font-size: 0.8125rem;
+    color: var(--text-tertiary);
+  }
+
   /* Belt-and-suspenders: nothing inside the article should ever be able to
      force the page wider than the viewport on mobile (long unbreakable pills,
      wide tables, etc.) */
@@ -648,3 +760,259 @@ const articleSchema = {
     }
   </script>
 )}
+
+<script>
+  // Only show a legend swatch for a callout type this specific post
+  // actually uses -- a post that never has a "todo" callout shouldn't list
+  // one. No-op (a handful of querySelector calls) on any post without a
+  // .rail-legend at all.
+  const legend = document.querySelector<HTMLElement>('.rail-legend');
+  if (legend) {
+    const types = ['todo', 'problem', 'lesson', 'case'];
+    let anyUsed = false;
+    for (const type of types) {
+      const used = document.querySelector(`.markdown-body .callout.${type}`) !== null;
+      if (used) anyUsed = true;
+      const swatch = legend.querySelector(`.rail-legend-swatch.${type}`);
+      const item = swatch?.closest<HTMLElement>('.rail-legend-item');
+      if (item && !used) item.style.display = 'none';
+    }
+    if (!anyUsed) legend.style.display = 'none';
+  }
+</script>
+
+{/* define:vars forces this script inline/unbundled -- fine for handing off
+    plain data, but it means a bare `import('nlpo3-newmm-typescript')` inside
+    it would never get resolved/code-split by Vite. So this block only
+    exists to hand the build-time word list to the real (bundled) script
+    below via a global, keeping thai-word-joins.json as the single source of
+    truth without breaking the dynamic import in the demo's "full tokenizer"
+    tab. */}
+<script define:vars={{ approvedThaiWords }}>
+  window.__approvedThaiWords = approvedThaiWords;
+</script>
+
+<script>
+  // Gated on element presence -- a no-op (single querySelectorAll, no
+  // listeners attached) on every page except the one post that embeds a
+  // [data-thai-demo] block.
+  const demos = document.querySelectorAll<HTMLElement>('[data-thai-demo]');
+  const approvedThaiWords: string[] = (window as any).__approvedThaiWords || [];
+  const sortedApprovedWords = [...approvedThaiWords].sort((a, b) => b.length - a.length);
+  const graphemeSegmenter = new Intl.Segmenter(undefined, { granularity: 'grapheme' });
+
+  // Split into user-perceived characters, not raw UTF-16 code units --
+  // word.split('') would separate a base consonant from its own combining
+  // vowel/tone marks (ข + ั + ้ is ONE visual unit).
+  function toGraphemeClusters(word: string): string[] {
+    return Array.from(graphemeSegmenter.segment(word), (s) => s.segment);
+  }
+
+  function escapeHtml(s: string): string {
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  type Segment = { type: 'text' | 'nowrap'; value: string };
+
+  // Mirrors scripts/lib/thai-html-walk.mjs's segmentThaiText exactly. Wraps
+  // matched words (and every Maiyamok ๆ + its preceding character) in
+  // `<span style="white-space:nowrap">` spans rather than inserting U+2060
+  // WORD JOINER characters. An earlier version used WORD JOINER and had a
+  // real bug: injecting it mid-word could confuse Chromium's Thai
+  // dictionary-based line-breaker badly enough to also lose the (valid,
+  // unrelated) break opportunity *before* the joined word -- observed
+  // splitting "อ่าน" into "อ่า"+"น" purely because "รายละเอียด" right after
+  // it had been joined. Real CSS layout (white-space:nowrap) doesn't have
+  // that failure mode.
+  function segmentThaiText(text: string, words: string[]): Segment[] {
+    let segments: Segment[] = [{ type: 'text', value: text }];
+    for (const word of words) {
+      const next: Segment[] = [];
+      for (const seg of segments) {
+        if (seg.type !== 'text' || !seg.value.includes(word)) {
+          next.push(seg);
+          continue;
+        }
+        const parts = seg.value.split(word);
+        parts.forEach((part, i) => {
+          if (part) next.push({ type: 'text', value: part });
+          if (i < parts.length - 1) next.push({ type: 'nowrap', value: word });
+        });
+      }
+      segments = next;
+    }
+
+    // Maiyamok (ๆ, U+0E46) must never start a line -- documented broken in
+    // every major engine: https://www.w3.org/TR/thai-gap/
+    const final: Segment[] = [];
+    for (const seg of segments) {
+      if (seg.type !== 'text') {
+        final.push(seg);
+        continue;
+      }
+      const clusters = toGraphemeClusters(seg.value);
+      let buffer: string[] = [];
+      for (const cluster of clusters) {
+        if (cluster === 'ๆ' && buffer.length > 0) {
+          const lastCluster = buffer.pop()!;
+          if (buffer.length) final.push({ type: 'text', value: buffer.join('') });
+          final.push({ type: 'nowrap', value: lastCluster + 'ๆ' });
+          buffer = [];
+        } else {
+          buffer.push(cluster);
+        }
+      }
+      if (buffer.length) final.push({ type: 'text', value: buffer.join('') });
+    }
+    return final;
+  }
+
+  function segmentsToHtml(segments: Segment[]): string {
+    return segments
+      .map((seg) => {
+        const escaped = escapeHtml(seg.value);
+        return seg.type === 'nowrap' ? `<span style="white-space:nowrap">${escaped}</span>` : escaped;
+      })
+      .join('');
+  }
+
+  // Exactly what scripts/apply-thai-word-joins.mjs does at build time,
+  // reading the same src/data/thai-word-joins.json -- run here live so the
+  // "fixed" tab can react to whatever the reader types, not just the
+  // default paragraph.
+  function applyCuratedList(text: string): string {
+    return segmentsToHtml(segmentThaiText(text, sortedApprovedWords));
+  }
+
+  const CAPTIONS_TH: Record<string, string> = {
+    broken:
+      'จำลอง: ถ้าไม่มีข้อมูลขอบเขตคำเลย ระบบจะตัดบรรทัดตรงไหนก็ได้ที่พอดีขอบจอ แม้อยู่กลางตัวอักษร (จำลองด้วย word-break: break-all เพื่อให้เห็นผลในทุกเบราว์เซอร์ -- ไม่ใช่การจำลองบั๊กจริงของ WebKit เป๊ะๆ ซึ่งเกิดจาก word-break: keep-all)',
+    native:
+      'นี่คือสิ่งที่เบราว์เซอร์ของคุณตัดคำเองตามค่าเริ่มต้น (หลังลบ word-break: keep-all แล้ว) -- ยังมีคำจริงๆ ที่ dictionary ของ browser เองก็ตัดผิด เกิดขึ้นจริงในทุกเบราว์เซอร์ ไม่ใช่แค่ WebKit',
+    fixed:
+      `หลังห่อคำในรายการที่ตรวจสอบด้วยมือแล้ว ${approvedThaiWords.length} คำ (บวกกฎ Maiyamok ที่ ๆ ต้องไม่ขึ้นต้นบรรทัด) ด้วย white-space:nowrap span -- นี่คือ mechanism เดียวกับที่ postbuild script ใช้จริงบนเว็บนี้ (อ่านจากไฟล์เดียวกัน src/data/thai-word-joins.json) ลองพิมพ์ข้อความของตัวเองด้านบนดูได้เลย`,
+    fullLoading: 'กำลังโหลด nlpo3-newmm-typescript (~314KB, ครั้งเดียว)...',
+    fullError: 'โหลดไม่สำเร็จ (อาจเป็นปัญหาเครือข่ายชั่วคราว) -- กดแท็บนี้อีกครั้งเพื่อลองใหม่',
+    full:
+      'ผลลัพธ์จากการรัน nlpo3-newmm-typescript เต็มรูปแบบสด ๆ ในเบราว์เซอร์ของคุณตอนนี้ (ไม่ใช่แค่รายการคำที่คัดแล้ว) สังเกตว่าบางทีมันรวมคำเป็นวลียาวเกินจำเป็น (เช่น "เพื่อให้") ซึ่งเป็นเหตุผลที่เว็บนี้เลือกไม่ใช้ผลลัพธ์นี้ตรงๆ',
+  };
+
+  const CAPTIONS_EN: Record<string, string> = {
+    broken:
+      "Simulated: with zero word-boundary information, a renderer can break a line anywhere it happens to fit -- even mid-character. (Forced here with word-break: break-all so it's visible in every browser -- this is NOT a literal replay of the real WebKit bug, which came from word-break: keep-all.)",
+    native:
+      "This is what your own browser does with its default Thai segmentation (after removing word-break: keep-all) -- there are still real words the browser's own dictionary splits wrong. Happens in every browser, not just WebKit.",
+    fixed:
+      `After wrapping the ${approvedThaiWords.length}-word hand-reviewed list (plus every Maiyamok ๆ) in white-space:nowrap spans -- this is the exact same mechanism the postbuild script uses in production (reads the same src/data/thai-word-joins.json). Try typing your own text above.`,
+    fullLoading: 'Loading nlpo3-newmm-typescript (~314KB, one-time)...',
+    fullError: 'Failed to load (possibly a transient network issue) -- click this tab again to retry.',
+    full:
+      "Live output from running the full nlpo3-newmm-typescript tokenizer in your browser right now (not the curated list). Notice it sometimes lumps whole phrases together (e.g. \"เพื่อให้\") more than necessary -- that's exactly why this site doesn't use this output directly.",
+  };
+
+  demos.forEach((container) => {
+    const tabs = Array.from(container.querySelectorAll<HTMLButtonElement>('.thai-demo-tab'));
+    const textEl = container.querySelector<HTMLElement>('.thai-demo-text');
+    const captionEl = container.querySelector<HTMLElement>('[data-caption]');
+    const inputEl = container.querySelector<HTMLTextAreaElement>('.thai-demo-input');
+    if (!textEl || !captionEl || !inputEl) return;
+
+    const langAttr = container.closest<HTMLElement>('[lang]')?.getAttribute('lang');
+    const CAPTIONS = langAttr === 'en' ? CAPTIONS_EN : CAPTIONS_TH;
+
+    let currentMode = 'broken';
+    let tokenizerPromise: Promise<any> | null = null;
+    function loadTokenizer() {
+      if (!tokenizerPromise) {
+        // nlpo3-newmm-typescript's own `new NewmmTokenizer()` constructor
+        // calls fs.readFileSync() to load its bundled dictionary -- that
+        // works in Node (which is all the package was designed/tested for)
+        // but throws in a real browser, since there's no filesystem. Bypass
+        // it: fetch the same dictionary file as a plain static asset and
+        // build the tokenizer via the from-word-list constructor instead,
+        // which never touches fs.
+        tokenizerPromise = Promise.all([
+          import('nlpo3-newmm-typescript'),
+          fetch('/data/nlpo3-words-th.txt').then((r) => r.text()),
+        ]).then(([mod, text]) => {
+          const words = text.split('\n').map((w) => w.trim()).filter(Boolean);
+          return mod.NewmmTokenizer.fromWordList(words);
+        });
+      }
+      return tokenizerPromise;
+    }
+
+    async function render() {
+      const requestedMode = currentMode;
+      const source = inputEl!.value;
+
+      tabs.forEach((tab) => {
+        const active = tab.dataset.mode === requestedMode;
+        tab.classList.toggle('active', active);
+        tab.setAttribute('aria-selected', String(active));
+      });
+
+      if (requestedMode === 'broken') {
+        textEl!.style.wordBreak = 'break-all';
+        textEl!.style.overflowWrap = 'normal';
+        textEl!.textContent = source;
+        captionEl!.textContent = CAPTIONS.broken;
+      } else if (requestedMode === 'fixed') {
+        textEl!.style.wordBreak = '';
+        textEl!.style.overflowWrap = '';
+        textEl!.innerHTML = applyCuratedList(source);
+        captionEl!.textContent = CAPTIONS.fixed;
+      } else if (requestedMode === 'full') {
+        textEl!.style.wordBreak = '';
+        textEl!.style.overflowWrap = '';
+        textEl!.textContent = source;
+        captionEl!.textContent = CAPTIONS.fullLoading;
+        const t0 = performance.now();
+        try {
+          const tokenizer = await loadTokenizer();
+          const tokens: string[] = tokenizer.segment(source, true);
+          const t1 = performance.now();
+          // guard against a stale write if the reader switched tabs/text mid-load
+          if (currentMode === requestedMode) {
+            // Same white-space:nowrap approach as applyCuratedList -- wrap
+            // every token boundary so nothing breaks inside a token, without
+            // the WORD JOINER side effect described above.
+            textEl!.innerHTML = tokens.map((t) => `<span style="white-space:nowrap">${escapeHtml(t)}</span>`).join('');
+            captionEl!.textContent = `${CAPTIONS.full} (${Math.round(t1 - t0)}ms)`;
+          }
+        } catch (err) {
+          // Seen in local dev when Vite's dependency pre-bundle cache goes
+          // stale after this dynamic import is added mid-session (a 504
+          // "Outdated Optimize Dep") -- fixed by restarting `astro dev`, but
+          // readers should never see an infinite "loading" state either way.
+          if (currentMode === requestedMode) {
+            tokenizerPromise = null; // allow a retry on next click instead of replaying the same failure
+            captionEl!.textContent = CAPTIONS.fullError;
+          }
+          console.error('Thai demo: failed to load/run nlpo3-newmm-typescript', err);
+        }
+      } else {
+        textEl!.style.wordBreak = '';
+        textEl!.style.overflowWrap = '';
+        textEl!.textContent = source;
+        captionEl!.textContent = CAPTIONS.native;
+      }
+    }
+
+    tabs.forEach((tab) => {
+      tab.addEventListener('click', () => {
+        currentMode = tab.dataset.mode || 'native';
+        render();
+      });
+    });
+
+    let debounceTimer: number;
+    inputEl.addEventListener('input', () => {
+      window.clearTimeout(debounceTimer);
+      debounceTimer = window.setTimeout(render, 300);
+    });
+
+    render();
+  });
+</script>
+

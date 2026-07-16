@@ -12,6 +12,9 @@ const blog = defineCollection({
     tags: z.array(z.string()).optional(),
     draft: z.boolean().optional().default(false),
     lang: z.enum(['en', 'th']).optional().default('en'),
+    // Slug of the same post in the other language, if a translation exists
+    // -- powers the TH/EN switcher in the post header.
+    translationSlug: z.string().optional(),
   }),
 });
 

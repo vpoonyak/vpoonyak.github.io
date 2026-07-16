@@ -146,6 +146,9 @@ ${errorHtml}
   <label>Tags (comma-separated)
     <input type="text" name="tags" value="${escapeHtml(tagsValue)}">
   </label>
+  <label>Translation slug (optional -- filename of this post's translation in the other language, e.g. <code>my-post-en</code>)
+    <input type="text" name="translationSlug" value="${escapeHtml(data.translationSlug ?? '')}">
+  </label>
   <label class="checkbox-row">
     <input type="checkbox" name="draft" ${data.draft ? 'checked' : ''}> Draft
   </label>
@@ -265,6 +268,7 @@ export default function blogAdmin() {
               const updatedDateRaw = params.get('updatedDate') || '';
               const heroImage = params.get('heroImage') || '';
               const tagsRaw = params.get('tags') || '';
+              const translationSlug = params.get('translationSlug') || '';
               const draft = params.get('draft') === 'on';
               const lang = params.get('lang') === 'th' ? 'th' : 'en';
               // Browser <textarea> form submissions use CRLF line endings,
@@ -285,7 +289,7 @@ export default function blogAdmin() {
                   const html = renderEditForm({
                     isNew: true,
                     slug: params.get('slug') || '',
-                    data: { title, description, pubDate: pubDateRaw, updatedDate: updatedDateRaw, heroImage, tags, draft, lang },
+                    data: { title, description, pubDate: pubDateRaw, updatedDate: updatedDateRaw, heroImage, tags, translationSlug, draft, lang },
                     body,
                     error: 'Slug is required and must contain at least one letter or digit.',
                   });
@@ -296,7 +300,7 @@ export default function blogAdmin() {
                   const html = renderEditForm({
                     isNew: true,
                     slug,
-                    data: { title, description, pubDate: pubDateRaw, updatedDate: updatedDateRaw, heroImage, tags, draft, lang },
+                    data: { title, description, pubDate: pubDateRaw, updatedDate: updatedDateRaw, heroImage, tags, translationSlug, draft, lang },
                     body,
                     error: `A post with slug "${slug}" already exists. Choose a different slug, or edit it from the list instead.`,
                   });
@@ -306,7 +310,18 @@ export default function blogAdmin() {
                 slug = existingSlug;
               }
 
+              // Start from whatever frontmatter already exists on disk (for
+              // an existing post) so any field this form doesn't know about
+              // -- translationSlug today, anything added to the content
+              // schema later -- survives a save through this editor instead
+              // of being silently dropped. The form-managed fields below
+              // always win over what was on disk.
+              const existingData = !isNew && fs.existsSync(path.join(blogDir, `${slug}.md`))
+                ? matter(fs.readFileSync(path.join(blogDir, `${slug}.md`), 'utf-8')).data
+                : {};
+
               const data = {
+                ...existingData,
                 title,
                 description,
                 pubDate: pubDateRaw ? new Date(pubDateRaw) : new Date(),
@@ -314,8 +329,13 @@ export default function blogAdmin() {
                 lang,
               };
               if (updatedDateRaw) data.updatedDate = new Date(updatedDateRaw);
+              else delete data.updatedDate;
               if (heroImage) data.heroImage = heroImage;
+              else delete data.heroImage;
               if (tags.length) data.tags = tags;
+              else delete data.tags;
+              if (translationSlug) data.translationSlug = translationSlug;
+              else delete data.translationSlug;
 
               const fileContents = matter.stringify(`\n${body}\n`, data);
               if (!fs.existsSync(blogDir)) fs.mkdirSync(blogDir, { recursive: true });

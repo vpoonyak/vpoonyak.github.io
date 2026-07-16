@@ -5,11 +5,26 @@ import Footer from '../../components/Footer.astro';
 import { getCollection } from 'astro:content';
 import { getReadingTime } from '../../utils/readingTime';
 
-const posts = (await getCollection('blog', (post) => {
+const allPosts = (await getCollection('blog', (post) => {
   return !post.data.draft || !import.meta.env.PROD;
 })).sort(
   (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
 );
+
+// Collapse translation pairs into a single card -- this blog's primary
+// language is English, so when a post has a translationSlug pointing at a
+// sibling that's also in this collection, list only the English side (with
+// a TH/EN badge) instead of two separate entries for the same article. The
+// Thai side is still fully reachable via the in-post language switcher.
+const byId = new Map(allPosts.map((p) => [p.id, p]));
+const hiddenIds = new Set<string>();
+for (const post of allPosts) {
+  const sibling = post.data.translationSlug ? byId.get(post.data.translationSlug) : undefined;
+  if (sibling && post.data.lang === 'th' && sibling.data.lang === 'en') {
+    hiddenIds.add(post.id);
+  }
+}
+const posts = allPosts.filter((p) => !hiddenIds.has(p.id));
 ---
 
 <Layout title="Blog | Vitchakorn Poonyakanok" description="Writing about Clinical AI, travel medicine, public health informatics, data systems, and cybersecurity." canonicalUrl="https://vitchakorn.com/blog/">
@@ -54,19 +69,45 @@ const posts = (await getCollection('blog', (post) => {
               });
               const readingTime = getReadingTime(post.body || '');
               const lang = post.data.lang || 'en';
-              
+              const sibling = post.data.translationSlug ? byId.get(post.data.translationSlug) : undefined;
+              const isBilingual = !!sibling;
+              const langBadge = isBilingual ? 'TH/EN' : lang;
+              const filterLangs = isBilingual ? 'en th' : lang;
+
+              // For a bilingual card, the title/description/link/reading-time
+              // need to switch to the Thai side's actual content when the
+              // "ภาษาไทย" filter is active -- otherwise selecting that filter
+              // still shows the English title, which reads as broken/ignored.
+              const thTitle = isBilingual ? sibling!.data.title : undefined;
+              const thDesc = isBilingual ? sibling!.data.description : undefined;
+              const thUrl = isBilingual ? `/blog/${sibling!.id}` : undefined;
+              const thReadingTime = isBilingual ? getReadingTime(sibling!.body || '') : undefined;
+
               return (
-                <article class="blog-item" data-post-lang={lang} style="position: relative;">
+                <article
+                  class="blog-item"
+                  data-post-lang={filterLangs}
+                  data-bilingual={isBilingual ? 'true' : undefined}
+                  data-en-title={post.data.title}
+                  data-en-desc={post.data.description}
+                  data-en-url={postUrl}
+                  data-en-reading-time={readingTime}
+                  data-th-title={thTitle}
+                  data-th-desc={thDesc}
+                  data-th-url={thUrl}
+                  data-th-reading-time={thReadingTime}
+                  style="position: relative;"
+                >
                   <div style="display: flex; flex-direction: column; gap: 0.75rem;">
                     <!-- Date, Lang, Reading Time & Tags -->
                     <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-                      <span style="font-size: 0.6875rem; font-weight: 600; text-transform: uppercase; color: var(--accent); border: 1px solid var(--border); padding: 1px 5px; border-radius: 4px; background: var(--bg-card);">{lang}</span>
+                      <span style="font-size: 0.6875rem; font-weight: 600; text-transform: uppercase; color: var(--accent); border: 1px solid var(--border); padding: 1px 5px; border-radius: 4px; background: var(--bg-card);">{langBadge}</span>
                       <span style="color: var(--text-quaternary); font-size: 0.75rem;">•</span>
                       <time datetime={post.data.pubDate.toISOString()} class="t-mono" style="font-size: 0.75rem; color: var(--text-secondary); font-weight: 500;">
                         {formattedDate}
                       </time>
                       <span style="color: var(--text-quaternary); font-size: 0.75rem;">•</span>
-                      <span class="t-mono" style="font-size: 0.75rem; color: var(--text-secondary);">{readingTime} min read</span>
+                      <span class="t-mono blog-item-reading-time" style="font-size: 0.75rem; color: var(--text-secondary);">{readingTime} min read</span>
                       {post.data.tags && post.data.tags.length > 0 && (
                         <>
                           <span style="color: var(--text-quaternary); font-size: 0.75rem;">•</span>
@@ -83,20 +124,20 @@ const posts = (await getCollection('blog', (post) => {
 
                     <!-- Title -->
                     <h2 style="font-size: clamp(1.25rem, 3vw, 1.625rem); font-weight: 700; margin: 0; line-height: 1.25;">
-                      <a href={postUrl} class="blog-link" style="color: var(--text-primary); text-decoration: none; display: inline-block; transition: color 0.15s ease;">
+                      <a href={postUrl} class="blog-link blog-item-title" style="color: var(--text-primary); text-decoration: none; display: inline-block; transition: color 0.15s ease;">
                         {post.data.title}
                       </a>
                     </h2>
 
                     <!-- Description -->
-                    <p style="font-size: 0.9375rem; color: var(--text-secondary); line-height: 1.6; margin: 0; max-width: 720px;">
+                    <p class="blog-item-desc" style="font-size: 0.9375rem; color: var(--text-secondary); line-height: 1.6; margin: 0; max-width: 720px;">
                       {post.data.description}
                     </p>
 
                     <!-- Read More Link -->
                     <div>
-                      <a href={postUrl} class="t-mono" style="font-size: 0.75rem; color: var(--accent); text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 4px; text-transform: uppercase;">
-                        Read Article
+                      <a href={postUrl} class="t-mono blog-item-readmore" style="font-size: 0.75rem; color: var(--accent); text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 4px; text-transform: uppercase;">
+                        <span class="blog-item-readmore-label">Read Article</span>
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
                       </a>
                     </div>
@@ -151,22 +192,47 @@ const posts = (await getCollection('blog', (post) => {
 
 <script>
   const buttons = document.querySelectorAll('.filter-btn');
-  const items = document.querySelectorAll('.blog-item');
-  
+  const items = document.querySelectorAll<HTMLElement>('.blog-item');
+
+  // For a bilingual card, show the Thai title/description/link when the
+  // "ภาษาไทย" filter is explicitly selected, English otherwise (including
+  // "All" -- this blog's primary language is English).
+  function applyCardLanguage(item: HTMLElement, filterLang: string | null) {
+    if (item.dataset.bilingual !== 'true') return;
+    const useThai = filterLang === 'th';
+    const title = useThai ? item.dataset.thTitle : item.dataset.enTitle;
+    const desc = useThai ? item.dataset.thDesc : item.dataset.enDesc;
+    const url = useThai ? item.dataset.thUrl : item.dataset.enUrl;
+    const readingTime = useThai ? item.dataset.thReadingTime : item.dataset.enReadingTime;
+
+    const titleEl = item.querySelector<HTMLAnchorElement>('.blog-item-title');
+    const descEl = item.querySelector<HTMLElement>('.blog-item-desc');
+    const readMoreEl = item.querySelector<HTMLAnchorElement>('.blog-item-readmore');
+    const readMoreLabelEl = item.querySelector<HTMLElement>('.blog-item-readmore-label');
+    const readingTimeEl = item.querySelector<HTMLElement>('.blog-item-reading-time');
+
+    if (titleEl && title) { titleEl.textContent = title; if (url) titleEl.href = url; }
+    if (descEl && desc) descEl.textContent = desc;
+    if (readMoreEl && url) readMoreEl.href = url;
+    if (readMoreLabelEl) readMoreLabelEl.textContent = useThai ? 'อ่านบทความ' : 'Read Article';
+    if (readingTimeEl && readingTime) readingTimeEl.textContent = `${readingTime} min read`;
+  }
+
   buttons.forEach(btn => {
     btn.addEventListener('click', () => {
       // Toggle active class
       buttons.forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-      
+
       const filterLang = btn.getAttribute('data-lang');
-      
+
       items.forEach(item => {
-        const itemLang = item.getAttribute('data-post-lang');
-        if (filterLang === 'all' || itemLang === filterLang) {
-          (item as HTMLElement).style.display = 'block';
+        const itemLangs = (item.getAttribute('data-post-lang') || '').split(' ');
+        if (filterLang === 'all' || itemLangs.includes(filterLang || '')) {
+          item.style.display = 'block';
+          applyCardLanguage(item, filterLang);
         } else {
-          (item as HTMLElement).style.display = 'none';
+          item.style.display = 'none';
         }
       });
     });
