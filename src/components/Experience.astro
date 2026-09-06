@@ -11,7 +11,7 @@ const clinical = [
     ],
     role: 'Travel Medicine Resident',
     org: 'Institute of Preventive Medicine, DDC, MOPH',
-    note: 'Preventive medicine, travel risk assessment, vaccinology, and health security. On academic leave from Aug 2026; residency resumes on return.',
+    note: 'On academic leave from Aug 2026; residency resumes on return.',
   },
   {
     year: '2024 — 2026',
@@ -19,9 +19,9 @@ const clinical = [
       { src: '/experience/pty.webp', alt: 'Pattayarak Health Unit' },
       { src: '/experience/moph.webp', alt: 'Ministry of Public Health' },
     ],
-    role: 'Medical Physician, Professional Level — Preventive &amp; Travel Medicine',
+    role: 'Medical Physician, Professional Level (Preventive &amp; Travel Medicine)',
     org: 'Office of Disease Prevention and Control 6 (ODPC 6), DDC, MOPH',
-    note: 'Pre-travel consultations, vaccination and certification, and travel health risk analysis; site physician for the WHO Enhanced Gonococcal Antimicrobial Surveillance Programme (EGASP).',
+    note: 'Travel consultations and vaccination; site physician for WHO EGASP surveillance.',
   },
   {
     year: '2022 — 2024',
@@ -31,7 +31,7 @@ const clinical = [
     ],
     role: 'General Practitioner',
     org: 'Bamrasnaradura Infectious Diseases Institute',
-    note: 'Led outpatient and ARI clinic services through COVID-19 and mpox responses; analysed 32,084 ARI visits in Python to locate scheduling bottlenecks.',
+    note: 'Led outpatient and ARI clinics; analysed 32,084 visits in Python to identify scheduling bottlenecks.',
   },
   {
     year: '2020 — 2022',
@@ -73,7 +73,7 @@ const education = [
     ],
     role: 'M.S. Digital &amp; AI Technologies in Health Systems',
     org: 'Chulalongkorn University (DigiHealth)',
-    note: 'Independent study: AI-assisted altitude extraction from travel itineraries — the work behind altit.app.',
+    note: 'Independent study: AI-assisted altitude extraction from travel itineraries, the work behind altit.app.',
   },
   {
     year: '2013 — 2019',
@@ -100,7 +100,7 @@ const education = [
     <div>
       <div class="rd-col-label">Clinical &amp; Research</div>
       <div class="rd-tl">
-        {clinical.map((item) => (
+        {clinical.slice(0, 3).map((item) => (
           <div class="rd-tl-item">
             <div class="rd-tl-year">{item.year}</div>
             <div class="rd-tl-row">
@@ -115,13 +115,33 @@ const education = [
             </div>
           </div>
         ))}
+        <details class="rd-mobile-details" data-mobile-detail open>
+          <summary>Earlier clinical roles</summary>
+          <div class="rd-tl">
+        {clinical.slice(3).map((item) => (
+          <div class="rd-tl-item">
+            <div class="rd-tl-year">{item.year}</div>
+            <div class="rd-tl-row">
+              <div class="rd-tl-logos">
+                {item.logos.map((l) => <img src={l.src} alt={l.alt} width="38" height="38" loading="lazy">)}
+              </div>
+              <div>
+                <div class="rd-tl-role" set:html={item.role} />
+                <div class="rd-tl-org">{item.org}</div>
+                {item.note && <div class="rd-tl-note">{item.note}</div>}
+              </div>
+            </div>
+          </div>
+        ))}
+          </div>
+        </details>
       </div>
     </div>
 
     <div>
       <div class="rd-col-label">Education</div>
       <div class="rd-tl">
-        {education.map((item) => (
+        {education.slice(0, 3).map((item) => (
           <div class="rd-tl-item">
             <div class="rd-tl-year">{item.year}</div>
             <div class="rd-tl-row">
@@ -139,6 +159,29 @@ const education = [
             </div>
           </div>
         ))}
+        <details class="rd-mobile-details" data-mobile-detail open>
+          <summary>Earlier education</summary>
+          <div class="rd-tl">
+        {education.slice(3).map((item) => (
+          <div class="rd-tl-item">
+            <div class="rd-tl-year">{item.year}</div>
+            <div class="rd-tl-row">
+              <div class="rd-tl-logos">
+                {item.logos.map((l) => <img src={l.src} alt={l.alt} width="38" height="38" loading="lazy">)}
+              </div>
+              <div>
+                <div class="rd-tl-role">
+                  <span set:html={item.role} />
+                  {item.current && <span class="rd-chip-current">CURRENT</span>}
+                </div>
+                <div class="rd-tl-org">{item.org}</div>
+                {item.note && <div class="rd-tl-note">{item.note}</div>}
+              </div>
+            </div>
+          </div>
+        ))}
+          </div>
+        </details>
       </div>
     </div>
   </div>

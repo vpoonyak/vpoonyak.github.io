@@ -159,7 +159,9 @@ const absoluteImage = image.startsWith('http') ? image : `https://vitchakorn.com
   <noscript><style>.fade-in{opacity:1;transform:none;}</style></noscript>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href={isHome
+    ? 'https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap'
+    : 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap'} rel="stylesheet">
   
   <!-- Blocking on purpose: stamps the theme on <html> before first paint so
        the page never repaints. An explicit choice (localStorage) wins;
@@ -194,12 +196,44 @@ const absoluteImage = image.startsWith('http') ? image : `https://vitchakorn.com
     function applyTheme(next) {
       htmlEl.setAttribute('data-theme', next);
       bodyEl.setAttribute('data-theme', next);
+      const frame = document.getElementById('roles3d') as HTMLIFrameElement | null;
+      try {
+        const sceneWindow = frame?.contentWindow as (Window & { setPortfolioTheme?: (mode: string) => void }) | null;
+        sceneWindow?.setPortfolioTheme?.(next);
+      } catch { /* A frame that is still loading receives the theme on load. */ }
+    }
+
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let requestedTheme = currentTheme;
+    let themeRevision = 0;
+    let activeThemeTransition: { skipTransition: () => void } | null = null;
+    function changeTheme(next: string) {
+      requestedTheme = next;
+      const revision = ++themeRevision;
+      activeThemeTransition?.skipTransition();
+      htmlEl.setAttribute('data-theme-switching', '');
+      const commit = () => { if (revision === themeRevision) applyTheme(next); };
+      const finish = () => {
+        if (revision !== themeRevision) return;
+        htmlEl.removeAttribute('data-theme-switching');
+        activeThemeTransition = null;
+      };
+      if (reducedMotion.matches || !document.startViewTransition) {
+        commit();
+        // Keep individual component transitions disabled through the paint.
+        requestAnimationFrame(() => requestAnimationFrame(finish));
+        return;
+      }
+      const transition = document.startViewTransition(commit);
+      activeThemeTransition = transition;
+      transition.ready.catch(() => { /* Rapid toggles may skip the older snapshot. */ });
+      transition.finished.then(finish, finish);
     }
 
     if (themeToggle) {
       themeToggle.addEventListener('click', function() {
-        const next = htmlEl.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-        applyTheme(next);
+        const next = requestedTheme === 'dark' ? 'light' : 'dark';
+        changeTheme(next);
         // Clicking the toggle is an explicit choice: from here on it wins
         // over the OS setting on this device.
         try { localStorage.setItem('theme', next); } catch (e) { /* storage blocked */ }
@@ -212,7 +246,7 @@ const absoluteImage = image.startsWith('http') ? image : `https://vitchakorn.com
       let saved = null;
       try { saved = localStorage.getItem('theme'); } catch (err) { /* storage blocked */ }
       if (saved === 'light' || saved === 'dark') return;
-      applyTheme(e.matches ? 'light' : 'dark');
+      changeTheme(e.matches ? 'light' : 'dark');
     });
   </script>
 </body>

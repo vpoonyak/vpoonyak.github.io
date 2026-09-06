@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Group Testing Explainer | Vitchakorn Poonyakanok</title>
+  <meta name="description" content="Case study: a from-scratch Manim explainer video on pooled/group testing -- expected value, the classic pool-size optimization, and a recursive re-splitting idea that pushes toward the information-theoretic limit, ending with Dorfman's 1943 origin story.">
+  <meta name="author" content="Vitchakorn Poonyakanok">
+  <link rel="canonical" href="https://vitchakorn.com/project/group-testing/">
+  <meta property="og:title" content="Group Testing Explainer | Vitchakorn Poonyakanok">
+  <meta property="og:description" content="Case study: a from-scratch Manim explainer video on pooled/group testing -- expected value, the classic pool-size optimization, and a recursive re-splitting idea that pushes toward the information-theoretic limit, ending with Dorfman's 1943 origin story.">
+  <meta property="og:image" content="https://vitchakorn.com/project/group-testing/group-testing-thumb.webp">
+  <meta property="og:url" content="https://vitchakorn.com/project/group-testing/">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://vitchakorn.com/project/group-testing/group-testing-thumb.webp">
+  <link rel="icon" href="../../favicon/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="../../favicon/favicon-32x32.png" sizes="32x32" type="image/png">
+  <link rel="icon" href="../../favicon/favicon-16x16.png" sizes="16x16" type="image/png">
+  <link rel="apple-touch-icon" href="../../favicon/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root, :root[data-theme="dark"] {
+      --bg: #14120d; --bg-card: #1c1913; --text-primary: #f0ead9; --text-secondary: #c9c0a8;
+      --text-tertiary: #a89f88; --accent: #6d89ff; --accent-heading: #93a6ff;
+      --accent-muted-strong: rgba(109, 137, 255, 0.22); --accent-border: rgba(109, 137, 255, 0.4);
+      --border: #3a352a; --border-light: #2a251c; --nav-bg: rgba(20, 18, 13, 0.9);
+      --selection-bg: rgba(109, 137, 255, 0.35); --cloud-bg: rgba(255, 255, 255, 0.015);
+    }
+    :root[data-theme="light"] {
+      --bg: #f5f1e8; --bg-card: #fdfbf5; --text-primary: #16140f; --text-secondary: #443e2f;
+      --text-tertiary: #59523f; --accent: #2244e0; --accent-heading: #2244e0;
+      --accent-muted-strong: rgba(34, 68, 224, 0.18); --accent-border: rgba(34, 68, 224, 0.42);
+      --border: #cfc7b4; --border-light: #e3ddcd; --nav-bg: rgba(245, 241, 232, 0.94);
+      --selection-bg: rgba(34, 68, 224, 0.22); --cloud-bg: rgba(34, 68, 224, 0.02);
+    }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 100%; overflow-x: hidden; }
+    body { font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: var(--bg); color: var(--text-primary); line-height: 1.6; transition: background-color 0.35s ease, color 0.35s ease; }
+    ::selection { background: var(--selection-bg); color: var(--text-primary); }
+    a { color: var(--accent-heading); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .container-grid { max-width: 860px; margin: 0 auto; padding: 0 48px; }
+    @media (max-width: 768px) { .container-grid { padding: 0 24px; } }
+    .page-header { position: sticky; top: 0; z-index: 10; background: var(--nav-bg); backdrop-filter: blur(20px) saturate(1.2); -webkit-backdrop-filter: blur(20px) saturate(1.2); border-bottom: 1px solid var(--border); }
+    .page-header-inner { max-width: 860px; margin: 0 auto; padding: 0 48px; height: 56px; display: flex; align-items: center; justify-content: space-between; }
+    @media (max-width: 768px) { .page-header-inner { padding: 0 24px; } }
+    .back-link {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.6875rem; font-weight: 600;
+      letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-tertiary);
+      display: inline-flex; align-items: center; padding: 12px 10px; margin: -12px -10px;
+      border-radius: 6px; transition: color 0.2s ease;
+    }
+    .back-link:hover { color: var(--accent-heading); text-decoration: none; }
+    .back-link:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+    .theme-toggle { width: 36px; height: 36px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg-card); color: var(--text-secondary); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease; }
+    .theme-toggle:hover { border-color: var(--accent); color: var(--accent-heading); background: var(--accent-muted-strong); }
+    .theme-toggle svg { width: 16px; height: 16px; }
+    [data-theme="dark"] .icon-sun { display: block; } [data-theme="dark"] .icon-moon { display: none; }
+    [data-theme="light"] .icon-sun { display: none; } [data-theme="light"] .icon-moon { display: block; }
+    .case-hero { padding-top: 48px; padding-bottom: 8px; }
+    .case-kicker { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent-heading); }
+    .case-title { font-size: clamp(1.75rem, 4vw, 2.5rem); font-weight: 800; letter-spacing: -0.02em; color: var(--text-primary); margin-top: 0.5rem; }
+    .case-sub { color: var(--text-secondary); margin-top: 0.875rem; max-width: 42rem; font-size: 0.9375rem; line-height: 1.75; }
+    .case-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 1.25rem; }
+    .case-tag { font-family: 'JetBrains Mono', monospace; font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.02em; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--border); color: var(--text-secondary); background: var(--bg-card); }
+    .case-cta { margin-top: 1.75rem; display: flex; gap: 12px; flex-wrap: wrap; }
+    .case-cta-btn { display: inline-flex; align-items: center; gap: 6px; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; font-weight: 700; padding: 10px 18px; border-radius: 8px; border: 1px solid var(--accent-border); color: var(--accent-heading); background: var(--accent-muted-strong); transition: background 0.2s ease, border-color 0.2s ease; }
+    .case-cta-btn:hover { background: var(--accent-border); text-decoration: none; }
+    .case-media { margin-top: 2rem; border: 1px solid var(--border-light); border-radius: 14px; overflow: hidden; background: var(--bg-card); aspect-ratio: 16 / 9; }
+    .case-media img { width: 100%; height: auto; display: block; }
+    .case-media iframe { width: 100%; height: 100%; display: block; border: 0; }
+    .case-section { padding: 2.25rem 0; border-top: 1px solid var(--border-light); }
+    .case-section-title { font-family: 'JetBrains Mono', monospace; font-size: 0.8125rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent-heading); margin-bottom: 1rem; }
+    .case-section p { color: var(--text-secondary); font-size: 0.9375rem; line-height: 1.8; max-width: 42rem; }
+    .case-section p + p { margin-top: 1rem; }
+    .case-section ol, .case-section ul { color: var(--text-secondary); font-size: 0.9375rem; line-height: 1.8; max-width: 42rem; margin-top: 0.75rem; padding-left: 1.25rem; }
+    .case-section li + li { margin-top: 0.5rem; }
+    .case-note { margin-top: 1.25rem; padding: 0.9rem 1.1rem; border-radius: 10px; border: 1px solid var(--border-light); background: var(--cloud-bg); font-size: 0.8125rem; color: var(--text-tertiary); max-width: 42rem; }
+    .case-stack { display: flex; flex-wrap: wrap; gap: 10px; }
+    .case-stack-item { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; font-weight: 600; padding: 7px 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-card); color: var(--text-primary); }
+    .archive-footer { padding: 40px 0 72px; }
+    .archive-footer a { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--text-tertiary); }
+    .archive-footer a:hover { color: var(--accent-heading); }
+  </style>
+  <link rel="stylesheet" href="/site-chrome.css">
+  <script src="/site-chrome.js" defer></script>
+  <script>
+    /* Blocking: stamp the theme on <html> before first paint. Tokens are
+       keyed on :root only, so <body> inherits and never repaints.
+       An explicit choice wins; otherwise follow the OS. */
+    (function () {
+      var t;
+      try { t = localStorage.getItem('theme'); } catch (e) {}
+      if (t !== 'light' && t !== 'dark') {
+        t = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+      }
+      document.documentElement.setAttribute('data-theme', t);
+    })();
+  </script>
+</head>
+<body>
+  <nav class="rd-nav" id="topNav">
+    <a href="/#top" class="rd-nav-brand" aria-label="Back to homepage">
+      <span class="rd-nav-dot"></span>
+      <span class="rd-nav-name">VITCHAKORN</span>
+      <span class="rd-nav-nick">&ldquo;Blue&rdquo;</span>
+    </a>
+    <a href="/#projects" class="rd-nav-item is-back">&larr; Portfolio</a>
+    <button class="rd-nav-btn rd-nav-theme" id="themeToggle" aria-label="Toggle theme">
+      <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+      <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </button>
+    <a href="/project/" class="rd-nav-cta is-secondary">Archive &#8599;</a>
+    <a href="/blog/" class="rd-nav-cta">Blog &#8599;</a>
+  </nav>
+  <div class="rd-nav-spacer"></div>
+
+  <div class="container-grid case-hero">
+    <div class="case-kicker">Educational Video &middot; Manim</div>
+    <h1 class="case-title">Group Testing: A 3Blue1Brown-Style Explainer</h1>
+    <p class="case-sub">A from-scratch animated explainer on pooled/group testing: expected value and linearity of expectation, the classic pool-size optimization (k* = 1/&radic;p), a concrete numeric payoff, a recursive re-splitting idea that pushes the expected test count toward the sparse-regime information limit, and Robert Dorfman's 1943 origin story.</p>
+    <div class="case-tags">
+      <span class="case-tag">Probability</span>
+      <span class="case-tag">Expected Value</span>
+      <span class="case-tag">Information Theory</span>
+      <span class="case-tag">Manim &middot; Python</span>
+    </div>
+    <div class="case-cta">
+      <a href="https://youtu.be/_lrJQWxHAM0" target="_blank" rel="noopener noreferrer" class="case-cta-btn">Watch on YouTube &nearr;</a>
+    </div>
+    <div class="case-media">
+      <iframe src="https://www.youtube-nocookie.com/embed/_lrJQWxHAM0" title="Group Testing: A 3Blue1Brown-Style Explainer" loading="lazy" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </div>
+  </div>
+
+  <div class="container-grid">
+    <section class="case-section">
+      <div class="case-section-title">About This Project</div>
+      <p>I built this because I couldn't find an accessible visual explainer of the idea that actually motivated it: a positive pool doesn't have to be tested member-by-member once it's flagged &mdash; it can be <em>recursively re-split</em> into smaller sub-pools instead, which pushes the expected number of tests from the classic single-split optimum down toward the information-theoretic limit for sparse infection rates. That specific insight didn't seem to have a clear online treatment, so I made the teaching material myself, in the animated-math tradition popularized by 3Blue1Brown.</p>
+      <p>The video runs nine chapters: expected value and linearity of expectation, the group-testing setup (with a native 3D pooled-sample demonstration), one positive case versus many, deriving the exact expected-test formula, the Bernoulli probability bound, optimizing the pool size, a concrete numeric payoff at N=100,000, the recursive multi-stage splitting idea and its entropy-bound comparison, and finally Robert Dorfman's 1943 paper &mdash; the two-stage method he introduced for syphilis screening of WWII recruits, with a recreation of his original Table I and Figure 1.</p>
+      <div class="case-note">Every claim in the video is checked against a pure-Python test suite (exact enumeration for small pools, the one-positive worked example, the plotted algorithm against the entropy bound) before rendering, and against the source paper for Chapter 9's historical figures.</div>
+    </section>
+
+    <section class="case-section">
+      <div class="case-section-title">Tech Stack</div>
+      <div class="case-stack">
+        <span class="case-stack-item">Python</span>
+        <span class="case-stack-item">Manim (Community Edition)</span>
+        <span class="case-stack-item">LaTeX</span>
+        <span class="case-stack-item">ffmpeg</span>
+      </div>
+    </section>
+  </div>
+
+  <footer class="archive-footer">
+    <div class="container-grid">
+      <a href="/project/">&larr; Back to project archive</a>
+    </div>
+  </footer>
+
+  <script>
+    const htmlEl = document.documentElement;
+    const bodyEl = document.body;
+    const themeToggle = document.getElementById('themeToggle');
+    const savedTheme = htmlEl.getAttribute('data-theme') || 'dark';
+    bodyEl.setAttribute('data-theme', savedTheme);
+    themeToggle.addEventListener('click', function () {
+      const current = htmlEl.getAttribute('data-theme');
+      const next = current === 'dark' ? 'light' : 'dark';
+      htmlEl.setAttribute('data-theme', next);
+      bodyEl.setAttribute('data-theme', next);
+      try { localStorage.setItem('theme', next); } catch (e) {}
+    });
+
+    // Follow the OS if the visitor has never used the toggle, so the page
+    // tracks a system light/dark switch while they're on it.
+    window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', function (e) {
+      var saved = null;
+      try { saved = localStorage.getItem('theme'); } catch (err) {}
+      if (saved === 'light' || saved === 'dark') return;
+      var next = e.matches ? 'light' : 'dark';
+      htmlEl.setAttribute('data-theme', next);
+      bodyEl.setAttribute('data-theme', next);
+    });
+  </script>
+</body>
+</html>

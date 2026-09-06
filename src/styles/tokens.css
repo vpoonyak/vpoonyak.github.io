@@ -101,3 +101,17 @@
 }
 
 :root { --nav-h: 57px; }
+
+/* A single page crossfade owns theme changes. Component hover/focus effects
+   resume afterwards, without leaving slower surfaces on the old palette. */
+:root[data-theme-switching],
+:root[data-theme-switching] *,
+:root[data-theme-switching] *::before,
+:root[data-theme-switching] *::after { transition: none !important; }
+::view-transition-old(root), ::view-transition-new(root) {
+  animation-duration: 220ms;
+  animation-timing-function: ease-in-out;
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root), ::view-transition-new(root) { animation: none; }
+}

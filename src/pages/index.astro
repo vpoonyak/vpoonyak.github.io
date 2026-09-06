@@ -35,6 +35,23 @@ import Footer from '../components/Footer.astro';
 </Layout>
 
 <script>
+  // Supporting details start closed on phones, with native keyboard and
+  // screen-reader disclosure controls. Without JavaScript all content stays open.
+  const mobileDetails = Array.from(document.querySelectorAll<HTMLDetailsElement>('[data-mobile-detail]'));
+  const mobileView = window.matchMedia('(max-width: 760px)');
+  const fitDetails = () => mobileDetails.forEach(detail => { detail.open = !mobileView.matches; });
+  mobileView.addEventListener('change', fitDetails);
+  fitDetails();
+  // Direct links into a disclosure must still reveal their destination.
+  function revealDestination() {
+    let target = document.getElementById(decodeURIComponent(location.hash.slice(1)));
+    while (target) {
+      if (target instanceof HTMLDetailsElement) target.open = true;
+      target = target.parentElement;
+    }
+  }
+  window.addEventListener('hashchange', revealDestination);
+  revealDestination();
   // ── Hero parallax ──
   // Elements tagged data-sp drift against the scroll by that factor. Purely
   // decorative, so reduced-motion visitors get the static layout.

@@ -1,25 +1,44 @@
 ---
 // Standing ask, pinned bottom-right. Dismissible, and the dismissal sticks
 // for the session so it doesn't nag a returning reader mid-page.
+//
+// Below 700px the full card collapses to a one-line chip (.cta-compact;
+// see redesign.css) -- small enough to stay on screen everywhere, landing
+// included, without sitting on top of whatever content is behind it. The
+// full card's own text still carries the same information for anyone who
+// taps through; the aria-label on the link is what a screen reader reads
+// regardless of which spans are visible at a given width.
 ---
 
 <div class="rd-float-cta" id="floatCta">
-  <button type="button" class="rd-float-cta-close" id="floatCtaClose" aria-label="Dismiss">✕</button>
-  <a href="/host-org-one-pager.pdf" target="_blank" rel="noopener noreferrer">
-    <span class="cta-kicker">OPEN TO OFFERS · USA, ANY STATE</span>
-    <span class="cta-title">Summer 2027 Internship — Health Care Analytics</span>
-    <span class="cta-meta">May 11 – Aug 20 · 300+ hrs → Host quick-reference (PDF) ↗</span>
+  <button type="button" class="rd-float-cta-close" id="floatCtaClose" aria-label="Dismiss internship invitation">✕</button>
+  <a
+    href="/host-org-one-pager.pdf"
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="Summer 2027 health care analytics internship, United States -- view internship brief, PDF"
+  >
+    <span class="cta-kicker">Health care analytics · USA</span>
+    <span class="cta-title">Summer 2027 internship</span>
+    <span class="cta-meta">May 11 – Aug 20 · 300+ hours</span>
+    <span class="cta-action">View internship brief <span aria-hidden="true">↗</span><small>PDF</small></span>
+    <span class="cta-compact" aria-hidden="true">Summer 2027 internship <span aria-hidden="true">↗</span></span>
   </a>
 </div>
 
 <script>
   const cta = document.getElementById('floatCta');
   const close = document.getElementById('floatCtaClose');
-  if (cta && sessionStorage.getItem('vp-cta-dismissed') === '1') {
-    cta.classList.add('is-dismissed');
-  }
+  try {
+    if (sessionStorage.getItem('vp-cta-dismissed') === '1') cta?.classList.add('is-dismissed');
+  } catch { /* The invitation still works when storage is unavailable. */ }
   close?.addEventListener('click', () => {
     cta?.classList.add('is-dismissed');
-    sessionStorage.setItem('vp-cta-dismissed', '1');
+    try { sessionStorage.setItem('vp-cta-dismissed', '1'); } catch { /* Dismiss for this page. */ }
   });
+  // Keep the card clear of the contact form's controls.
+  const contact = document.getElementById('contact');
+  if (contact) new IntersectionObserver(([entry]) => {
+    cta?.classList.toggle('is-over-contact', entry.isIntersecting);
+  }).observe(contact);
 </script>

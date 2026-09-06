@@ -6,21 +6,15 @@
 // colour. Shipped raw it was 512 KB, and gzip only got it to 355 KB -- it was
 // by far the heaviest thing the stage downloaded, and the scene blocked on it.
 //
-// Two changes, both lossless in practice:
-//
-//  1. Half resolution. The grid is sampled onto SphereGeometry(GR, 256, 128),
-//     which has 257 x 129 vertices -- about 1.4 degrees per vertex. A 512-wide
-//     grid is 0.7 degrees, i.e. exactly 2x more than the mesh can carry, so
-//     256 x 128 loses nothing the geometry could have shown.
-//
-//  2. PNG instead of a raw byte dump. PNG's per-row filters exploit the fact
-//     that this IS an image; gzip on the raw bytes cannot.
+// Preserve the original 512x256 surface colour for the detailed globe mesh.
+// A light 3x3 Gaussian filter on relief reduces isolated spikes while keeping
+// finer land features. PNG filtering compresses both planes in one request.
 //
 // The two data planes are stacked into one image rather than shipped as two
 // files (one request, and no second round trip):
 //
-//     rows   0..127  -> RGB = surface colour
-//     rows 128..255  -> R=G=B = relief
+//     rows   0..255  -> RGB = surface colour
+//     rows 256..511  -> R=G=B = relief
 //
 // RGB, never RGBA: canvas stores alpha-premultiplied, so a data channel put in
 // the alpha slot comes back out of getImageData quantised.
@@ -29,11 +23,27 @@
 
 import fs from 'node:fs';
 import zlib from 'node:zlib';
+import { MASK_W, MASK_H, MASK_B64 } from '../public/roles3d/land-mask.js';
 
 const SRC = 'design/roles3d/earth-grid.bin';
 const OUT = 'public/roles3d/assets/earth-grid.png';
 const W = 512, H = 256;          // source grid
-const GW = W / 2, GH = H / 2;    // shipped grid
+const GW = W, GH = H;           // retain source resolution
+const mask = Buffer.from(MASK_B64, 'base64');
+// Keep a coast margin wider than the bilinear/filter footprints. Ocean-only
+// texels never reach the visible surface, so blanking them is lossless there.
+function nearLand(x, y) {
+  const sourceLon = (x + 0.5) / W * 360 - 180;
+  const sourceLat = 90 - (y + 0.5) / H * 180;
+  const lon = 90 - sourceLon, lat = -sourceLat;
+  for (let dy = -3; dy <= 3; dy++) for (let dx = -3; dx <= 3; dx++) {
+    const mx = ((Math.floor((lon + 180) / 360 * MASK_W) + dx) % MASK_W + MASK_W) % MASK_W;
+    const my = Math.max(0, Math.min(MASK_H - 1, Math.floor((90 - lat) / 180 * MASK_H) + dy));
+    const i = my * MASK_W + mx;
+    if ((mask[i >> 3] >> (7 - (i & 7))) & 1) return true;
+  }
+  return false;
+}
 
 const crcTable = (() => {
   const t = new Int32Array(256);
@@ -103,21 +113,23 @@ if (src.length !== W * H * 4) throw new Error(`${SRC}: expected ${W * H * 4} byt
 const out = Buffer.alloc(GW * GH * 2 * 3);
 for (let y = 0; y < GH; y++) {
   for (let x = 0; x < GW; x++) {
-    // Box-filter the 2x2 source block rather than dropping three of every four
-    // samples: the relief channel is noisy at full resolution.
-    const s = [0, 0, 0, 0];
-    for (let dy = 0; dy < 2; dy++) {
-      for (let dx = 0; dx < 2; dx++) {
-        const b = ((y * 2 + dy) * W + (x * 2 + dx)) * 4;
-        for (let c = 0; c < 4; c++) s[c] += src[b + c];
+    if (!nearLand(x, y)) continue;
+    let elevation = 0;
+    for (let dy = -1; dy <= 1; dy++) {
+      for (let dx = -1; dx <= 1; dx++) {
+        const sx = (x + dx + W) % W;
+        const sy = Math.max(0, Math.min(H - 1, y + dy));
+        const weight = (dx === 0 ? 2 : 1) * (dy === 0 ? 2 : 1);
+        elevation += src[(sy * W + sx) * 4] * weight;
       }
     }
     const colour = (y * GW + x) * 3;
-    out[colour] = s[1] / 4 | 0;
-    out[colour + 1] = s[2] / 4 | 0;
-    out[colour + 2] = s[3] / 4 | 0;
+    const source = (y * W + x) * 4;
+    out[colour] = src[source + 1];
+    out[colour + 1] = src[source + 2];
+    out[colour + 2] = src[source + 3];
     const relief = ((GH + y) * GW + x) * 3;
-    out[relief] = out[relief + 1] = out[relief + 2] = s[0] / 4 | 0;
+    out[relief] = out[relief + 1] = out[relief + 2] = Math.round(elevation / 16);
   }
 }
 

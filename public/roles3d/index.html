@@ -4,16 +4,16 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title>Four Roles — Scroll 3D</title>
+<title>Four Roles | Vitchakorn Poonyakanok</title>
 <!-- The label overlay is the only thing that wants these faces, and the
      canvas behind it is what a visitor is actually waiting on -- but a
      stylesheet <link> blocks script execution, so loading it normally held
      the whole scene behind two round trips to Google. media="print" makes it
      non-blocking; the onload promotes it the moment it lands. Weights are
-     only those actually used: 900 for the headings, 400 for everything else.
+     limited to the small monospace labels; headings use the system sans serif.
      No italic. -->
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;900&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <script type="importmap">
 {
   "imports": {
@@ -52,7 +52,7 @@
 <link rel="preload" as="image" href="/roles3d/assets/earth-grid.png">
 <style>
   * { box-sizing: border-box; margin: 0; }
-  body { background: #060609; color: #f5f5f7; font-family: 'Inter', 'Helvetica Neue', sans-serif; }
+  body { background: #14120d; color: #f5f5f7; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; }
   a { color: #5ea0ff; text-decoration: none; }
   a:hover { color: #f5f5f7; }
   body.light { background: #f5f1e8; color: #16140f; }
@@ -68,11 +68,11 @@
   .sec[data-side="right"] .copy { text-align: right; }
   .hero-center .pin { justify-content: center; text-align: center; }
   .hero-center .copy { max-width: 780px; }
-  .copy { pointer-events: auto; max-width: 560px; padding: 44px clamp(28px, 6vw, 100px); opacity: 0; transform: translateY(24px); will-change: opacity, transform; background: radial-gradient(ellipse 105% 100% at center, rgba(6, 6, 9, 0.72) 30%, rgba(6, 6, 9, 0) 78%); }
+  .copy { pointer-events: auto; max-width: 560px; padding: 44px clamp(28px, 6vw, 100px); opacity: 0; transform: translateY(24px); will-change: opacity, transform; background: radial-gradient(ellipse 105% 100% at center, rgba(20, 18, 13, 0.72) 30%, rgba(20, 18, 13, 0) 78%); }
   body.light .copy { background: radial-gradient(ellipse 105% 100% at center, rgba(245, 241, 232, 0.8) 30%, rgba(245, 241, 232, 0) 78%); }
   .kicker { font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: #5ea0ff; margin-bottom: 18px; }
-  h1 { font-family: 'Inter', sans-serif; font-weight: 900; font-size: clamp(44px, 6.5vw, 88px); line-height: 0.98; letter-spacing: -0.02em; text-transform: uppercase; }
-  h2 { font-family: 'Inter', sans-serif; font-weight: 900; font-size: clamp(34px, 4.5vw, 60px); line-height: 1; letter-spacing: -0.02em; text-transform: uppercase; margin-bottom: 16px; }
+  h1 { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-weight: 900; font-size: clamp(44px, 6.5vw, 88px); line-height: 0.98; letter-spacing: -0.02em; text-transform: uppercase; }
+  h2 { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-weight: 900; font-size: clamp(34px, 4.5vw, 60px); line-height: 1; letter-spacing: -0.02em; text-transform: uppercase; margin-bottom: 16px; }
   .sub { font-size: clamp(16px, 1.6vw, 20px); line-height: 1.55; color: #b9b9c2; font-weight: 400; }
   .num { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #5c5c66; margin-top: 22px; letter-spacing: 0.14em; }
   .scrollhint { position: fixed; left: 50%; bottom: 26px; transform: translateX(-50%); z-index: 2; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.2em; color: #5c5c66; text-transform: uppercase; transition: opacity 0.4s; }
@@ -107,7 +107,7 @@
   }
   .gcell { max-width: none; padding-left: 44%; }
   .gk { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: #5ea0ff; }
-  .gt { font-family: 'Inter', sans-serif; font-weight: 900; font-size: clamp(17px, 2vw, 28px); line-height: 1.03; letter-spacing: -0.02em; text-transform: uppercase; margin: 7px 0; }
+  .gt { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-weight: 600; font-size: clamp(17px, 2vw, 26px); line-height: 1.15; letter-spacing: -0.02em; margin: 8px 0; }
   .gs { font-size: clamp(11.5px, 1vw, 14px); line-height: 1.45; color: #b9b9c2; }
   body.light .gk { color: #2244e0; }
   body.light .gs { color: #59523f; }
@@ -153,7 +153,7 @@
   <div class="pin"><div class="copy">
     <div class="kicker">Vitchakorn Poonyakanok</div>
     <h1>Four roles.<br>One mission.</h1>
-    <p class="sub" style="margin-top:22px">Medicine, populations, data, and machines — turned into better health decisions.</p>
+    <p class="sub" style="margin-top:22px">Connecting clinical practice, public health, data analysis, and AI.</p>
   </div></div>
 </section>
 
@@ -161,7 +161,7 @@
   <div class="pin"><div class="copy">
     <div class="kicker">Role 01</div>
     <h2>Travel<br>Medicine</h2>
-    <p class="sub">Clinical care for people crossing borders — live routes between major cities, pre-travel risk, post-travel illness.</p>
+    <p class="sub">Clinical care for people crossing borders, from pre-travel risk to post-travel illness.</p>
     <div class="num">01 / 04</div>
   </div></div>
 </section>
@@ -170,7 +170,7 @@
   <div class="pin"><div class="copy">
     <div class="kicker">Role 02</div>
     <h2>Public<br>Health</h2>
-    <p class="sub">Contact tracing from an index case outward — surveillance, outbreak response, and prevention at national scale.</p>
+    <p class="sub">Surveillance, outbreak response, and prevention across Thailand.</p>
     <div class="num">02 / 04</div>
   </div></div>
 </section>
@@ -179,7 +179,7 @@
   <div class="pin"><div class="copy">
     <div class="kicker">Role 03</div>
     <h2>Data<br>Analyst</h2>
-    <p class="sub">From observed history to forecast — models that project what comes next, with honest uncertainty.</p>
+    <p class="sub">Analyzing observed data and forecasting what comes next, with honest uncertainty.</p>
     <div class="num">03 / 04</div>
   </div></div>
 </section>
@@ -188,7 +188,7 @@
   <div class="pin"><div class="copy">
     <div class="kicker">Role 04</div>
     <h2>AI<br>Engineering</h2>
-    <p class="sub">Building intelligent systems for health — LLMs, prediction models, and tools that scale clinical judgment.</p>
+    <p class="sub">Building AI assistants for health with context retrieval and output validation.</p>
     <div class="num">04 / 04</div>
   </div></div>
 </section>
@@ -210,12 +210,12 @@
   <div class="gcell">
     <div class="gk">Role 01</div>
     <div class="gt">Travel<br>Medicine</div>
-    <div class="gs">Care for people crossing borders — pre-travel risk, post-travel illness.</div>
+    <div class="gs">Care for people crossing borders, before and after travel.</div>
   </div>
   <div class="gcell">
     <div class="gk">Role 02</div>
     <div class="gt">Public<br>Health</div>
-    <div class="gs">Surveillance and outbreak response, from index case to national scale.</div>
+    <div class="gs">Surveillance and outbreak response across Thailand.</div>
   </div>
   <div class="gcell">
     <div class="gk">Role 03</div>
@@ -225,36 +225,37 @@
   <div class="gcell">
     <div class="gk">Role 04</div>
     <div class="gt">AI<br>Engineering</div>
-    <div class="gs">LLMs and prediction models that scale clinical judgment.</div>
+    <div class="gs">AI assistants with retrieval, validation, and clear outputs.</div>
   </div>
 </div>
-<div class="gmid">Where they meet, I work</div>
+<div class="gmid">Areas of practice</div>
 
 <div class="scrollhint" id="hint">Scroll ↓</div>
 
 <script type="module">
 import * as THREE from 'three';
 import { MASK_W, MASK_H, MASK_B64 } from './land-mask.js';
-import { THAI_B64 } from './thailand-dots.js';
+import { THAILAND_OUTLINE } from './thailand-outline.js';
 const maskBin = atob(MASK_B64);
 function isLand(lonDeg, latDeg) {
-  const x = Math.min(MASK_W - 1, Math.floor((lonDeg + 180) / 360 * MASK_W));
+  const wrappedLon = ((lonDeg + 180) % 360 + 360) % 360;
+  const x = Math.floor(wrappedLon / 360 * MASK_W);
   const y = Math.min(MASK_H - 1, Math.floor((90 - latDeg) / 180 * MASK_H));
   const i = y * MASK_W + x;
   return (maskBin.charCodeAt(i >> 3) >> (7 - (i & 7))) & 1;
 }
 
 const stage = document.getElementById('stage');
-const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
-renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
 renderer.setSize(innerWidth, innerHeight);
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 1.1;
 stage.appendChild(renderer.domElement);
 
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x060609);
-scene.fog = new THREE.Fog(0x060609, 9, 17);
+scene.background = new THREE.Color(0x14120d);
+scene.fog = new THREE.Fog(0x14120d, 9, 17);
 const camera = new THREE.PerspectiveCamera(40, innerWidth / innerHeight, 0.1, 60);
 // A sphere off the camera's axis projects as an ellipse stretched along the
 // line from the centre of frame, and the stretch grows with the field of
@@ -297,7 +298,7 @@ const world = new THREE.Group(); world.name = 'four-roles'; scene.add(world);
 const R = 2.3;
 const ll = (lat, lon, r) => { const la = lat * Math.PI / 180, lo = lon * Math.PI / 180; return new THREE.Vector3(Math.cos(la) * Math.sin(lo) * r, Math.sin(la) * r, Math.cos(la) * Math.cos(lo) * r); };
 
-// ---- 1. Travel Medicine: globe with major cities + live flight tracking
+// ---- 1. Travel Medicine: globe with illustrative flight routes
 const travel = new THREE.Group(); travel.name = 'travel-medicine'; travel.position.set(R, 0, 0);
 const GR = 0.58;
 // real Earth: sampled from the user's living_earth GLB into a compact grid
@@ -313,7 +314,7 @@ const GR = 0.58;
 // drew anything at all.
 let shadeGlobe = null;
 {
-  const GW = 256, GH = 128;
+  const GW = 512, GH = 256;
   const sample = (grid, lat, lon) => {
     const fx = ((lon + 180) / 360) * GW - 0.5;
     const fy = (1 - (lat + 90) / 180) * GH - 0.5;
@@ -334,30 +335,40 @@ let shadeGlobe = null;
     for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) s += isLand(lon + dx * 0.75, lat + dy * 0.75);
     return s / 9;
   };
-  const geo = new THREE.SphereGeometry(GR, 256, 128);
+  // Fit geometry cost to the small on-page model; retain full source colour.
+  const segments = innerWidth < 900 ? 256 : 384;
+  const geo = new THREE.SphereGeometry(GR, segments, segments / 2);
   const pos = geo.attributes.position;
+  const spherePositions = pos.array.slice();
   const col = new Float32Array(pos.count * 3);
   geo.setAttribute('color', new THREE.BufferAttribute(col, 3));
   const v = new THREE.Vector3(), c = new THREE.Color();
   const seaC = new THREE.Color(0x16344f);
 
-  // Safe to run twice because the no-grid pass writes each vertex back at the
-  // radius it already had: the second pass still reads an undisplaced sphere.
+  // Reset every radius so loading or refreshing the terrain cannot accumulate
+  // displacement. Ocean vertices never inherit the source's seafloor relief.
   shadeGlobe = (grid) => {
+    if (!grid) {
+      for (let i = 0; i < pos.count; i++) {
+        col[i * 3] = seaC.r; col[i * 3 + 1] = seaC.g; col[i * 3 + 2] = seaC.b;
+      }
+      geo.attributes.color.needsUpdate = true;
+      return;
+    }
     for (let i = 0; i < pos.count; i++) {
-      v.fromBufferAttribute(pos, i);
+      v.fromArray(spherePositions, i * 3);
       const r = v.length();
       const lat = Math.asin(v.y / r) * 180 / Math.PI;
       const lon = Math.atan2(v.x, v.z) * 180 / Math.PI;
-      const k = smoothstep(0.3, 0.7, landFrac(lat, lon)); // ocean gate: 0 at sea
-      if (grid) {
+      const k = isLand(lon, lat) ? smoothstep(0.3, 0.7, landFrac(lat, lon)) : 0;
+      v.setLength(GR);
+      c.copy(seaC);
+      if (grid && k > 0) {
         const [rN, r8, g8, b8] = sample(grid, -lat, 90 - lon); // model frame: lat flipped, lon mirrored +90° (verified against the land mask)
         const elev = Math.max(0, rN / 255 - 0.42) / 0.58;
         v.setLength(GR + k * (0.006 + 0.055 * elev)); // land only; ocean stays spherical
         c.setRGB(Math.min(1, r8 / 255 * 1.2), Math.min(1, g8 / 255 * 1.2), Math.min(1, b8 / 255 * 1.2));
-        c.lerp(seaC, (1 - k) * 0.88); // hide mid-ocean ridge markings — calm uniform deep blue
-      } else {
-        c.copy(seaC);
+        c.lerp(seaC, 1 - k); // blend only at land edges; no bathymetry color at sea
       }
       pos.setXYZ(i, v.x, v.y, v.z);
       col[i * 3] = c.r; col[i * 3 + 1] = c.g; col[i * 3 + 2] = c.b;
@@ -368,13 +379,13 @@ let shadeGlobe = null;
   };
   shadeGlobe(null);
 
-  const globe = new THREE.Mesh(geo, new THREE.MeshStandardMaterial({ name: 'earth-relief', vertexColors: true, roughness: 0.55, metalness: 0.1 }));
+  const globe = new THREE.Mesh(geo, new THREE.MeshStandardMaterial({ name: 'earth-relief', vertexColors: true, roughness: 0.55, metalness: 0 }));
   globe.name = 'globe'; travel.add(globe);
 }
 
 // Pulls the two stacked planes back out of earth-grid.png into the RGBA-ish
 // byte layout sample() reads: [relief, r, g, b] per texel. Decoding through a
-// canvas is a few milliseconds on a 256x256 image, and it happens off the
+// canvas decodes the 512x512 packed image, and it happens off the
 // critical path either way.
 async function loadEarthGrid() {
   // Loaded as an <img>, not fetch(): the <link rel="preload" as="image"> in
@@ -408,11 +419,16 @@ const CITIES = {
   gru: [-23.6, -46.6], ist: [41.0, 29.0], bkk: [13.75, 100.5], pit: [40.44, -80.0]
 };
 for (const [k, c] of Object.entries(CITIES)) {
-  const m = new THREE.Mesh(new THREE.SphereGeometry(k === 'bkk' || k === 'pit' ? 0.022 : 0.014, 12, 8), glow);
+  const m = new THREE.Mesh(new THREE.SphereGeometry(k === 'bkk' || k === 'pit' ? 0.03 : 0.009, 12, 8), k === 'bkk' || k === 'pit' ? glow : blue);
   m.name = 'city-' + k; m.position.copy(ll(c[0], c[1], GR + 0.045)); travel.add(m);
+  if (k === 'bkk' || k === 'pit') {
+    const halo = new THREE.Mesh(new THREE.TorusGeometry(0.047, 0.005, 8, 40), blue);
+    halo.name = 'hub-' + k; halo.position.copy(m.position);
+    halo.lookAt(m.position.clone().multiplyScalar(2)); travel.add(halo);
+  }
 }
 // flight routes: main PIT→BKK + ambient pairs, each with a tracked plane
-const PAIRS = [['pit','bkk'], ['nyc','lon'], ['lon','dxb'], ['dxb','sin'], ['sin','tyo'], ['tyo','la'], ['par','nbo'], ['del','bkk'], ['bkk','syd'], ['gru','par'], ['ist','fra'], ['sel','sin']];
+const PAIRS = [['pit','bkk'], ['nyc','lon'], ['dxb','sin'], ['bkk','syd']];
 // airliner in the reference style: lathed tapering fuselage, thin swept
 // tapered wings, underslung pod engines, swept stabilizers + fin. Nose +Z.
 function makePlane(s) {
@@ -467,13 +483,13 @@ const flights = PAIRS.map(([a, b], idx) => {
   }
   const line = new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), idx === 0 ? new THREE.LineBasicMaterial({ color: 0x2f81f7, transparent: true, opacity: 0.8 }) : lineMat);
   line.name = 'route-' + a + '-' + b; travel.add(line);
-  const plane = makePlane(idx === 0 ? 0.055 : 0.034);
+  const plane = makePlane(idx === 0 ? 0.085 : 0.03);
   plane.name = 'plane-' + a + '-' + b; travel.add(plane);
-  return { pts, plane, period: idx === 0 ? 7 : 4.5 + (idx % 5) * 1.3, phase: idx / PAIRS.length };
+  return { pts, plane, period: idx === 0 ? 7 : 9 + idx, phase: idx / PAIRS.length };
 });
 world.add(travel);
 
-// ---- 2. Public Health: Thailand dot map with contact tracing (same data as the hero art)
+// ---- 2. Public Health: an extruded Thailand map and regional surveillance links
 const health = new THREE.Group(); health.name = 'public-health'; health.position.set(0, 0, R);
 function linkMesh(a, b, name) {
   const d = new THREE.Vector3().subVectors(b, a);
@@ -482,58 +498,43 @@ function linkMesh(a, b, name) {
   m.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), d.clone().normalize());
   return m;
 }
-const thaiDots = [];
+// Use the existing geographic outline for a continuous extruded country.
+// Regional markers illustrate surveillance coverage, not live case counts.
+const mapPoint = (lon, lat, z = 0) => new THREE.Vector3((lon - 101.48) * 0.097, (lat - 13.055) * 0.1, z);
 {
-  const bin = atob(THAI_B64), S = 0.8;
-  const pos = [], col = [];
-  for (let i = 0; i + 2 < bin.length; i += 3) {
-    const x = (bin.charCodeAt(i) / 127.5 - 1) * 0.92 * S;
-    const y = -(bin.charCodeAt(i + 1) / 127.5 - 1) * 0.92 * S; // canvas y-down → 3D y-up
-    const tier = bin.charCodeAt(i + 2);
-    thaiDots.push({ x, y });
-    for (let r = 0; r < 3; r++) { // densify like padShape
-      pos.push(x + (Math.random() - 0.5) * 0.02, y + (Math.random() - 0.5) * 0.02, (Math.random() - 0.5) * 0.008);
-      const g = (0.3 + tier * 0.22) * (0.75 + Math.random() * 0.5);
-      col.push(0.184 * g, 0.506 * g, 0.968 * g);
-    }
-  }
-  const g = new THREE.BufferGeometry();
-  g.setAttribute('position', new THREE.BufferAttribute(new Float32Array(pos), 3));
-  g.setAttribute('color', new THREE.BufferAttribute(new Float32Array(col), 3));
-  const thaiMat = new THREE.PointsMaterial({ size: 0.016, vertexColors: true, transparent: true, opacity: 0.95, blending: THREE.AdditiveBlending, depthWrite: false, sizeAttenuation: true });
-  pointMats.push(thaiMat);
-  const map = new THREE.Points(g, thaiMat);
-  map.name = 'thailand-map'; health.add(map);
+  const points = THAILAND_OUTLINE.map(([lon, lat]) => mapPoint(lon, lat));
+  const shape = new THREE.Shape(points.map(p => new THREE.Vector2(p.x, p.y)));
+  const geometry = new THREE.ExtrudeGeometry(shape, { depth: 0.1, bevelEnabled: true, bevelThickness: 0.008, bevelSize: 0.008, bevelSegments: 1, steps: 1 });
+  geometry.translate(0, 0, -0.11);
+  const country = new THREE.Mesh(geometry, new THREE.MeshStandardMaterial({ color: 0x245a9a, roughness: 0.5, metalness: 0.25 }));
+  country.name = 'thailand-solid-map'; health.add(country);
+  const outline = new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints(points), new THREE.LineBasicMaterial({ color: 0x79b8ff, transparent: true, opacity: 0.7 }));
+  outline.name = 'thailand-outline'; health.add(outline);
 }
-// trace network: index case nearest Bangkok, contacts linked to nearest predecessor
-const traceNodes = [];
-{
-  const S = 0.8, bkx = -0.11 * S, bky = 0.082 * S;
-  let best = thaiDots[0], bd = 1e9;
-  for (const d of thaiDots) { const q = (d.x - bkx) ** 2 + (d.y - bky) ** 2; if (q < bd) { bd = q; best = d; } }
-  const picked = [best];
-  for (let k = 1; k <= 12; k++) picked.push(thaiDots[(k * 107) % thaiDots.length]);
-  picked.sort((a, b) => ((a.x - bkx) ** 2 + (a.y - bky) ** 2) - ((b.x - bkx) ** 2 + (b.y - bky) ** 2));
-  picked.forEach((d, idx) => {
-    const v = new THREE.Vector3(d.x, d.y, 0.03);
-    const n = new THREE.Mesh(new THREE.SphereGeometry(idx === 0 ? 0.05 : 0.028, 14, 10), idx === 0 ? glow : blue2);
-    n.name = idx === 0 ? 'index-case' : 'contact-' + idx; n.position.copy(v); health.add(n);
-    traceNodes.push({ mesh: n, v, delay: idx * 0.55 });
-  });
-  for (let k = 1; k < traceNodes.length; k++) {
-    let bp = 0; bd = 1e9;
-    for (let m = 0; m < k; m++) {
-      const q = traceNodes[k].v.distanceToSquared(traceNodes[m].v);
-      if (q < bd) { bd = q; bp = m; }
-    }
-    const lm = linkMesh(traceNodes[bp].v, traceNodes[k].v, 'tlink-' + k);
-    lm.material = new THREE.MeshBasicMaterial({ color: 0x2f81f7, transparent: true, opacity: 0.6 });
-    health.add(lm);
-    traceNodes[k].link = lm;
-  }
-}
+const regions = [
+  ['Bangkok', 100.5, 13.75, 0],
+  ['Chiang Mai', 98.98, 18.79, 0],
+  ['Chiang Rai', 99.84, 19.91, 1],
+  ['Khon Kaen', 102.83, 16.44, 0],
+  ['Ubon Ratchathani', 104.85, 15.24, 3],
+  ['Surat Thani', 99.33, 9.14, 0],
+  ['Songkhla', 100.59, 7.2, 5]
+];
+const traceNodes = regions.map(([name, lon, lat, parent], idx) => {
+  const v = mapPoint(lon, lat, idx === 0 ? 0.16 : 0.1);
+  health.add(linkMesh(mapPoint(lon, lat), v, 'marker-stem-' + idx));
+  const mesh = new THREE.Mesh(new THREE.SphereGeometry(idx === 0 ? 0.055 : 0.035, 12, 8), idx === 0 ? glow : blue2);
+  mesh.name = 'region-' + name; mesh.position.copy(v); health.add(mesh);
+  return { mesh, v, parent };
+});
+traceNodes.forEach((node, idx) => {
+  if (!idx) return;
+  const link = linkMesh(traceNodes[node.parent].v, node.v, 'surveillance-link-' + idx);
+  link.material = new THREE.MeshBasicMaterial({ color: 0x7daaff, transparent: true, opacity: 0.5 });
+  health.add(link); node.link = link;
+});
 const index0 = traceNodes[0].mesh;
-const pulses = [0, 1, 2].map(i => {
+const pulses = [0].map(i => {
   const ring = new THREE.Mesh(new THREE.TorusGeometry(0.2, 0.006, 8, 64),
     new THREE.MeshBasicMaterial({ color: 0x2f81f7, transparent: true, opacity: 0.5 }));
   ring.name = 'pulse-' + i; ring.position.copy(traceNodes[0].v); health.add(ring);
@@ -541,78 +542,132 @@ const pulses = [0, 1, 2].map(i => {
 });
 world.add(health);
 
-// ---- 3. Data Analyst: observed bars → forecast line with uncertainty cone
+// Text stays part of the model, so labels follow the same fitting and fading.
+function modelLabel(text, x, y, width) {
+  const canvas = document.createElement('canvas');
+  canvas.width = 512; canvas.height = 96;
+  const ctx = canvas.getContext('2d');
+  ctx.font = '600 48px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillStyle = '#ffffff'; ctx.fillText(text, 256, 48);
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  const label = new THREE.Mesh(new THREE.PlaneGeometry(width, width * 96 / 512), new THREE.MeshBasicMaterial({ name: 'model-label', map: texture, transparent: true, depthWrite: false, side: THREE.DoubleSide }));
+  label.position.set(x, y, 0.1);
+  return label;
+}
+
+// ---- 3. Data Analyst: a sculptural chart with a clear forecast and intervals.
 const data = new THREE.Group(); data.name = 'data-analyst'; data.position.set(-R, 0, 0);
-const base = new THREE.Mesh(new THREE.BoxGeometry(1.8, 0.06, 0.5), dark); base.name = 'chart-base'; base.position.set(0.12, -0.55, 0); data.add(base);
-const histH = [0.32, 0.52, 0.72, 0.5, 0.3, 0.55, 0.76, 0.52]; // two seasons of history
+const base = new THREE.Mesh(new THREE.BoxGeometry(1.95, 0.065, 0.5), dark);
+base.name = 'chart-plinth'; base.position.set(0.04, -0.55, 0); data.add(base);
+data.add(modelLabel('OBSERVED', -0.3, -0.68, 0.75), modelLabel('FORECAST', 0.72, -0.68, 0.65));
+const histH = [0.32, 0.54, 0.72, 0.49, 0.34, 0.58];
+const barGeometry = new THREE.BoxGeometry(0.14, 1, 0.28);
 const bars = histH.map((h, i) => {
-  const b = new THREE.Mesh(new THREE.BoxGeometry(0.1, 1, 0.1), blue3);
-  b.name = 'obs-' + i; b.userData.h = h; b.position.x = -0.62 + i * 0.15;
+  const b = new THREE.Mesh(barGeometry, blue3);
+  b.name = 'observation-' + i; b.userData.h = h;
+  b.position.set(-0.75 + i * 0.2, -0.515 + h / 2, 0); b.scale.y = h;
   data.add(b); return b;
 });
 const fGroup = new THREE.Group(); fGroup.name = 'forecast'; data.add(fGroup);
-const fx = [0.15, 0.3, 0.45], fy = [0.66, 0.84, 0.6]; // seasonal projection: rise, peak, turn down
-const lastTop = new THREE.Vector3(-0.62 + 7 * 0.15, -0.52 + histH[7], 0);
-const fPts = fx.map((x, i) => new THREE.Vector3(lastTop.x + x, -0.52 + fy[i], 0));
+const lastTop = new THREE.Vector3(0.25, -0.515 + histH.at(-1), 0);
+const fPts = [
+  new THREE.Vector3(0.47, 0.18, 0),
+  new THREE.Vector3(0.69, 0.34, 0),
+  new THREE.Vector3(0.91, 0.13, 0)
+];
+const forecastMaterial = new THREE.MeshStandardMaterial({ color: 0xb6d6ff, emissive: 0x2f81f7, emissiveIntensity: 0.2, roughness: 0.35 });
 const fDots = fPts.map((p, i) => {
-  const m = new THREE.Mesh(new THREE.SphereGeometry(0.035, 14, 10), glow);
-  m.name = 'forecast-' + i; m.position.copy(p); fGroup.add(m); return m;
+  const dot = new THREE.Mesh(new THREE.SphereGeometry(0.04, 12, 8), glow);
+  dot.name = 'forecast-' + i; dot.position.copy(p); fGroup.add(dot); return dot;
 });
 const fLinks = [lastTop, ...fPts].slice(0, -1).map((p, i) => {
-  const m = linkMesh(p, [lastTop, ...fPts][i + 1], 'flink-' + i); fGroup.add(m); return m;
+  const link = linkMesh(p, fPts[i], 'forecast-path-' + i);
+  link.material = forecastMaterial; link.scale.x = link.scale.z = 1.5; fGroup.add(link); return link;
 });
-// uncertainty cone (fan widening toward the future)
-const cone = (() => {
-  const g = new THREE.BufferGeometry();
-  const spread = [0.05, 0.14, 0.26];
-  const v = [lastTop.x, lastTop.y, 0];
-  const verts = [];
-  let prevLo = [...v], prevHi = [...v];
-  fPts.forEach((p, i) => {
-    const lo = [p.x, p.y - spread[i], 0], hi = [p.x, p.y + spread[i], 0];
-    verts.push(...prevLo, ...prevHi, ...hi, ...prevLo, ...hi, ...lo);
-    prevLo = lo; prevHi = hi;
+const uncertainty = [];
+fPts.forEach((p, i) => {
+  const spread = [0.07, 0.12, 0.19][i];
+  const lo = new THREE.Vector3(p.x, p.y - spread, -0.06);
+  const hi = new THREE.Vector3(p.x, p.y + spread, -0.06);
+  const intervals = [[lo, hi], [lo.clone().add(new THREE.Vector3(-0.035, 0, 0)), lo.clone().add(new THREE.Vector3(0.035, 0, 0))], [hi.clone().add(new THREE.Vector3(-0.035, 0, 0)), hi.clone().add(new THREE.Vector3(0.035, 0, 0))]];
+  intervals.forEach(([a, b], k) => {
+    const line = linkMesh(a, b, 'uncertainty-' + i + '-' + k);
+    line.material = new THREE.MeshBasicMaterial({ color: 0x79a4da, transparent: true, opacity: 0.6 });
+    fGroup.add(line); uncertainty.push(line);
   });
-  g.setAttribute('position', new THREE.BufferAttribute(new Float32Array(verts), 3));
-  const m = new THREE.Mesh(g, new THREE.MeshBasicMaterial({ color: 0x2f81f7, transparent: true, opacity: 0.1, side: THREE.DoubleSide }));
-  m.name = 'uncertainty-cone'; fGroup.add(m); return m;
-})();
+});
+const forecastSignal = new THREE.Mesh(new THREE.SphereGeometry(0.027, 10, 8), glow);
+forecastSignal.name = 'forecast-signal'; fGroup.add(forecastSignal);
 world.add(data);
 
-// ---- 4. AI Engineering: layered MLP (3-6-6-3), rings of nodes per layer,
-// dense inter-layer connections, glowing signals travelling left → right
+// ---- 4. AI Engineering: four spatial layers with one highlighted signal path.
 const ai = new THREE.Group(); ai.name = 'ai-engineering'; ai.position.set(0, 0, -R);
-const LAYERS = [3, 6, 6, 3];
-const layerX = [-0.66, -0.22, 0.22, 0.66];
-const layerNodes = LAYERS.map((n, li) => {
-  const arr = [];
-  for (let k = 0; k < n; k++) {
-    const a = (k / n) * Math.PI * 2 + li * 0.55;
-    const r = n > 3 ? 0.34 : 0.18;
-    const v = new THREE.Vector3(layerX[li], Math.cos(a) * r, Math.sin(a) * r);
-    const m = new THREE.Mesh(new THREE.SphereGeometry(0.055, 20, 14), blue4);
-    m.name = 'node-' + li + '-' + k; m.position.copy(v); ai.add(m);
-    arr.push({ v, m });
-  }
-  return arr;
+const layerSizes = [3, 5, 5, 3];
+const layerNodes = layerSizes.map((count, layer) => {
+  const x = -0.84 + layer * 0.56;
+  return Array.from({ length: count }, (_, i) => {
+    const angle = i / count * Math.PI * 2 + layer * 0.35;
+    const radius = layer === 0 || layer === 3 ? 0.23 : 0.36;
+    const node = new THREE.Mesh(new THREE.SphereGeometry(0.06, 20, 14), blue4);
+    node.name = 'neuron-' + layer + '-' + i;
+    node.position.set(x, Math.cos(angle) * radius, Math.sin(angle) * radius);
+    ai.add(node);
+    return node;
+  });
 });
-const nodes = layerNodes.flat().map(o => o.m);
-const edgeMat = new THREE.MeshStandardMaterial({ name: 'edge', color: 0x9fc0f5, metalness: 0.4, roughness: 0.45, transparent: true, opacity: 0.5 });
-for (let li = 0; li < LAYERS.length - 1; li++) {
-  layerNodes[li].forEach((a2, ia) => layerNodes[li + 1].forEach((b2, ib) => {
-    const e = linkMesh(a2.v, b2.v, 'edge-' + li + '-' + ia + '-' + ib);
-    e.material = edgeMat;
-    e.scale.x = e.scale.z = 0.5; // thin struts
-    ai.add(e);
-  }));
+const networkEdges = [];
+const networkEdgeMaterial = new THREE.MeshStandardMaterial({
+  color: 0x7daaff, emissive: 0x2f81f7, emissiveIntensity: 0.08,
+  roughness: 0.45, metalness: 0.2, transparent: true, opacity: 0.12,
+  depthWrite: false
+});
+layerNodes.slice(0, -1).forEach((layer, layerIndex) => {
+  layer.forEach((from, fromIndex) => {
+    layerNodes[layerIndex + 1].forEach((to, toIndex) => {
+      const edge = linkMesh(from.position, to.position, 'neural-edge-' + layerIndex + '-' + fromIndex + '-' + toIndex);
+      edge.material = networkEdgeMaterial;
+      edge.scale.x = edge.scale.z = 0.55;
+      ai.add(edge);
+      networkEdges.push({ edge, layerIndex, fromIndex, toIndex });
+    });
+  });
+});
+const neuralSignal = new THREE.Mesh(new THREE.SphereGeometry(0.032, 14, 10), glow);
+neuralSignal.name = 'neural-signal'; ai.add(neuralSignal);
+ai.add(
+  modelLabel('INPUT', -0.84, -0.58, 0.5),
+  modelLabel('HIDDEN LAYERS', 0, -0.58, 1.05),
+  modelLabel('OUTPUT', 0.84, -0.58, 0.5)
+);
+
+// One illustrative route per cycle. This depicts signal flow, not measured
+// activations or the full computation of a trained network.
+function animateNetwork(t, strength, fade) {
+  const cycle = Math.floor(t / 2.2);
+  const progress = Math.min(1, (t % 2.2) / 1.8);
+  const selected = layerSizes.map((count, layer) => (cycle * (layer + 1) + layer) % count);
+  const segment = Math.min(2, Math.floor(progress * 3));
+  neuralSignal.position.lerpVectors(
+    layerNodes[segment][selected[segment]].position,
+    layerNodes[segment + 1][selected[segment + 1]].position,
+    progress * 3 - segment
+  );
+  // Hold the output briefly before starting the next route.
+  networkEdges.forEach(({ edge, layerIndex, fromIndex, toIndex }) => {
+    const onPath = fromIndex === selected[layerIndex] && toIndex === selected[layerIndex + 1];
+    edge.material.opacity = (onPath ? 0.85 : 0.1) * fade;
+    edge.material.emissiveIntensity = onPath ? 0.5 * strength : 0.04;
+  });
+  layerNodes.forEach((layer, layerIndex) => {
+    layer.forEach((node, nodeIndex) => {
+      const distance = Math.abs(progress * 3 - layerIndex);
+      const active = nodeIndex === selected[layerIndex] ? Math.max(0, 1 - distance) : 0;
+      node.scale.setScalar(1 + active * 0.16);
+      node.material.emissiveIntensity = 0.15 + active * 0.65 * strength;
+    });
+  });
 }
-const signals = [];
-for (let s = 0; s < 9; s++) {
-  const m = new THREE.Mesh(new THREE.SphereGeometry(0.028, 10, 8), glow);
-  m.name = 'signal-' + s; m.scale.setScalar(0.001); ai.add(m);
-  signals.push({ m, t0: s * 0.4, path: null, dur: 1.5 });
-}
-const newPath = () => layerNodes.map(L => L[Math.floor(Math.random() * L.length)].v);
 world.add(ai);
 
 const orbitRing = new THREE.Mesh(new THREE.TorusGeometry(R, 0.007, 8, 200), dark.clone());
@@ -679,15 +734,22 @@ scene.updateMatrixWorld(true);
 // (scale is still 1) and silently wrong at any later moment.
 function fitOf(g) {
   const v = new THREE.Vector3();
+  const instance = new THREE.Matrix4();
   const toLocal = new THREE.Matrix4().copy(g.matrixWorld).invert();
   let radial2 = 0, half = 0;
   g.traverse(o => {
     const pos = o.geometry?.attributes?.position;
     if (!pos) return;
-    for (let i = 0; i < pos.count; i++) {
-      v.fromBufferAttribute(pos, i).applyMatrix4(o.matrixWorld).applyMatrix4(toLocal);
-      radial2 = Math.max(radial2, v.x * v.x + v.z * v.z);
-      half = Math.max(half, Math.abs(v.y));
+    for (let j = 0; j < (o.isInstancedMesh ? o.count : 1); j++) {
+      if (o.isInstancedMesh) o.getMatrixAt(j, instance);
+      else instance.identity();
+      for (let i = 0; i < pos.count; i++) {
+        v.fromBufferAttribute(pos, i).applyMatrix4(instance).applyMatrix4(o.matrixWorld).applyMatrix4(toLocal);
+        const radial = Math.hypot(v.x, v.z);
+        radial2 = Math.max(radial2, radial * radial);
+        // Allow the new quarter-view pitch to expose tops without clipping.
+        half = Math.max(half, Math.abs(v.y) + (g === travel ? 0 : radial * 0.3));
+      }
     }
   });
   return { r: Math.max(0.001, Math.sqrt(radial2)), h: Math.max(0.001, half) };
@@ -719,11 +781,18 @@ const EMBED = new URLSearchParams(location.search).has('embed');
 function setSceneTheme(mode) {
   const light = mode === 'light';
   document.body.classList.toggle('light', light);
-  const bg = light ? 0xf5f1e8 : 0x060609;
+  const bg = light ? 0xf5f1e8 : 0x14120d;
   scene.background.set(bg); scene.fog.color.set(bg);
   orbitRing.material.color.set(light ? 0xb3ab98 : 0x585862); // visible-but-quiet in both themes
   pointMats.forEach(m => { m.blending = light ? THREE.NormalBlending : THREE.AdditiveBlending; m.needsUpdate = true; });
+  scene.traverse(o => { if (o.material?.name === 'model-label') o.material.color.set(light ? 0x263d61 : 0xc4d5ef); });
 }
+// Let the same-origin host include WebGL in its single theme snapshot.
+// Messages remain the fallback for initial load and ordinary theme mirroring.
+window.setPortfolioTheme = (mode) => {
+  setSceneTheme(mode === 'light' ? 'light' : 'dark');
+  renderer.render(scene, camera);
+};
 let paused = false;
 if (EMBED) {
   document.body.classList.add('embed');
@@ -896,7 +965,7 @@ function planePoint(fx, fy) {
 
 const clock = new THREE.Clock();
 function frame() {
-  if (paused) { requestAnimationFrame(frame); return; }
+  if (paused || document.hidden) { requestAnimationFrame(frame); return; }
   const t = clock.getElapsedTime();
   // magnetic scroll: the param snaps toward each role and holds there,
   // so nearby scroll positions settle onto the role. HOLD is the dead zone
@@ -993,7 +1062,7 @@ function frame() {
   });
 
   // travel: slow spin + planes tracking their routes
-  travel.rotation.y = t * 0.16;
+  travel.rotation.y = -1.2 + t * 0.12;
   travel.updateMatrixWorld();
   const tCenter = new THREE.Vector3();
   travel.getWorldPosition(tCenter);
@@ -1007,69 +1076,56 @@ function frame() {
     f.plane.lookAt(target);
   });
 
-  // public health: outbreak replays on the map — contacts + links appear in sequence
-  health.rotation.y = Math.sin(t * 0.3) * 0.07; // near-frontal: the map faces the viewer
+  // Follow one branch from the index case, then move to the next endpoint.
+  health.quaternion.copy(camera.quaternion);
+  health.rotateY(-0.3 + Math.sin(t * 0.4) * 0.16);
+  health.rotateX(0.12);
   // Same reason as the chart below: with every role on screen at once none
   // is the focused one, so they would all animate at their dimmed
   // background intensity. Embedded, each reads at full presence.
   const ha = EMBED ? 1 : activation(p, 2);
-  const cycle = (t % 10);
+  const branchTime = 2.4;
+  let endpoint = 1 + Math.floor(t / branchTime) % (traceNodes.length - 1);
+  const branch = [];
+  while (endpoint > 0) { branch.unshift(endpoint); endpoint = traceNodes[endpoint].parent; }
+  const cycle = (t % branchTime) / branchTime;
   traceNodes.forEach((n, k) => {
     if (k === 0) return;
-    const on = THREE.MathUtils.clamp((cycle - n.delay) / 0.4, 0, 1);
-    n.mesh.scale.setScalar(Math.max(0.001, on * (1 + Math.sin(t * 2 + k) * 0.12)));
-    if (n.link) { n.link.scale.setScalar(Math.max(0.001, on)); n.link.material.opacity = 0.6 * on * (0.4 + ha * 0.6) * fades[1]; }
+    const step = branch.indexOf(k);
+    const on = step < 0 ? 0 : THREE.MathUtils.clamp((cycle * (branch.length + 1) - step) * 3, 0, 1) * (1 - THREE.MathUtils.smoothstep(cycle, 0.85, 1));
+    n.mesh.scale.setScalar(0.5 + on * 0.5);
+    n.mesh.material.emissiveIntensity = 0.1 + on * 0.5;
+    if (n.link) n.link.material.opacity = (0.06 + 0.7 * on) * (0.4 + ha * 0.6) * fades[1];
   });
   pulses.forEach(pl => {
-    const k = (t * 0.35 + pl.phase) % 1;
+    const k = (t * 0.3 + pl.phase) % 1;
     pl.ring.scale.setScalar(0.2 + k * RING_SPAN);
     pl.ring.material.opacity = 0.45 * (1 - k) * (0.35 + ha * 0.65) * fades[1];
   });
-  index0.scale.setScalar(1 + Math.sin(t * 2.4) * 0.08);
+  index0.scale.setScalar(1 + Math.sin(t * 1.2) * 0.05);
 
-  // data: faces the camera when focused; gently swings while in the background.
-  //
-  // Embedded there is no "focused" role, so this used to sit permanently at
-  // the background angle -- swinging ~20 degrees off a 54-degree yaw, which
-  // reads as a jiggle and hides the forecast. It also stayed at the
-  // background's partial reveal, so the third projected point and most of the
-  // uncertainty cone never appeared. Both are wrong here: this is the one
-  // model whose whole point is legible, and a chart is planar, so any large
-  // rotation puts it edge-on for half of every turn. It now yaws to face the
-  // camera in whichever lane it has been placed, keeps a slight sway for
-  // life, and renders fully: whole bars, all three forecast points, and the
-  // full uncertainty cone.
+  // An angled view exposes the column sides and plinth; values stay stable.
   const da = EMBED ? 1 : activation(p, 3);
-  data.rotation.y = EMBED
-    ? Math.atan2(data.position.x - camera.position.x, camera.position.z - data.position.z) + Math.sin(t * 0.25) * 0.1
-    : -0.95 + Math.sin(t * 0.3) * 0.35 * (1 - da);
-  bars.forEach((b, k) => {
-    const H = Math.max(0.05, b.userData.h * (0.55 + 0.45 * Math.min(1, da * 1.5 + 0.2)) + Math.sin(t * 1.2 + k * 2.3) * 0.018 * (0.3 + da));
+  data.quaternion.copy(camera.quaternion);
+  data.rotateY(-0.32 + Math.sin(t * 0.36) * 0.12);
+  data.rotateX(0.2);
+  bars.forEach((b, i) => {
+    const H = b.userData.h;
     b.scale.y = H; b.position.y = -0.515 + H / 2;
+    b.material.emissiveIntensity = 0.12 + (Math.floor(t * 3) % bars.length === i ? 0.4 : 0);
   });
   const reveal = Math.min(1, 0.62 + da * 0.38); // prediction always visible, brightens on focus
-  fGroup.rotation.z = Math.sin(t * 4.7) * 0.014 * da;
-  fGroup.position.y = (Math.sin(t * 3.4) + 0.6 * Math.sin(t * 8.9)) * 0.016 * da;
-  fDots.forEach((m, k) => { const on = THREE.MathUtils.clamp(reveal * 4 - k, 0, 1); m.scale.setScalar(Math.max(0.001, on * (1 + Math.sin(t * 6 + k * 2) * 0.16 * da))); });
-  fLinks.forEach((m, k) => { const on = THREE.MathUtils.clamp(reveal * 4 - k, 0, 1); m.scale.setScalar(Math.max(0.001, on)); });
-  cone.material.opacity = (0.11 + 0.035 * Math.sin(t * 5.1)) * reveal * fades[2];
+  fDots.forEach((m, k) => { const on = THREE.MathUtils.clamp(reveal * 4 - k, 0, 1); m.scale.setScalar(Math.max(0.001, on * (1 + Math.sin(t * 1.2 + k) * 0.05 * da))); });
+  uncertainty.forEach(line => { line.material.opacity = 0.6 * reveal * fades[2]; });
+  const forecastProgress = (t % 2) / 2 * 3;
+  const forecastSegment = Math.floor(forecastProgress);
+  forecastSignal.position.lerpVectors(forecastSegment === 0 ? lastTop : fPts[forecastSegment - 1], fPts[forecastSegment], forecastProgress - forecastSegment);
 
-  ai.rotation.y = -t * 0.2;
+  ai.quaternion.copy(camera.quaternion);
+  ai.rotateY(0.25 + Math.sin(t * 0.48) * 0.24);
+  ai.rotateX(0.16);
   const aa = EMBED ? 1 : activation(p, 4);
-  nodes.forEach((n, k) => n.scale.setScalar(1 + Math.sin(t * 3 + k * 1.7) * 0.08 * (0.3 + aa)));
-  // signals hop layer-to-layer along random paths, then respawn
-  signals.forEach(sg => {
-    const s = (t - sg.t0) / sg.dur;
-    if (s >= 1 || !sg.path) {
-      sg.path = newPath(); sg.t0 = t + Math.random() * 0.9; sg.m.scale.setScalar(0.001);
-      return;
-    }
-    if (s < 0) return;
-    const span = sg.path.length - 1;
-    const seg = Math.min(span - 1, Math.floor(s * span));
-    sg.m.position.lerpVectors(sg.path[seg], sg.path[seg + 1], s * span - seg);
-    sg.m.scale.setScalar(0.8 + 0.6 * aa);
-  });
+  animateNetwork(t, aa, fades[3]);
   orbitRing.rotation.z = t * 0.04;
   orbitRing.material.opacity = (1 - 0.92 * maxAct) * (1 - 0.8 * overlay); // fade while a role or overlay text is focused
 

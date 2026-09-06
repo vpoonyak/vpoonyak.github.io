@@ -23,65 +23,48 @@ import SocialLinks from './SocialLinks.astro';
 //
 // Every tile links somewhere. They sit in the one part of the page where a
 // visitor is most willing to act, so leaving them inert wasted the slot.
-// "12" is the archive count, matching the "/ 12" on §03's archive button.
+// "13" is the archive count, matching the "/ 13" on §03's archive button.
 const stats = [
-  { since: '2019-09-09', fallback: '6+', label: 'Years clinical practice', href: '#experience' },
+  { since: '2019-09-09', fallback: '6+', label: 'Years clinical practice', href: '#experience', action: 'View experience' },
   // Label lengths are tuned to the longest of the others ("Years clinical
   // practice", 23 chars). "Selected of 10,457 · Super AI S6" ran 31 and took
   // a third line at 390px and 760px while its neighbours took two.
-  { value: '157', label: 'Of 10,457 · Super AI S6', href: '#training' },
-  { value: '02', label: 'Publications', href: '#publications' },
-  { value: '12', label: 'Projects shipped', accent: true, href: '/project/' },
+  { value: '157', label: 'Of 10,457 · Super AI S6', href: '#training', action: 'Explore training' },
+  { value: '2', label: 'Peer-reviewed publications', href: '#publications', action: 'Read research' },
+  { value: '13', label: 'Projects shipped', accent: true, href: '/project/', action: 'Browse projects' },
 ];
 ---
 
 <header class="rd-hero" id="top">
   <div class="rd-hero-top">
-    {/* data-sp sits on the column, not on its children. translate is
-        (elementCentre - viewportCentre) * -factor, so two elements with the
-        SAME factor keep a constant offset however far the page scrolls (the
-        scroll term cancels), while any difference in factor opens or closes
-        the gap between them. The lede used to carry 0.09 against a CTA and a
-        social row carrying none, which closed a 30px gap and then overlapped
-        them by 24px by 700px of scroll. The portrait keeps the same 0.05, so
-        the whole hero drifts against the sections below as one piece. */}
-    <div class="rd-hero-copy" data-sp="0.05">
-      {/* Line breaks are block spans, not <br>: with <br> the accessible
-          name and the text a crawler extracts came out as
-          "ClinicalData,Engineered." with no word boundaries. */}
-      {/* Trailing spaces sit *inside* the spans on purpose: Astro collapses
-          whitespace between elements, so without them the accessible name
-          and the extracted text read "ClinicalData,Engineered.". The spans
-          are display:block, so a trailing space costs nothing visually. */}
+    <div class="rd-hero-heading">
+      <p class="rd-hero-eyebrow">Physician · Health care analytics</p>
       <h1 class="rd-hero-title">
-        <span class="line">Clinical </span><span class="line">Data, </span><span class="line accent">Engineered.</span>
+        <span class="line">Vitchakorn </span><span class="line">Poonyakanok</span>
       </h1>
-      <p class="rd-hero-lede">
-        Vitchakorn <span class="rd-italic">&ldquo;Blue&rdquo;</span> Poonyakanok, MD — a physician bridging <span class="rd-role-word" id="roleSwap">travel medicine</span> into intelligent health systems.
-      </p>
-
-      {/* One primary action, pointing at the evidence rather than at
-          contact. Contact is already reachable three ways from the top fold
-          (the email below, the floating CTA, §07), and the floating CTA
-          already carries the internship one-pager -- nothing was pushing a
-          recruiter toward the work itself. */}
-      <a href="#projects" class="rd-btn rd-hero-cta">VIEW SELECTED WORK ↓</a>
-
-      {/* Moved up from #about: the profile links and the email address are
-          what the page is asking a visitor to act on, so they sit above the
-          fold rather than one section down. */}
-      <SocialLinks class="rd-hero-socials" />
     </div>
 
-    <div class="rd-hero-portrait" data-sp="0.05">
+    <div class="rd-hero-portrait">
       <img
-        src="/pic/vitchakorn.jpg"
+        src="/pic/vpoonyak-headshot-500.webp"
+        srcset="/pic/vpoonyak-headshot-240.webp 240w, /pic/vpoonyak-headshot-500.webp 500w, /pic/vpoonyak-headshot-900.webp 900w"
+        sizes="(max-width: 360px) 112px, (max-width: 442px) 38vw, (max-width: 760px) 168px, (max-width: 1360px) 38vw, 500px"
         alt="Portrait of Vitchakorn Poonyakanok"
-        width="264"
-        height="330"
+        width="900"
+        height="900"
         fetchpriority="high"
       >
-      <div class="rd-hero-tag">MD → MSHCA, CARNEGIE MELLON</div>
+    </div>
+
+    <div class="rd-hero-copy">
+      <p class="rd-hero-lede">
+        I’m Blue, a physician studying health care analytics at Carnegie Mellon.
+        I build tools for travel medicine and public health.
+      </p>
+      <div class="rd-hero-actions">
+        <a href="#projects" class="rd-btn rd-hero-cta">Explore my work <span aria-hidden="true">↗</span></a>
+      </div>
+      <SocialLinks class="rd-hero-socials" />
     </div>
   </div>
 
@@ -94,6 +77,7 @@ const stats = [
             : s.value}
         </div>
         <div class="rd-stat-label">{s.label}</div>
+        <span class="rd-link-action">{s.action} <span aria-hidden="true">→</span></span>
       </a>
     ))}
   </div>
@@ -110,22 +94,4 @@ const stats = [
     el.textContent = years + '+';
   });
 
-  // ── Role word rotation ──
-  // The four roles the 3D stage below walks through, cycled in the lede so
-  // the hero states the whole span before the visitor scrolls into it.
-  const roleEl = document.getElementById('roleSwap');
-  const ROLES = ['travel medicine', 'public health', 'data analysis', 'AI engineering'];
-  if (roleEl && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    let i = 0;
-    roleEl.style.transition = 'opacity 0.3s ease';
-    setInterval(() => {
-      if (document.hidden) return;
-      i = (i + 1) % ROLES.length;
-      roleEl.style.opacity = '0';
-      setTimeout(() => {
-        roleEl.textContent = ROLES[i];
-        roleEl.style.opacity = '1';
-      }, 300);
-    }, 2800);
-  }
 </script>

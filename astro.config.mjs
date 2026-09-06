@@ -36,6 +36,7 @@ export default defineConfig({
         'https://vitchakorn.com/project/hospcode/',
         'https://vitchakorn.com/project/hajjmens/',
         'https://vitchakorn.com/project/pm2-5/',
+        'https://vitchakorn.com/project/group-testing/',
         'https://vitchakorn.com/project/cirrhosis/',
         'https://vitchakorn.com/project/th-numeral/',
         'https://vitchakorn.com/project/bnk48/',
