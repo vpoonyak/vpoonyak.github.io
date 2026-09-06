@@ -79,7 +79,7 @@ const projects = [
   <div class="rd-section-head">
     <div class="rd-section-num">03</div>
     <h2 class="rd-section-kicker">Projects</h2>
-    <a href="/project/" class="rd-btn rd-section-action">FULL PROJECT ARCHIVE / 13 ↗</a>
+    <a href="/project/" class="rd-btn rd-section-action">FULL PROJECT ARCHIVE / 13 ↗︎</a>
   </div>
 
   {/* Two visibility tiers, both driven by how many columns the grid can open,
@@ -95,7 +95,7 @@ const projects = [
       <a href={`/project/${p.slug}/`} class:list={['rd-work-card', i >= 3 && i < 6 && 'is-extra', i >= 6 && 'is-wide-extra']}>
         <div class="rd-work-meta">
           <span>{p.kicker}</span>
-          <span class="arrow">↗</span>
+          <span class="arrow">↗︎</span>
         </div>
         <img src={p.thumb} alt={p.alt} width="600" height="210" loading="lazy">
         <div class="rd-work-title" set:html={p.title} />
