@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2026-09-06] - Research Hierarchy, About Balance, and Internship Invitation
+
+### Changed
+- **Device Theme Default**: The page and 3D scene follow the device's color scheme before first paint unless a visitor explicitly saved a light/dark choice. Devices without a dark preference use light mode, and system changes update the page while no override is saved.
+- **3D Animation Timer**: Replaced deprecated `THREE.Clock` with `THREE.Timer`, updating once per rendered frame and using page visibility handling to avoid elapsed-time jumps after returning to a hidden tab.
+- **Typography & Controls**: Kept Helvetica Neue and Newsreader, softened Training headings, changed action/form labels to sentence case, and enlarged small metadata. Standardized buttons, inputs, credential cards, and skill chips on subtle 4px corners while retaining square project thumbnails and unframed photo cutouts.
+- **Research & Awards**: Unified award and research typography, supporting text, and row separators. Simplified publication metadata to journal and date, with explicit paper and certificate links. Separated other research from the two published papers.
+- **About Composition**: Centered a bounded reading column and brought desktop CV/résumé actions directly below the paragraph while preserving the photo silhouette wrap.
+- **Internship Invitation**: Reduced the desktop card's size and replaced the blue fill with a quiet bordered surface. On phones, the invitation now sits inline in the hero before the stats instead of covering scrolling content.
+
 ## [2026-07-10] - YF/Malaria Dashboard: Antimeridian Blink, Russia Teleport, and iPhone Fullscreen Fixes
 
 ### Fixed

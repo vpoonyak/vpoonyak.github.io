@@ -165,14 +165,13 @@ const absoluteImage = image.startsWith('http') ? image : `https://vitchakorn.com
   
   <!-- Blocking on purpose: stamps the theme on <html> before first paint so
        the page never repaints. An explicit choice (localStorage) wins;
-       otherwise follow the OS. Dark is the fallback when neither is
-       available, which also matches the tokens' bare :root values. -->
+       otherwise follow the OS, using light when no dark preference is set. -->
   <script is:inline>
     (function () {
       var theme;
       try { theme = localStorage.getItem('theme'); } catch (e) { /* storage blocked */ }
       if (theme !== 'light' && theme !== 'dark') {
-        theme = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+        theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
       }
       document.documentElement.setAttribute('data-theme', theme);
     })();
@@ -242,11 +241,11 @@ const absoluteImage = image.startsWith('http') ? image : `https://vitchakorn.com
 
     // Follow the OS if the visitor has never used the toggle, so the page
     // tracks a system light/dark switch while they're on it.
-    window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', function (e) {
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function (e) {
       let saved = null;
       try { saved = localStorage.getItem('theme'); } catch (err) { /* storage blocked */ }
       if (saved === 'light' || saved === 'dark') return;
-      changeTheme(e.matches ? 'light' : 'dark');
+      changeTheme(e.matches ? 'dark' : 'light');
     });
   </script>
 </body>

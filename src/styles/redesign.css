@@ -117,36 +117,36 @@ img { max-width: 100%; }
   bottom: 18px;
   z-index: 96;
   display: block;
-  background: var(--accent);
-  color: var(--accent-ink);
-  border: 1px solid var(--accent);
-  box-shadow: 0 8px 28px rgb(0 0 0 / 0.2);
-  padding: 22px;
-  width: 300px;
+  background: var(--bg);
+  color: var(--ink);
+  border: 1px solid var(--rule);
+  box-shadow: 0 4px 16px rgb(0 0 0 / 0.1);
+  padding: 16px;
+  width: 270px;
   max-width: calc(100vw - 36px);
-  border-radius: 3px;
+  border-radius: 4px;
 }
 .rd-float-cta > a { display: block; color: inherit; }
-.rd-float-cta:hover { color: var(--accent-ink); }
 .rd-float-cta .cta-kicker {
   display: block;
   font-family: 'JetBrains Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 0.14em;
+  font-size: 12px;
+  line-height: 1.5;
+  letter-spacing: 0.02em;
   margin-bottom: 6px;
-  opacity: 0.85;
+  color: var(--muted);
 }
 .rd-float-cta .cta-title {
   display: block;
   font-weight: 600;
-  font-size: 22px;
+  font-size: 18px;
   line-height: 1.15;
   text-transform: none;
 }
 .rd-float-cta .cta-meta {
   display: block;
   font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
+  font-size: 12px;
   margin-top: 8px;
 }
 .cta-action {
@@ -154,16 +154,15 @@ img { max-width: 100%; }
   align-items: center;
   gap: 10px;
   min-height: 44px;
-  margin-top: 18px;
-  padding: 10px 12px;
-  background: var(--accent-ink);
+  margin-top: 8px;
+  padding: 8px 0 0;
+  border-top: 1px solid var(--rule);
   color: var(--accent);
   font-size: 14px;
   font-weight: 600;
 }
 .cta-action small { margin-left: auto; font-size: 10px; }
 .rd-float-cta a:is(:hover, :focus-visible) .cta-action { text-decoration: underline; text-underline-offset: 3px; }
-.rd-float-cta .cta-compact { display: none; }
 .rd-float-cta-close {
   position: absolute;
   top: -10px;
@@ -196,23 +195,23 @@ img { max-width: 100%; }
   pointer-events: none;
 }
 @media (max-width: 700px) {
-  /* The full card is too tall for a phone screen -- it ran into whatever
-     content happened to sit behind it as the reader scrolled. Collapse to
-     a one-line chip instead; the full text is still there for anyone who
-     taps it, and the aria-label carries the same information either way. */
-  .rd-float-cta { width: auto; max-width: calc(100vw - 32px); padding: 12px 16px; right: 16px; bottom: max(12px, env(safe-area-inset-bottom)); }
-  .rd-float-cta .cta-kicker,
-  .rd-float-cta .cta-title,
-  .rd-float-cta .cta-meta,
-  .rd-float-cta .cta-action { display: none; }
-  .rd-float-cta .cta-compact {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-weight: 600;
-    font-size: 14px;
-    line-height: 1.3;
-    white-space: nowrap;
+  .rd-float-cta {
+    position: relative;
+    inset: auto;
+    z-index: auto;
+    width: auto;
+    max-width: none;
+    margin: 0 24px 28px;
+    padding: 16px;
+    box-shadow: none;
+  }
+  /* The floating card's visibility observers must not hide an inline link. */
+  .rd-float-cta.is-behind,
+  .rd-float-cta.is-over-contact {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    pointer-events: auto;
   }
   .rd-float-cta-close { width: 32px; height: 32px; top: -10px; right: -10px; font-size: 11px; }
 }
@@ -452,14 +451,10 @@ img { max-width: 100%; }
    is low so only the near-fully-transparent margin (not his faint AA edge)
    counts as free space -- too high a threshold pulls the wrap line away
    from him, too low risks brushing the edge. */
-/* Caps the whole text column, not just the paragraph: shape-outside only
-   ever shows up on lines that actually reach the float, and .rd-body would
-   otherwise stretch across nearly the whole section (there's no second flex
-   column holding it back any more) -- so at wide viewports every paragraph
-   line fell short of the photo and the wrap-around was invisible, just a big
-   empty gap. This keeps the photo genuinely inside the reading column
-   instead of pinned out at the section's far edge. */
-#about .rd-body { max-width: 880px; }
+/* Center the reading column within the wider section. Keep a bounded width
+   so the prose still reaches the floated silhouette, and contain the photo
+   without forcing the document links below its full height. */
+#about .rd-body { max-width: 960px; margin-inline: auto; display: flow-root; }
 .rd-about-cutout {
   float: right;
   width: clamp(140px, 30vw, 320px);
@@ -529,15 +524,23 @@ img { max-width: 100%; }
 .rd-route-row strong { color: var(--ink); font-weight: 600; }
 
 .rd-actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 32px; align-items: center; }
-/* Always below the floated cutout, never squeezed beside it -- two short
-   pill buttons fighting shape-outside for width looks cramped, not intentional. */
-#about .rd-actions { clear: both; }
+/* Small interactive surfaces share a restrained radius; the editorial grid
+   and transparent photo cutouts keep their existing straight geometry. */
+.rd-btn, .rd-btn-ghost, .rd-verify, .rd-cred, .rd-badge,
+.rd-form input, .rd-form textarea, .rd-form button, .rd-contact-mail,
+.rd-float-cta-close, .rd-train-logos img { border-radius: 4px; }
+/* Flex establishes a rectangular boundary beside the photo for safe buttons;
+   paragraph text above still follows the alpha contour. */
+#about .rd-actions { margin-top: 24px; gap: 12px; }
+@media (max-width: 700px) {
+  #about .rd-actions { clear: both; }
+}
 .rd-btn {
   display: inline-flex;
   align-items: center;
   min-height: 44px;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 12px;
+  font-family: inherit;
+  font-size: 14px;
   border: 1px solid var(--accent);
   background: var(--accent);
   color: var(--accent-ink);
@@ -549,8 +552,8 @@ img { max-width: 100%; }
   display: inline-flex;
   align-items: center;
   min-height: 44px;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 12px;
+  font-family: inherit;
+  font-size: 14px;
   border: 1px solid var(--rule);
   padding: 9px 16px;
 }
@@ -601,8 +604,8 @@ img { max-width: 100%; }
 }
 .rd-tl-year {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
-  letter-spacing: 0.08em;
+  font-size: 12px;
+  letter-spacing: 0.02em;
   color: var(--accent);
   margin-bottom: 5px;
 }
@@ -638,11 +641,12 @@ img { max-width: 100%; }
   background: var(--accent);
   color: var(--accent-ink);
   font-family: 'JetBrains Mono', monospace;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 600;
   line-height: 1.4;
   padding: 3px 8px;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.02em;
+  border-radius: 4px;
   white-space: nowrap;
 }
 
@@ -694,7 +698,8 @@ img { max-width: 100%; }
   display: flex;
   justify-content: space-between;
   font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
+  font-size: 12px;
+  line-height: 1.5;
   margin-bottom: 14px;
   color: var(--muted);
   gap: 10px;
@@ -729,7 +734,6 @@ a:focus-visible .cta-action > span[aria-hidden] { transform: translateX(3px); }
 }
 .rd-btn:active, .rd-btn-ghost:active, .rd-verify:active, .rd-form button:active { transform: translateY(1px); }
 a:is(:hover, :focus-visible) > .rd-link-action { text-decoration: underline; text-underline-offset: 4px; }
-a.rd-pub { padding-bottom: 18px; border-bottom: 1px solid var(--rule); }
 .rd-mobile-details > summary { display: none; }
 .rd-mobile-details { display: contents; }
 .rd-mobile-only { display: none; }
@@ -758,24 +762,21 @@ a.rd-pub { padding-bottom: 18px; border-bottom: 1px solid var(--rule); }
 
 /* ═══ RESEARCH ══════════════════════════════════════════════ */
 .rd-research { display: flex; flex-direction: column; gap: 34px; }
-.rd-pub { display: block; max-width: 840px; }
-.rd-pub-meta { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--muted); margin-bottom: 8px; }
-.rd-pub-title { font-size: clamp(19px, 1.8vw, 25px); line-height: 1.35; }
+.rd-pub { display: block; max-width: 840px; padding-bottom: 22px; border-bottom: 1px solid var(--rule); }
+.rd-pub-meta { font-family: 'JetBrains Mono', monospace; font-size: 12px; line-height: 1.6; color: var(--muted); margin-bottom: 8px; }
+.rd-pub-title { font-size: clamp(19px, 1.8vw, 25px); font-weight: 400; line-height: 1.35; margin: 0; }
 .rd-pub-authors { font-size: 14px; color: var(--muted); margin-top: 8px; line-height: 1.5; }
-
-.rd-award {
-  display: block;
-  max-width: 840px;
-}
-.rd-award-kicker {
+.rd-award-placement { color: var(--accent); }
+.rd-research-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin-top: 8px;
   font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
-  letter-spacing: 0.14em;
+  font-size: 12px;
   color: var(--accent);
-  margin-bottom: 10px;
 }
-.rd-award-title { font-weight: 600; font-size: clamp(18px, 1.8vw, 22px); line-height: 1.35; }
-.rd-award-body { font-size: 16px; color: var(--muted); margin-top: 10px; line-height: 1.55; }
+.rd-research-link:is(:hover, :focus-visible) { text-decoration: underline; text-underline-offset: 4px; }
 
 /* ═══ TRAINING ══════════════════════════════════════════════ */
 .rd-train-logos { display: flex; gap: 10px; margin-bottom: 16px; }
@@ -785,17 +786,19 @@ a.rd-pub { padding-bottom: 18px; border-bottom: 1px solid var(--rule); }
   background: var(--card);
   border: 1px solid var(--rule);
 }
-.rd-train-title { font-weight: 900; font-size: 20px; text-transform: uppercase; }
-.rd-train-meta { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--accent); margin-top: 6px; }
+.rd-train-title { font-weight: 600; font-size: 22px; line-height: 1.35; letter-spacing: -0.02em; }
+.rd-train-meta { font-family: 'JetBrains Mono', monospace; font-size: 12px; line-height: 1.6; color: var(--accent); margin-top: 6px; }
 .rd-train-body { font-size: 16px; color: var(--muted); margin-top: 12px; line-height: 1.6; }
 .rd-train-list { list-style: none; margin-top: 14px; display: flex; flex-direction: column; gap: 8px; }
 .rd-train-list li { font-size: 15px; color: var(--muted); line-height: 1.5; padding-left: 18px; position: relative; }
 .rd-train-list li::before { content: '→'; position: absolute; left: 0; color: var(--accent); font-family: 'JetBrains Mono', monospace; font-size: 13px; }
 .rd-train-list strong { color: var(--ink); font-weight: 600; }
 .rd-verify {
-  display: inline-block;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 12px;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-family: inherit;
+  font-size: 14px;
   color: var(--accent);
   border: 1px solid var(--accent);
   padding: 8px 14px;
@@ -821,6 +824,8 @@ a.rd-pub { padding-bottom: 18px; border-bottom: 1px solid var(--rule); }
   background: var(--card);
   padding: 6px 12px;
   font-size: 14px;
+  min-height: 34px;
+  line-height: 1.4;
 }
 .rd-badge img { width: 15px; height: 15px; object-fit: contain; }
 .rd-badge img.toefl { width: 34px; }
@@ -840,9 +845,8 @@ a.rd-pub { padding-bottom: 18px; border-bottom: 1px solid var(--rule); }
 .rd-cred-name { display: block; font-size: 14px; font-weight: 600; }
 .rd-cred-meta {
   display: block;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 0.06em;
+  font-size: 12px;
+  line-height: 1.5;
   color: var(--muted);
   margin-top: 2px;
 }
@@ -850,14 +854,14 @@ a.rd-pub { padding-bottom: 18px; border-bottom: 1px solid var(--rule); }
 /* ═══ CONTACT ═══════════════════════════════════════════════ */
 .rd-contact-lede { font-size: clamp(22px, 2.4vw, 30px); line-height: 1.4; margin: 0; }
 .rd-contact-lede em { font-style: italic; color: var(--accent); }
-.rd-contact-note { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--muted); margin: 22px 0 0; line-height: 1.7; }
+.rd-contact-note { font-size: 16px; color: var(--muted); margin: 22px 0 0; line-height: 1.7; }
 .rd-contact-mail {
   display: inline-block;
   margin-top: 24px;
   background: var(--accent);
   color: var(--accent-ink);
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 13px;
+  font-family: inherit;
+  font-size: 15px;
   padding: 14px 20px;
 }
 .rd-contact-mail:hover { color: var(--accent-ink); background: color-mix(in srgb, var(--accent) 85%, var(--ink)); }
@@ -867,9 +871,8 @@ a.rd-pub { padding-bottom: 18px; border-bottom: 1px solid var(--rule); }
   display: flex;
   flex-direction: column;
   gap: 6px;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
-  letter-spacing: 0.1em;
+  font-family: inherit;
+  font-size: 13px;
   color: var(--muted);
 }
 .rd-form input,
@@ -892,8 +895,8 @@ a.rd-pub { padding-bottom: 18px; border-bottom: 1px solid var(--rule); }
   border: 2px solid var(--line);
   background: var(--ink);
   color: var(--bg);
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 13px;
+  font-family: inherit;
+  font-size: 14px;
   padding: 14px 20px;
   cursor: pointer;
   align-self: flex-start;

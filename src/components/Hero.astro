@@ -1,5 +1,6 @@
 ---
 import SocialLinks from './SocialLinks.astro';
+import FloatingCta from './FloatingCta.astro';
 
 // Stat numbers that age are computed at load from data-years-since rather
 // than hand-edited — update the anchor date, not the visible text.
@@ -71,6 +72,8 @@ const stats = [
       <SocialLinks class="rd-hero-socials" />
     </div>
   </div>
+
+  <FloatingCta />
 
   <div class="rd-stats">
     {stats.map((s) => (

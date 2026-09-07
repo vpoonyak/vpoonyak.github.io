@@ -2,12 +2,8 @@
 // Standing ask, pinned bottom-right. Dismissible, and the dismissal sticks
 // for the session so it doesn't nag a returning reader mid-page.
 //
-// Below 700px the full card collapses to a one-line chip (.cta-compact;
-// see redesign.css) -- small enough to stay on screen everywhere, landing
-// included, without sitting on top of whatever content is behind it. The
-// full card's own text still carries the same information for anyone who
-// taps through; the aria-label on the link is what a screen reader reads
-// regardless of which spans are visible at a given width.
+// On phones this sits in the hero's normal flow, before the stats, so it
+// cannot cover page content. Desktop retains a quieter floating invitation.
 ---
 
 <div class="rd-float-cta" id="floatCta">
@@ -22,7 +18,6 @@
     <span class="cta-title">Summer 2027 internship</span>
     <span class="cta-meta">May 11 – Aug 20 · 300+ hours</span>
     <span class="cta-action">View internship brief <span aria-hidden="true">↗︎</span><small>PDF</small></span>
-    <span class="cta-compact" aria-hidden="true">Summer 2027 internship <span aria-hidden="true">↗︎</span></span>
   </a>
 </div>
 

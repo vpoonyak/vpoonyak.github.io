@@ -18,7 +18,7 @@
     var theme;
     try { theme = localStorage.getItem('theme'); } catch (e) { /* storage blocked */ }
     if (theme !== 'light' && theme !== 'dark') {
-      theme = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+      theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
     }
     if (theme === 'light') document.documentElement.classList.add('light');
   })();
@@ -986,10 +986,12 @@ function planePoint(fx, fy) {
   return camera.position.clone().add(_dir.multiplyScalar(t));
 }
 
-const clock = new THREE.Clock();
+const timer = new THREE.Timer();
+timer.connect(document);
 function frame() {
   if (paused || document.hidden) { requestAnimationFrame(frame); return; }
-  const t = clock.getElapsedTime();
+  timer.update();
+  const t = timer.getElapsed();
   // magnetic scroll: the param snaps toward each role and holds there,
   // so nearby scroll positions settle onto the role. HOLD is the dead zone
   // at each end of a segment, MOVE the travel between them; they must sum

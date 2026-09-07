@@ -2,13 +2,13 @@
 const publications = [
   {
     href: 'https://doi.org/10.1155/jotm/9974081',
-    meta: '001 · Journal of Tropical Medicine (Wiley) · Aug 2025 · DOI 10.1155/jotm/9974081 ↗︎',
+    meta: 'Journal of Tropical Medicine (Wiley) · Aug 2025',
     title: 'An Investigation of MMR-Related Mumps Cluster Following Immunization Among Practical Nursing Students, Bangkok, Thailand, 2024',
     authors: 'Lertsakulbunlue S, Srithammavong D, Tepsittha K, Kanjanasombut H, Poonyakanok V, et al.',
   },
   {
     href: 'https://doi.org/10.59096/wesr.v55i9.3248',
-    meta: '002 · Weekly Epidemiological Surveillance Report · Sep 2024 · DOI 10.59096/wesr.v55i9.3248 ↗︎',
+    meta: 'Weekly Epidemiological Surveillance Report · Sep 2024',
     title: 'Preliminary investigation and rapid response to methanol intoxication outbreak linked to illegal herbal liquor in Bangkok, August 2024',
     authors: 'Jitpeera C, Rongdech W, Raruenroeng K, Poonyakanok V, et al.',
   },
@@ -24,52 +24,57 @@ const publications = [
   <div class="rd-body">
     <div class="rd-col-label">Awards</div>
     <div class="rd-research">
-      {/* The placement sits in the title rather than the body: "2nd Place,
-          Silver Award" said it twice, and stacking a second denominator
-          ("of 60 teams across four categories") on top of "2nd of 15" read
-          as arguing the case rather than stating it. That fuller framing
-          lives on the credential archive page. */}
-      <a href="https://bridgeai2026.md.chula.ac.th/award-certificates/bai-d21.pdf" target="_blank" rel="noopener noreferrer" class="rd-award">
-        <div class="rd-award-kicker">AWARD · JUL 2026 · BRIDGE-AI SUMMIT 2026 ↗︎</div>
-        <div class="rd-award-title">Silver Award, Medical AI · 2nd of 15 teams</div>
-        <div class="rd-award-body">
-          Track B (Advanced Innovator), Digital Health Innovation Competition, Chulalongkorn
+      {/* Keep one category-specific denominator; the full competition
+          framing lives on the credential archive page. */}
+      <article class="rd-pub rd-award">
+        <div class="rd-pub-meta">BRIDGE-AI Summit 2026 · Jul 2026</div>
+        <h3 class="rd-pub-title">Silver Award, Medical AI</h3>
+        <div class="rd-pub-authors rd-award-placement">2nd of 15 teams · Track B (Advanced Innovator)</div>
+        <div class="rd-pub-authors">
+          Digital Health Innovation Competition, Chulalongkorn
           Faculty of Medicine with Weill Cornell Medicine. For the AI-assisted altitude
           extraction behind altit.app.
         </div>
-      </a>
+        <a href="https://bridgeai2026.md.chula.ac.th/award-certificates/bai-d21.pdf" target="_blank" rel="noopener noreferrer" class="rd-research-link">View certificate ↗︎</a>
+      </article>
     </div>
 
     <div class="rd-block">
       <div class="rd-col-label">Publications</div>
       <div class="rd-research">
         {publications.map((p) => (
-          <a href={p.href} target="_blank" rel="noopener noreferrer" class="rd-pub">
+          <article class="rd-pub">
             <div class="rd-pub-meta">{p.meta}</div>
-            <div class="rd-pub-title">{p.title}</div>
+            <h3 class="rd-pub-title">{p.title}</h3>
             <div class="rd-pub-authors">{p.authors}</div>
-          </a>
+            <a href={p.href} target="_blank" rel="noopener noreferrer" class="rd-research-link" aria-label={`Read paper: ${p.title}`}>Read paper ↗︎</a>
+          </article>
         ))}
+      </div>
+    </div>
 
-        <div class="rd-pub">
-          <div class="rd-pub-meta">003 · SURVEILLANCE EVALUATION · JAN — JUN 2025 · ODPC 6, DDC</div>
-          <div class="rd-pub-title">Evaluation of the Syphilis Surveillance System, ODPC 6, Pattaya, Chon Buri, Thailand</div>
+    <div class="rd-block">
+      <div class="rd-col-label">Other Research</div>
+      <div class="rd-research">
+        <article class="rd-pub">
+          <div class="rd-pub-meta">Surveillance evaluation · Jan — Jun 2025 · ODPC 6, DDC</div>
+          <h3 class="rd-pub-title">Evaluation of the Syphilis Surveillance System, ODPC 6, Pattaya, Chon Buri, Thailand</h3>
           <div class="rd-pub-authors">
             Co-investigator. Assessed the national Digital Disease Surveillance (DDS) platform's
             sensitivity, predictive value positive, timeliness and representativeness against the
             CDC surveillance-evaluation framework, and recommended improvements.
           </div>
-        </div>
+        </article>
 
         {/* Unpublished, and deliberately not linked -- the meta line claims
             a target journal, not that OSIR has it. Move to the `publications`
             array above with a DOI once it is accepted, and bump the hero's
             "Publications" stat then, not now. */}
-        <div class="rd-pub">
-          <div class="rd-pub-meta">004 · MANUSCRIPT IN PREPARATION · TARGET: OSIR</div>
-          <div class="rd-pub-title">An Investigation of Mumps Outbreak in a Secondary School, Saraburi Province, Thailand, August &ndash; September 2025</div>
+        <article class="rd-pub">
+          <div class="rd-pub-meta">Manuscript in preparation · Target: OSIR</div>
+          <h3 class="rd-pub-title">An Investigation of Mumps Outbreak in a Secondary School, Saraburi Province, Thailand, August &ndash; September 2025</h3>
           <div class="rd-pub-authors">Prasongsil T, Saowong W, Poonyakanok V, et al.</div>
-        </div>
+        </article>
       </div>
     </div>
   </div>
