@@ -3,8 +3,10 @@
 
    The Astro pages get this from Navigation.astro's scoped styles; the
    hand-written HTML (project archive, case studies, credentials) links
-   this file instead so both render the identical bar. Colours come from
-   each page's own :root token block, which carries the same v2 values as
+   this file instead so both render the identical bar. Kept in sync by
+   hand -- Navigation.astro is the source of truth; port its .rd-nav*
+   rules here after any change there. Colours come from each page's own
+   :root token block, which carries the same v2 values as
    src/styles/tokens.css.
    ═══════════════════════════════════════════════════════════════ */
 
@@ -16,13 +18,13 @@
   flex-wrap: nowrap;
   overflow-x: auto;
   align-items: stretch;
-  border-bottom: 2px solid var(--text-primary);
+  border-bottom: 1px solid var(--rule, var(--border));
   background: var(--bg);
-  font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-size: 13px;
   font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
+  text-transform: none;
+  letter-spacing: 0;
   white-space: nowrap;
   scrollbar-width: none;
 }
@@ -34,21 +36,19 @@
   flex: 2 1 auto;
   min-width: max-content;
   padding: 14px 20px;
-  border-right: 1px solid var(--text-primary);
   display: flex;
   align-items: center;
   gap: 8px;
 }
 .rd-nav-brand:hover { color: var(--accent); }
 .rd-nav-dot { width: 9px; height: 9px; background: var(--accent); display: inline-block; flex: none; }
-.rd-nav-name { font-family: 'JetBrains Mono', monospace; font-weight: 700; }
-.rd-nav-nick { font-style: italic; text-transform: none; font-weight: 400; color: var(--text-tertiary); }
+.rd-nav-name { font-family: inherit; font-weight: 600; }
+.rd-nav-nick { font-style: italic; text-transform: none; font-weight: 400; color: var(--muted, var(--text-tertiary)); }
 
 .rd-nav-item {
   flex: 1 1 auto;
   min-width: max-content;
   padding: 14px 16px;
-  border-right: 1px solid var(--text-primary);
   display: flex;
   align-items: center;
 }
@@ -59,9 +59,8 @@
   flex: none;
   padding: 14px 16px;
   border: none;
-  border-right: 1px solid var(--text-primary);
   background: var(--bg);
-  color: var(--text-primary);
+  color: var(--ink, var(--text-primary));
   font: inherit;
   cursor: pointer;
   display: flex;
@@ -69,22 +68,23 @@
   gap: 6px;
 }
 .rd-nav-btn:hover { color: var(--accent); }
-.rd-nav-theme { background: var(--bg-card); }
+.rd-nav-theme { background: transparent; position: relative; min-width: 48px; min-height: 44px; }
 
 .rd-nav-cta {
   flex: none;
   padding: 14px 24px;
-  background: var(--accent);
-  color: #ffffff;
+  background: transparent;
+  color: var(--ink, var(--text-primary));
   display: flex;
   align-items: center;
 }
-.rd-nav-cta:hover { color: #ffffff; background: color-mix(in srgb, var(--accent) 85%, var(--text-primary)); }
+.rd-nav-cta:hover { color: var(--accent); background: var(--chip, var(--bg-card)); }
 
-/* Second destination beside Blog. Outlined rather than filled so the bar
-   keeps a single accent block instead of two competing ones. */
-.rd-nav-cta.is-secondary { background: var(--bg); color: var(--text-primary); }
-.rd-nav-cta.is-secondary:hover { background: var(--bg-card); color: var(--accent); }
+/* Second destination beside Blog. Same treatment as the primary CTA --
+   the bar carries no filled accent block, just plain items and hover
+   states, matching Navigation.astro. */
+.rd-nav-cta.is-secondary { background: var(--bg); color: var(--ink, var(--text-primary)); }
+.rd-nav-cta.is-secondary:hover { background: var(--chip, var(--bg-card)); color: var(--accent); }
 
 /* The bar is fixed, so push the page content clear of it. site-chrome.js
    measures the bar and writes --nav-h; the literal is only the pre-script

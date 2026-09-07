@@ -28,7 +28,7 @@ export default defineConfig({
   integrations: [
     sitemap({
       customPages: [
-        'https://vitchakorn.com/credentials.html',
+        'https://vitchakorn.com/credentials/',
         'https://vitchakorn.com/project/',
         'https://vitchakorn.com/project/ddschatbot/',
         'https://vitchakorn.com/project/altit/',
