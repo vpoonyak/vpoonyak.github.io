@@ -251,6 +251,7 @@ img { max-width: 100%; }
   margin: 0;
 }
 .rd-hero-title .line { display: block; }
+.rd-hero-blue { color: var(--accent); }
 .rd-hero-lede {
   font-size: clamp(17px, 1.45vw, 20px);
   line-height: 1.65;
@@ -271,13 +272,19 @@ img { max-width: 100%; }
 }
 .rd-hero-socials { max-width: 510px; margin-top: 26px; }
 .rd-hero .rd-social-mail { font-family: inherit; font-size: 13px; }
-.rd-hero-portrait { grid-area: portrait; min-width: 0; margin: 0; }
-.rd-hero-portrait img {
+.rd-hero-portrait { grid-area: portrait; min-width: 0; margin: 0; position: relative; z-index: 1; }
+.rd-hero-portrait-panel {
+  position: relative;
   width: 100%;
-  height: auto;
   aspect-ratio: 4 / 5;
-  object-fit: cover;
-  object-position: center 38%;
+  background: var(--bg);
+  overflow: hidden;
+}
+.rd-hero-cutout {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: 50% 100%;
   display: block;
 }
 .rd-stats {
@@ -299,7 +306,7 @@ img { max-width: 100%; }
 .rd-stat-label { font-size: 12px; line-height: 1.5; color: var(--muted); margin-top: 7px; }
 @media (max-width: 760px) {
   .rd-hero-top {
-    grid-template-columns: minmax(0, 1fr) clamp(112px, 38vw, 168px);
+    grid-template-columns: minmax(0, 1fr) clamp(170px, 46vw, 230px);
     grid-template-areas: "heading portrait" "copy copy";
     gap: 14px 12px;
     padding-top: 24px;
@@ -308,7 +315,7 @@ img { max-width: 100%; }
   .rd-hero-title { font-size: clamp(24px, 6.6vw, 46px); }
   .rd-hero-eyebrow { margin-bottom: 12px; font-size: 12px; }
   .rd-hero-portrait { align-self: center; }
-  .rd-hero-portrait img { aspect-ratio: 1; }
+  .rd-hero-portrait-panel { aspect-ratio: 1; }
   .rd-hero-lede { max-width: 580px; font-size: 17px; line-height: 1.5; }
   .rd-hero-actions { gap: 12px 24px; margin-top: 18px; }
   .rd-hero .rd-hero-socials { margin-top: 16px; }
@@ -319,7 +326,7 @@ img { max-width: 100%; }
   .rd-hero .rd-social-mail { flex-basis: 100%; padding-block: 10px; min-height: 44px; }
 }
 @media (max-width: 360px) {
-  .rd-hero-top { grid-template-columns: minmax(0, 1fr) 112px; gap: 14px 8px; }
+  .rd-hero-top { grid-template-columns: minmax(0, 1fr) 150px; gap: 14px 8px; }
   .rd-hero-title { font-size: 22px; }
 }
 
@@ -429,12 +436,51 @@ img { max-width: 100%; }
 }
 
 /* ═══ ABOUT ═════════════════════════════════════════════════ */
+/* The cutout is a CSS float with shape-outside traced from its OWN alpha
+   channel -- not a second flex column with a guessed margin. Earlier
+   attempts at "let the text bleed into the photo" used a fixed negative
+   margin, which has no idea where his silhouette actually is: at some
+   viewport width the panel would inevitably be narrow/tall enough that the
+   margin reached past the transparent letterboxing and into his actual
+   face (confirmed live at 950px). shape-outside reads the real alpha
+   boundary of the rendered image and lets the body paragraph's lines wrap
+   snugly against THAT contour at whatever size the image ends up being --
+   correct at every width by construction, nothing to retune per breakpoint.
+   float: right rises only as high as the lede above it allows, which is
+   what gives the "photo lower-right" composition; shape-margin adds a
+   reading gap between the text and his silhouette. shape-image-threshold
+   is low so only the near-fully-transparent margin (not his faint AA edge)
+   counts as free space -- too high a threshold pulls the wrap line away
+   from him, too low risks brushing the edge. */
+/* Caps the whole text column, not just the paragraph: shape-outside only
+   ever shows up on lines that actually reach the float, and .rd-body would
+   otherwise stretch across nearly the whole section (there's no second flex
+   column holding it back any more) -- so at wide viewports every paragraph
+   line fell short of the photo and the wrap-around was invisible, just a big
+   empty gap. This keeps the photo genuinely inside the reading column
+   instead of pinned out at the section's far edge. */
+#about .rd-body { max-width: 880px; }
+.rd-about-cutout {
+  float: right;
+  width: clamp(140px, 30vw, 320px);
+  height: auto;
+  margin: 4px 0 12px 20px;
+  shape-outside: url('/pic/vpoonyak-cutout-podium-480.webp');
+  shape-image-threshold: 0.15;
+  shape-margin: 16px;
+}
+@media (max-width: 700px) {
+  .rd-about-cutout { width: clamp(110px, 40vw, 170px); margin: 4px 0 10px 16px; shape-margin: 10px; }
+}
+
 .rd-about-lede {
-  font-size: clamp(22px, 2.3vw, 30px);
+  font-family: 'Newsreader', Georgia, serif;
+  font-style: italic;
   font-weight: 600;
-  line-height: 1.4;
+  font-size: clamp(26px, 2.9vw, 38px);
+  line-height: 1.35;
   margin: 0;
-  max-width: 840px;
+  max-width: 780px;
 }
 .rd-inline-chip {
   background: var(--chip);
@@ -457,7 +503,6 @@ img { max-width: 100%; }
   font-size: clamp(16px, 1.55vw, 18px);
   line-height: 1.65;
   color: var(--muted);
-  max-width: 720px;
   margin: 22px 0 0;
 }
 .rd-about-body strong { color: var(--ink); font-weight: 600; }
@@ -484,6 +529,9 @@ img { max-width: 100%; }
 .rd-route-row strong { color: var(--ink); font-weight: 600; }
 
 .rd-actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 32px; align-items: center; }
+/* Always below the floated cutout, never squeezed beside it -- two short
+   pill buttons fighting shape-outside for width looks cramped, not intentional. */
+#about .rd-actions { clear: both; }
 .rd-btn {
   display: inline-flex;
   align-items: center;

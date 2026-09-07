@@ -5,6 +5,24 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <title>Four Roles | Vitchakorn Poonyakanok</title>
+<!-- Blocking, mirrors Layout.astro's own head script exactly. Same-origin
+     localStorage is shared with the parent, so this frame can work out light
+     vs dark on its own before first paint instead of waiting on the parent's
+     postMessage (sent only after this frame's `load` fires) -- that gap is
+     what showed up as a flash of the wrong theme's background on refresh.
+     Runs before the <style> block below is even parsed, and before <body>
+     exists, so it stamps <html> rather than <body>; setSceneTheme() below
+     mirrors the class onto <body> too once the scene boots. -->
+<script>
+  (function () {
+    var theme;
+    try { theme = localStorage.getItem('theme'); } catch (e) { /* storage blocked */ }
+    if (theme !== 'light' && theme !== 'dark') {
+      theme = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+    }
+    if (theme === 'light') document.documentElement.classList.add('light');
+  })();
+</script>
 <!-- The label overlay is the only thing that wants these faces, and the
      canvas behind it is what a visitor is actually waiting on -- but a
      stylesheet <link> blocks script execution, so loading it normally held
@@ -55,10 +73,10 @@
   body { background: #14120d; color: #f5f5f7; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; }
   a { color: #5ea0ff; text-decoration: none; }
   a:hover { color: #f5f5f7; }
-  body.light { background: #f5f1e8; color: #16140f; }
-  body.light .kicker, body.light a { color: #2244e0; }
-  body.light .sub { color: #59523f; }
-  body.light .num, body.light .scrollhint { color: #8a8270; }
+  html.light body { background: #f5f1e8; color: #16140f; }
+  html.light .kicker, html.light a { color: #2244e0; }
+  html.light .sub { color: #59523f; }
+  html.light .num, html.light .scrollhint { color: #8a8270; }
   #stage { position: fixed; inset: 0; z-index: 0; }
   #stage canvas { display: block; }
   .sec { position: relative; z-index: 1; height: 100vh; pointer-events: none; }
@@ -69,7 +87,7 @@
   .hero-center .pin { justify-content: center; text-align: center; }
   .hero-center .copy { max-width: 780px; }
   .copy { pointer-events: auto; max-width: 560px; padding: 44px clamp(28px, 6vw, 100px); opacity: 0; transform: translateY(24px); will-change: opacity, transform; background: radial-gradient(ellipse 105% 100% at center, rgba(20, 18, 13, 0.72) 30%, rgba(20, 18, 13, 0) 78%); }
-  body.light .copy { background: radial-gradient(ellipse 105% 100% at center, rgba(245, 241, 232, 0.8) 30%, rgba(245, 241, 232, 0) 78%); }
+  html.light .copy { background: radial-gradient(ellipse 105% 100% at center, rgba(245, 241, 232, 0.8) 30%, rgba(245, 241, 232, 0) 78%); }
   .kicker { font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: #5ea0ff; margin-bottom: 18px; }
   h1 { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-weight: 900; font-size: clamp(44px, 6.5vw, 88px); line-height: 0.98; letter-spacing: -0.02em; text-transform: uppercase; }
   h2 { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-weight: 900; font-size: clamp(34px, 4.5vw, 60px); line-height: 1; letter-spacing: -0.02em; text-transform: uppercase; margin-bottom: 16px; }
@@ -109,8 +127,8 @@
   .gk { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: #5ea0ff; }
   .gt { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-weight: 600; font-size: clamp(17px, 2vw, 26px); line-height: 1.15; letter-spacing: -0.02em; margin: 8px 0; }
   .gs { font-size: clamp(11.5px, 1vw, 14px); line-height: 1.45; color: #b9b9c2; }
-  body.light .gk { color: #2244e0; }
-  body.light .gs { color: #59523f; }
+  html.light .gk { color: #2244e0; }
+  html.light .gs { color: #59523f; }
 
   /* Landscape only — in portrait every row is spoken for. */
   /* Inset scales with width, not height: the host sizes its section to the
@@ -780,7 +798,7 @@ const hint = document.getElementById('hint');
 const EMBED = new URLSearchParams(location.search).has('embed');
 function setSceneTheme(mode) {
   const light = mode === 'light';
-  document.body.classList.toggle('light', light);
+  document.documentElement.classList.toggle('light', light);
   const bg = light ? 0xf5f1e8 : 0x14120d;
   scene.background.set(bg); scene.fog.color.set(bg);
   orbitRing.material.color.set(light ? 0xb3ab98 : 0x585862); // visible-but-quiet in both themes
@@ -796,7 +814,12 @@ window.setPortfolioTheme = (mode) => {
 let paused = false;
 if (EMBED) {
   document.body.classList.add('embed');
-  setSceneTheme('dark'); // matches the parent page's default theme
+  // The head's blocking script already worked out light vs dark from the
+  // same-origin localStorage before first paint (see <head>) -- read that
+  // back rather than hardcoding dark, or a light-mode visitor would still
+  // see the WebGL canvas itself flash dark for a frame even though the CSS
+  // background around it was already correct.
+  setSceneTheme(document.documentElement.classList.contains('light') ? 'light' : 'dark');
   addEventListener('message', e => {
     if (!e.data) return;
     // rolesProgress is no longer read: the embedded stage is a fixed
