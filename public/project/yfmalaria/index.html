@@ -130,6 +130,13 @@
       cursor: pointer;
       transition: all 0.2s ease;
     }
+    /* This class's own display:inline-flex above matches the UA [hidden]
+       rule's specificity, and wins on source order - toggling .hidden on
+       any .control-btn (tripClearBtn does, via renderTripSummary) would
+       silently do nothing without this. */
+    .control-btn[hidden] {
+      display: none;
+    }
     .layout-toggle-group .control-btn {
       border: none;
       border-radius: 0;
@@ -233,9 +240,56 @@
       background: rgba(120, 120, 168, 0.05);
     }
     .map-container {
+      position: relative;
       width: 100%;
       height: 400px;
       background: var(--bg) !important;
+    }
+    /* Shown by default in the static markup (no flash-of-nothing before JS
+       runs) and removed once the ~550KB GeoJSON fetch resolves. Leaflet
+       itself never clears a container's existing children on init, so this
+       can sit as a plain child and just needs to out-rank Leaflet's own
+       panes (topmost built-in is the popup pane at z-index 700). Without
+       this, a slow connection or - more importantly - a failed fetch (ad
+       blocker, transient network error, a future hosting hiccup) left the
+       map a permanently blank canvas with zero visible indication
+       anything was wrong; the only trace was a console.error no visitor
+       would ever see. */
+    .map-loading-state {
+      position: absolute;
+      inset: 0;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 20px;
+      text-align: center;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.8125rem;
+      color: var(--text-secondary);
+      background: var(--bg);
+    }
+    .map-loading-state[hidden] {
+      display: none;
+    }
+    .map-loading-spinner {
+      width: 22px;
+      height: 22px;
+      border: 2px solid var(--border);
+      border-top-color: var(--accent-heading);
+      border-radius: 50%;
+      animation: map-loading-spin 0.8s linear infinite;
+    }
+    .map-loading-state.is-error {
+      color: #d95362;
+    }
+    .map-loading-state.is-error .map-loading-spinner {
+      display: none;
+    }
+    @keyframes map-loading-spin {
+      to { transform: rotate(360deg); }
     }
     .map-legend {
       display: flex;
@@ -290,7 +344,8 @@
       background-color: var(--bg) !important;
       color: var(--text-tertiary) !important;
     }
-    .leaflet-control-home {
+    .leaflet-control-home,
+    .leaflet-control-fullscreen-map {
       display: flex !important;
       align-items: center;
       justify-content: center;
@@ -416,6 +471,14 @@
       flex: 1;
       height: 100%;
     }
+    /* Fullscreen is for the map; the itinerary is a below-the-fold summary
+       of what's already pinned, and its cards run long (full requirements/
+       prophylaxis text per country) - on a phone it was pushing the map
+       itself down below the fold once anything was pinned, defeating the
+       point of fullscreen. It's still one tap away via Exit Full. */
+    .dashboard-wrapper.is-fullscreen #tripSummaryPanel {
+      display: none;
+    }
 
     .filter-group {
       display: flex;
@@ -453,6 +516,23 @@
       height: 100%;
     }
 
+    /* "Both" fullscreen on a short viewport: two full map sections (each
+       with its own header + legend) genuinely cannot share 800-ish px of
+       height without the map itself shrinking to a sliver - confirmed by
+       measurement, each map-container dropped to ~154px on a 390x844
+       phone. The legend duplicates what a click/hover popup already shows
+       once you're actually interacting with a map, so it's the one piece
+       safe to drop here to give the map back most of that space; header
+       and controls stay since they're how you'd switch to a single-map
+       view instead. Single-map fullscreen (.view-yf-only/.view-malaria-
+       only) already has room to keep its legend - #map-yf/#map-malaria
+       get height:100% there via the rule above, so this is scoped out. */
+    @media (max-width: 768px) {
+      .dashboard-wrapper.is-fullscreen:not(.view-yf-only):not(.view-malaria-only) .map-legend {
+        display: none;
+      }
+    }
+
     /* Custom scrollable map popups */
     .custom-map-popup .leaflet-popup-content-wrapper {
       background: var(--bg-card) !important;
@@ -486,9 +566,50 @@
         border-left: none;
         border-top: 1px solid var(--border-light);
       }
+      /* Below this width Split is forced back to a column above anyway (the
+         override two rules up), so the toggle offers a choice that doesn't
+         actually do anything - confirmed by direct testing: Split still
+         applies its state correctly (the button shows active, the class is
+         set), it just becomes visually identical to Stack, reading as
+         "broken" rather than "no-op." Hide it outright, matching how this
+         same group already hides entirely in single-map view for the same
+         reason (no meaningful choice to offer). !important because JS sets
+         this group's display inline (to inline-flex/none) when switching
+         view modes - a plain rule here would lose to that inline style.
+         Scoped to the id, NOT the shared .layout-toggle-group class - that
+         class also matches #viewModeGroup (Both/YF Only/Malaria Only),
+         which very much still does something at any width and must stay
+         visible; an earlier version of this rule used the class and
+         silently took the whole view switcher down below 1024px too,
+         which is exactly what made "switch maps without leaving
+         fullscreen" look broken - the control was there, just invisible. */
+      #layoutToggleGroup {
+        display: none !important;
+      }
+      /* .dashboard-controls wraps its three top-level children (title,
+         control-groups, search) as whole units. control-groups forcing
+         width:100% claimed the entire row for itself the moment it
+         wrapped onto its own line, leaving zero room for search to share
+         that line even when there was visibly space left over - measured
+         at 850px: title alone, then controls alone, then search alone,
+         three full row-heights where two would do. Drop the forced full
+         width so it sizes to its own content and search-container (also
+         no longer a rigid 260px block, see below) can sit beside it on
+         the same wrapped line whenever there's room. */
       .control-groups {
-        width: 100%;
-        justify-content: space-between;
+        justify-content: flex-start;
+      }
+      .search-container {
+        width: auto;
+        /* flex-basis matches min-width on purpose: flex-wrap decides
+           whether an item fits the current line using its hypothetical
+           (basis) size, before any shrinking - confirmed by measurement,
+           a 180px basis here was placing search on its own line by a
+           margin of exactly 3px even though the post-shrink 140px would
+           have fit next to control-groups with room to spare. flex-grow:1
+           still lets it expand past 140px whenever there's leftover room. */
+        flex: 1 1 140px;
+        min-width: 140px;
       }
     }
 
@@ -618,6 +739,18 @@
       flex-wrap: wrap;
       gap: 10px;
     }
+    .trip-empty-state {
+      margin: 0;
+      padding: 10px 2px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.8125rem;
+      line-height: 1.6;
+      color: var(--text-tertiary);
+    }
+    .trip-empty-state strong {
+      color: var(--text-secondary);
+      font-weight: 600;
+    }
     .trip-card {
       flex: 1 1 220px;
       max-width: 300px;
@@ -727,13 +860,13 @@
       <span class="rd-nav-name">Vitchakorn</span>
       <span class="rd-nav-nick">&ldquo;Blue&rdquo;</span>
     </a>
-    <a href="/#projects" class="rd-nav-item is-back">&larr; Portfolio</a>
+    <a href="/#projects" class="rd-nav-item is-back">Portfolio</a>
     <button class="rd-nav-btn rd-nav-theme" id="themeToggle" aria-label="Toggle theme">
       <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
       <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
     </button>
-    <a href="/project/" class="rd-nav-cta is-secondary">Archive &#8599;&#xFE0E;</a>
-    <a href="/blog/" class="rd-nav-cta">Blog &#8599;&#xFE0E;</a>
+    <a href="/project/" class="rd-nav-cta is-secondary">Archive</a>
+    <a href="/blog/" class="rd-nav-cta">Blog</a>
   </nav>
   <div class="rd-nav-spacer"></div>
 
@@ -749,7 +882,7 @@
       <span class="case-tag">Trip Planning</span>
     </div>
     <div class="case-cta">
-      <a href="https://public.tableau.com/app/profile/vitchakorn.poonyakanok/viz/yf_malaria/CDC" target="_blank" rel="noopener noreferrer" class="case-cta-btn">Open on Tableau Public &nearr;&#xFE0E;</a>
+      <a href="https://public.tableau.com/app/profile/vitchakorn.poonyakanok/viz/yf_malaria/CDC" target="_blank" rel="noopener noreferrer" class="case-cta-btn">Open on Tableau Public</a>
     </div>
     <div class="case-media dashboard-wrapper">
       <div class="dashboard-controls">
@@ -795,7 +928,12 @@
         <!-- Yellow Fever Map Section -->
         <div class="map-section" id="sectionYF">
           <div class="map-section-header yf-header">Yellow Fever Vaccine Guidance</div>
-          <div id="map-yf" class="map-container"></div>
+          <div id="map-yf" class="map-container">
+            <div class="map-loading-state" id="mapYfLoadingState">
+              <div class="map-loading-spinner" aria-hidden="true"></div>
+              <span>Loading map data…</span>
+            </div>
+          </div>
           <div class="map-legend">
             <div class="legend-title">Entry Category:</div>
             <div class="legend-item"><span class="legend-color" style="background: #afafaf;"></span>Vaccine is not required</div>
@@ -809,7 +947,12 @@
         <!-- Malaria Map Section -->
         <div class="map-section border-top" id="sectionMalaria">
           <div class="map-section-header malaria-header">Malaria Prophylaxis Guidance</div>
-          <div id="map-malaria" class="map-container"></div>
+          <div id="map-malaria" class="map-container">
+            <div class="map-loading-state" id="mapMalariaLoadingState">
+              <div class="map-loading-spinner" aria-hidden="true"></div>
+              <span>Loading map data…</span>
+            </div>
+          </div>
           <div class="map-legend">
             <div class="legend-title">Resistance Type:</div>
             <div class="legend-item"><span class="legend-color" style="background: #afafaf;"></span>No Malaria</div>
@@ -824,12 +967,20 @@
 
       <div class="data-source-note">Data extracted from the <a href="https://www.cdc.gov/yellow-book/hcp/preparing-international-travelers/yellow-fever-vaccine-and-malaria-prevention-information-by-country.html" target="_blank" rel="noopener noreferrer">CDC Yellow Book 2026</a> — Yellow Fever Vaccine &amp; Malaria Prevention Information by Country.</div>
 
-      <div class="trip-summary-panel" id="tripSummaryPanel" style="display: none;">
+      <div class="trip-summary-panel" id="tripSummaryPanel">
         <div class="trip-summary-header">
           <span class="trip-summary-title">Trip Itinerary</span>
-          <button class="control-btn" id="tripClearBtn">Clear All</button>
+          <button class="control-btn" id="tripClearBtn" hidden>Clear All</button>
         </div>
-        <div class="trip-summary-list" id="tripSummaryList"></div>
+        <!-- Visible by default (not display:none) so the trip-planning
+             feature - the page's own headline differentiator per the hero
+             copy above - has some presence before a first-time visitor has
+             already discovered "Add to Trip" inside a country popup.
+             renderTripSummary() below swaps this same element between this
+             empty-state hint and the actual pinned-country cards. -->
+        <div class="trip-summary-list" id="tripSummaryList">
+          <p class="trip-empty-state">No countries pinned yet. Click a country on either map, then <strong>Add to Trip</strong>, to start comparing destinations.</p>
+        </div>
       </div>
       <div class="hover-detail-panel" id="hoverDetailPanel"></div>
     </div>
@@ -870,7 +1021,7 @@
 
   <footer class="archive-footer">
     <div class="container-grid">
-      <a href="/project/">&larr; Back to project archive</a>
+      <a href="/project/">Back to project archive</a>
     </div>
   </footer>
 
@@ -1006,12 +1157,29 @@
       let pinnedCountries = new Map();
       const hoverPanel = document.getElementById('hoverDetailPanel');
 
+      // Tracks whichever popup is currently open per map, so a resize can
+      // refresh it - see the mapResizeObserver comment further down for why
+      // that's needed at all.
+      let currentPopupYF = null;
+      let currentPopupMalaria = null;
+
       // Touch taps fire a synthetic mouseover just before click (Leaflet's
       // tap-to-click shim), with no real mouseout ever following - so on
       // touch devices the floating hover panel would open and then stay
-      // stuck on screen underneath the click popup. Hover detail only
-      // makes sense for devices that actually have hover, so gate it.
+      // stuck on screen underneath the click popup - a third info box next
+      // to the two real ones. Hover detail only makes sense for devices
+      // that actually have hover, so gate it.
       const supportsHoverDetail = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+      // The matchMedia gate above is not enough on its own: iOS/iPadOS
+      // permanently reports hover:hover/pointer:fine once *any* mouse or
+      // trackpad has ever been paired (incl. AssistiveTouch), even for
+      // later plain finger taps - so the gate stays "open" while the
+      // interaction is still a touch tap. Track real touch activity
+      // directly and treat any mouseover within this window of a touch as
+      // part of that tap's synthetic event stream, not a genuine hover.
+      let lastTouchAt = 0;
+      document.addEventListener('touchstart', () => { lastTouchAt = Date.now(); }, { passive: true, capture: true });
 
       // Colors matching Tableau reference
       const colorsYF = {
@@ -1295,8 +1463,15 @@
       }
 
       // Fetch GeoJSON data
+      const mapLoadingStates = [
+        document.getElementById('mapYfLoadingState'),
+        document.getElementById('mapMalariaLoadingState')
+      ];
       fetch('data/yf_malaria_map.geojson')
-        .then(response => response.json())
+        .then(response => {
+          if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
+          return response.json();
+        })
         .then(data => {
           addDateLineCopies(data);
           mapData = data;
@@ -1304,8 +1479,15 @@
           initSearchAutocomplete();
           populateFilterDropdowns();
           applyStateFromURL();
+          mapLoadingStates.forEach(el => { el.hidden = true; });
         })
-        .catch(err => console.error("Error loading map GeoJSON:", err));
+        .catch(err => {
+          console.error("Error loading map GeoJSON:", err);
+          mapLoadingStates.forEach(el => {
+            el.classList.add('is-error');
+            el.querySelector('span').textContent = "Couldn't load map data. Check your connection and reload the page.";
+          });
+        });
 
       function getYFShortLabel(props) {
         const cat = props.entryCategory || 'Vaccine is not required';
@@ -1449,17 +1631,17 @@
       }
 
       function renderTripSummary() {
-        const panel = document.getElementById('tripSummaryPanel');
         const list = document.getElementById('tripSummaryList');
-        if (!panel || !list) return;
+        const clearBtn = document.getElementById('tripClearBtn');
+        if (!list) return;
+
+        clearBtn.hidden = pinnedCountries.size === 0;
 
         if (pinnedCountries.size === 0) {
-          panel.style.display = 'none';
-          list.innerHTML = '';
+          list.innerHTML = '<p class="trip-empty-state">No countries pinned yet. Click a country on either map, then <strong>Add to Trip</strong>, to start comparing destinations.</p>';
           return;
         }
 
-        panel.style.display = 'block';
         list.innerHTML = Array.from(pinnedCountries.values()).map(props => {
           const yfCat = props.entryCategory || 'Vaccine is not required';
           const yfBadgeColor = colorsYF[yfCat] || '#afafaf';
@@ -1586,6 +1768,8 @@
       function showHoverDetail(mapType, feature, originalEvent) {
         // Skip on touch devices - see supportsHoverDetail above.
         if (!supportsHoverDetail) return;
+        // Skip a touch tap's synthetic mouseover - see lastTouchAt above.
+        if (Date.now() - lastTouchAt < 700) return;
         // Skip while actively dragging: Leaflet's canvas hit-testing plus
         // the getBoundingClientRect() reflow below competes with the pan
         // itself, visibly stuttering the pane under the cursor.
@@ -1739,7 +1923,24 @@
         }
       }
 
+      // A horizontally-centered popup this wide can undercut the zoom-
+      // control stack in the map's top-left corner on narrow phones -
+      // confirmed by measurement: a centered 280px-wide popup on a 375px
+      // viewport leaves ~46px margin per side, but the zoom-control stack
+      // (now four buttons tall: zoom in/out, home, fullscreen) reaches
+      // ~67px in from the left edge - a real ~21px overlap that clips the
+      // popup's own title/subregion text behind the controls, not just a
+      // visual near-miss. Reserve that corner's width on both sides rather
+      // than hand-tuning one width for one device.
+      function popupMaxWidth() {
+        return Math.max(200, Math.min(280, window.innerWidth - 150));
+      }
+
       function selectCountry(vkpCode, latlng = null) {
+        // Belt-and-suspenders: a click popup should never coexist with the
+        // floating hover panel (see lastTouchAt above for the known cause).
+        hideHoverDetail();
+
         selectedFeatureId = vkpCode;
         updateMapStyle();
 
@@ -1791,8 +1992,8 @@
           mapMalaria.closePopup();
 
           // Open YF popup on Map YF
-          L.popup({
-            maxWidth: 280,
+          currentPopupYF = L.popup({
+            maxWidth: popupMaxWidth(),
             className: 'custom-map-popup',
             autoPan: false
           })
@@ -1801,8 +2002,8 @@
             .openOn(mapYF);
 
           // Open Malaria popup on Map Malaria
-          L.popup({
-            maxWidth: 280,
+          currentPopupMalaria = L.popup({
+            maxWidth: popupMaxWidth(),
             className: 'custom-map-popup',
             autoPan: false
           })
@@ -1834,6 +2035,8 @@
         mapYF.closePopup();
         mapMalaria.closePopup();
         isSwitchingSelection = false;
+        currentPopupYF = null;
+        currentPopupMalaria = null;
       }
       mapYF.on('popupclose', () => { if (!isSwitchingSelection) deselectCountry(); });
       mapMalaria.on('popupclose', () => { if (!isSwitchingSelection) deselectCountry(); });
@@ -1899,6 +2102,10 @@
       const wrapper = document.querySelector('.dashboard-wrapper');
 
       viewBothBtn.addEventListener('click', () => {
+        // A deliberate toolbar click always overrides any pending restore
+        // from the per-map fullscreen button (see tempViewSwitch below) -
+        // this IS the user now choosing a view on purpose.
+        tempViewSwitch = null;
         viewBothBtn.classList.add('active');
         viewYFBtn.classList.remove('active');
         viewMalariaBtn.classList.remove('active');
@@ -1914,6 +2121,12 @@
       });
 
       viewYFBtn.addEventListener('click', () => {
+        // See the matching comment on viewBothBtn above. The per-map
+        // fullscreen button below also calls this programmatically - it
+        // sets tempViewSwitch itself, but only AFTER this fires, so this
+        // reset here only ever cancels a restore from a PRIOR temporary
+        // fullscreen, never the one currently being entered.
+        tempViewSwitch = null;
         viewYFBtn.classList.add('active');
         viewBothBtn.classList.remove('active');
         viewMalariaBtn.classList.remove('active');
@@ -1929,6 +2142,8 @@
       });
 
       viewMalariaBtn.addEventListener('click', () => {
+        // See the matching comment on viewBothBtn above.
+        tempViewSwitch = null;
         viewMalariaBtn.classList.add('active');
         viewBothBtn.classList.remove('active');
         viewYFBtn.classList.remove('active');
@@ -1950,6 +2165,9 @@
       const sectionMalaria = document.getElementById('sectionMalaria');
 
       layoutStackBtn.addEventListener('click', () => {
+        // See the matching comment on layoutSplitBtn below, and the
+        // tempViewSwitch comments further down - same pattern, same reason.
+        tempLayoutSwitch = null;
         layoutStackBtn.classList.add('active');
         layoutSplitBtn.classList.remove('active');
         dashboardBody.classList.remove('layout-split');
@@ -1963,6 +2181,17 @@
       });
 
       layoutSplitBtn.addEventListener('click', () => {
+        // A deliberate toolbar click cancels any pending fullscreen-exit
+        // restore - the fullscreen-entry code below force-switches to
+        // Stack (confirmed by measurement: Split at a common ~1280px
+        // laptop width left each map barely 280px of clearance on each
+        // side of its own popup, badly cramped, while Stack at the exact
+        // same width comfortably showed the selected country plus most of
+        // the surrounding continent) and remembers Split to restore on
+        // exit - but if the user picks Split again themselves while still
+        // fullscreen, that's them overriding the auto-switch on purpose,
+        // so there's nothing left to "restore" on exit.
+        tempLayoutSwitch = null;
         layoutSplitBtn.classList.add('active');
         layoutStackBtn.classList.remove('active');
         dashboardBody.classList.add('layout-split');
@@ -2012,6 +2241,41 @@
       addHomeButtonToZoomControl(mapYF);
       addHomeButtonToZoomControl(mapMalaria);
 
+      // Every view/layout/fullscreen toggle above queues invalidateSize()
+      // after a fixed 150ms guess. That's usually enough for the map's own
+      // canvas (an earlier pass through this code mistook the renderer's
+      // oversized-looking <canvas> buffer for a stale resize and chased it
+      // as a bug - it's actually the documented padding:1 renderer buffer,
+      // exactly 3x the container in each dimension by design, confirmed by
+      // measurement, not a bug). But a fixed delay can't cover every case,
+      // and there's a real second problem invalidateSize() never touches
+      // at all: a popup already open on a map whose container was
+      // display:none (hidden by single-map view mode - see the per-map
+      // fullscreen button below) gets its width computed from that
+      // zero-size container at open time, and nothing about
+      // invalidateSize() ever tells an *already-open* popup to recompute
+      // once its container is visible and correctly sized again -
+      // confirmed by measurement, the popup's own wrapper stayed stuck at
+      // a ~53px width, with its text spilling past that narrow background
+      // via the popup's own overflow:visible. A ResizeObserver catches the
+      // exact moment a container's real box changes for any reason (view
+      // switch, fullscreen, layout switch, window resize), so it's the one
+      // place both fixes belong: refit the map, and refresh whichever
+      // popup is currently open on it.
+      const mapResizeObserver = new ResizeObserver((entries) => {
+        for (const entry of entries) {
+          if (entry.target === mapYFEl) {
+            mapYF.invalidateSize();
+            if (currentPopupYF) currentPopupYF.update();
+          } else if (entry.target === mapMalariaEl) {
+            mapMalaria.invalidateSize();
+            if (currentPopupMalaria) currentPopupMalaria.update();
+          }
+        }
+      });
+      mapResizeObserver.observe(mapYFEl);
+      mapResizeObserver.observe(mapMalariaEl);
+
       const fullscreenBtn = document.getElementById('fullscreenBtn');
 
       // iPhone Safari has no element Fullscreen API at all (not even
@@ -2022,11 +2286,62 @@
       const fsExit = document.exitFullscreen || document.webkitExitFullscreen;
       const fsElement = () => document.fullscreenElement || document.webkitFullscreenElement;
 
+      const EXPAND_ICON = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3"/></svg>';
+      const COMPRESS_ICON = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3v3a2 2 0 0 1-2 2H4M21 8h-3a2 2 0 0 1-2-2V3M3 16h3a2 2 0 0 1 2 2v3M16 21v-3a2 2 0 0 1 2-2h3"/></svg>';
+      // Per-map fullscreen buttons (added below) update in lockstep with the
+      // toolbar one - both reflect the single is-fullscreen source of truth,
+      // so exiting from either control keeps them all in sync.
+      const perMapFsLinks = [];
+
+      // Set by the per-map fullscreen button to whichever view button was
+      // active right before it switched to a single map - restored
+      // automatically on exit below, regardless of which control was used
+      // to exit (this same icon, the toolbar's Exit Full, Escape, or the
+      // browser's own native fullscreen chrome). Tapping "fullscreen this
+      // map" reads as "give me a closer look for a second," not "narrow
+      // what I'm browsing to just this map from now on" - only the
+      // toolbar's own YF Only/Malaria Only buttons make that persistent,
+      // and clicking either of them (including programmatically, from this
+      // same per-map flow) clears this so there's nothing left to restore.
+      let tempViewSwitch = null;
+
+      // Split at a common ~1280px laptop width left each map with barely
+      // 280px of clearance on either side of its own popup - the selected
+      // country itself ended up mostly hidden behind the popup, confirmed
+      // by measurement and screenshot. Stack at that exact same width
+      // comfortably showed the selected country plus most of the
+      // surrounding continent, and looked fine at every other width
+      // tested too, so it's the safe default specifically for fullscreen.
+      // Same temporary-switch pattern as tempViewSwitch above: force Stack
+      // on entry only if Split was actually active, remember to restore
+      // it on exit, and let a deliberate Stack/Split click at any point
+      // (including while still fullscreen) cancel that pending restore.
+      let tempLayoutSwitch = null;
+
       function applyFullscreenUI(active) {
         wrapper.classList.toggle('is-fullscreen', active);
         bodyEl.classList.toggle('fullscreen-lock', active);
         fullscreenBtn.classList.toggle('active', active);
         fullscreenBtn.querySelector('span').textContent = active ? 'Exit Full' : 'Fullscreen';
+        perMapFsLinks.forEach(link => {
+          link.innerHTML = active ? COMPRESS_ICON : EXPAND_ICON;
+          const label = active ? 'Exit fullscreen' : 'Fullscreen this map';
+          link.title = label;
+          link.setAttribute('aria-label', label);
+        });
+        if (active) {
+          if (layoutSplitBtn.classList.contains('active')) {
+            layoutStackBtn.click();
+            tempLayoutSwitch = layoutSplitBtn;
+          }
+        } else if (tempLayoutSwitch) {
+          tempLayoutSwitch.click();
+          tempLayoutSwitch = null;
+        }
+        if (!active && tempViewSwitch) {
+          tempViewSwitch.click();
+          tempViewSwitch = null;
+        }
         setTimeout(() => {
           mapYF.invalidateSize();
           mapMalaria.invalidateSize();
@@ -2051,6 +2366,42 @@
       ['fullscreenchange', 'webkitfullscreenchange'].forEach(evt => {
         document.addEventListener(evt, () => applyFullscreenUI(!!fsElement()));
       });
+
+      // Per-map fullscreen: a dedicated control on each map's own zoom
+      // stack (matching the home-button pattern above), so fullscreening
+      // just the YF map or just the Malaria map is one tap instead of
+      // first switching view mode with the toolbar buttons, then hitting
+      // the separate toolbar Fullscreen button.
+      function addFullscreenButtonToZoomControl(map, viewBtn) {
+        const zoomContainer = map.zoomControl.getContainer();
+        const fsLink = L.DomUtil.create('a', 'leaflet-control-fullscreen-map', zoomContainer);
+        fsLink.href = '#';
+        fsLink.title = 'Fullscreen this map';
+        fsLink.setAttribute('role', 'button');
+        fsLink.setAttribute('aria-label', 'Fullscreen this map');
+        fsLink.innerHTML = EXPAND_ICON;
+        L.DomEvent.on(fsLink, 'click', L.DomEvent.stop).on(fsLink, 'click', () => {
+          // Already fullscreen (on this map, the other one, or Both): this
+          // button doubles as the exit control, matching the toolbar one -
+          // a user who fullscreened via this icon shouldn't need to hunt
+          // for the separate "Exit Full" button to back out.
+          if (wrapper.classList.contains('is-fullscreen')) {
+            fullscreenBtn.click();
+          } else {
+            const activeViewBtn = [viewBothBtn, viewYFBtn, viewMalariaBtn].find(b => b.classList.contains('active'));
+            // viewBtn.click() clears tempViewSwitch as a side effect of its
+            // own handler (it's a real, deliberate-looking view switch from
+            // its own perspective) - set the restore target after, so it
+            // survives to be picked up when applyFullscreenUI later exits.
+            viewBtn.click();
+            tempViewSwitch = activeViewBtn !== viewBtn ? activeViewBtn : null;
+            fullscreenBtn.click();
+          }
+        });
+        perMapFsLinks.push(fsLink);
+      }
+      addFullscreenButtonToZoomControl(mapYF, viewYFBtn);
+      addFullscreenButtonToZoomControl(mapMalaria, viewMalariaBtn);
 
       // Listen for theme toggle events to adjust map layers dynamically
       themeToggle.addEventListener('click', function() {
