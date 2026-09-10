@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2026-09-10] - Site-wide Consistency and Chatbot Demo Preparation
+
+### Changed
+- **Typography and Controls**: Aligned remaining Inter body/headline styles with Helvetica Neue, removed unused web-font requests from standalone pages, and applied pill shapes and 44px targets to blog filters, article navigation, and case-study actions.
+- **Light Palette**: Replaced the stronger cream with a lightly warm off-white background and white cards across the homepage, blog, archives, case studies, and 3D backdrop.
+- **Navigation and Content**: Standardized device-theme defaults and action capitalization, added Home to standalone menus, restored the full DigiHealth degree wording, and clarified the credential archive's verification wording.
+- **Accessibility**: Added main landmarks and skip links to standalone archives/case studies and a primary heading to the standalone Contact page.
+- **DDS Chatbot**: Prepared a responsive inline public demo with an explicit open/close control. It appears only when the backend advertises its restricted embedding endpoint; the existing external demo remains available otherwise. The backend change is prepared separately and requires deployment.
+- **Audit**: Added `node scripts/audit-site.mjs` to check built content pages for metadata, headings, landmarks, image descriptions, local targets/anchors, structured data, and decorative action arrows.
+
 ## [2026-09-10] - Glass Carousel Controls
 
 ### Changed

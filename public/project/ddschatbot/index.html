@@ -18,9 +18,6 @@
   <link rel="icon" href="../../favicon/favicon-32x32.png" sizes="32x32" type="image/png">
   <link rel="icon" href="../../favicon/favicon-16x16.png" sizes="16x16" type="image/png">
   <link rel="apple-touch-icon" href="../../favicon/apple-touch-icon.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root, :root[data-theme="dark"] {
       --bg: #14120d;
@@ -40,8 +37,8 @@
     }
 
     :root[data-theme="light"] {
-      --bg: #f5f1e8;
-      --bg-card: #fdfbf5;
+      --bg: #faf9f6;
+      --bg-card: #ffffff;
       --text-primary: #16140f;
       --text-secondary: #443e2f;
       --text-tertiary: #59523f;
@@ -49,9 +46,9 @@
       --accent-heading: #2244e0;
       --accent-muted-strong: rgba(34, 68, 224, 0.18);
       --accent-border: rgba(34, 68, 224, 0.42);
-      --border: #cfc7b4;
-      --border-light: #e3ddcd;
-      --nav-bg: rgba(245, 241, 232, 0.94);
+      --border: #d5d2ca;
+      --border-light: #e7e5df;
+      --nav-bg: rgba(250, 249, 246, 0.94);
       --selection-bg: rgba(34, 68, 224, 0.22);
       --cloud-bg: rgba(34, 68, 224, 0.02);
     }
@@ -59,7 +56,7 @@
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     html, body { width: 100%; overflow-x: hidden; }
     body {
-      font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
       background-color: var(--bg);
       color: var(--text-primary);
       line-height: 1.6;
@@ -68,7 +65,6 @@
     ::selection { background: var(--selection-bg); color: var(--text-primary); }
     a { color: var(--accent-heading); text-decoration: none; }
     a:hover { text-decoration: underline; }
-    .font-mono { font-family: 'JetBrains Mono', monospace !important; }
 
     .container-grid { max-width: 860px; margin: 0 auto; padding: 0 48px; }
     @media (max-width: 768px) { .container-grid { padding: 0 24px; } }
@@ -172,6 +168,13 @@
 
     .archive-footer { padding: 40px 0 72px; }
     .archive-footer a { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 0.75rem; color: var(--text-tertiary); }
+    .case-cta-btn[hidden], .chatbot-demo[hidden] { display: none; }
+    .chatbot-demo { margin-top: 28px; padding: 20px; border: 1px solid var(--border); border-radius: 24px; background: var(--bg-card); scroll-margin-top: calc(var(--nav-h, 51px) + 24px); }
+    .chatbot-demo-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+    .chatbot-demo h2 { font-size: 20px; }
+    .chatbot-demo p { margin-bottom: 16px; color: var(--text-secondary); }
+    .chatbot-demo iframe { display: block; width: 100%; height: clamp(520px, 78svh, 820px); border: 1px solid var(--border); border-radius: 16px; background: var(--bg-card); }
+    @media (max-width: 600px) { .chatbot-demo { padding: 12px; } .chatbot-demo iframe { height: 78svh; min-height: 480px; } }
     .archive-footer a:hover { color: var(--accent-heading); }
   </style>
   <link rel="stylesheet" href="/site-chrome.css">
@@ -184,7 +187,7 @@
       var t;
       try { t = localStorage.getItem('theme'); } catch (e) {}
       if (t !== 'light' && t !== 'dark') {
-        t = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+        t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
       }
       document.documentElement.setAttribute('data-theme', t);
     })();
@@ -211,6 +214,7 @@
   </script>
 </head>
 <body>
+  <a class="skip-link" href="#main">Skip to main content</a>
   <nav class="rd-nav" id="topNav">
     <a href="/#top" class="rd-nav-brand" aria-label="Back to homepage">
       <span class="rd-nav-dot"></span>
@@ -227,6 +231,8 @@
   </nav>
   <div class="rd-nav-spacer"></div>
 
+  <main id="main">
+
   <div class="container-grid case-hero">
     <div class="case-kicker">Public Health LLM</div>
     <h1 class="case-title">DDS Chatbot</h1>
@@ -238,8 +244,18 @@
       <span class="case-tag">PDPA-Aligned</span>
     </div>
     <div class="case-cta">
-      <a href="https://vpoonyak-ddschatbot.hf.space/" target="_blank" rel="noopener noreferrer" class="case-cta-btn">Open Live Demo</a>
+      <button class="case-cta-btn" id="try-chatbot" type="button" aria-controls="chatbot-demo" aria-expanded="false" hidden>Try it here</button>
+      <a href="https://vpoonyak-ddschatbot.hf.space/" target="_blank" rel="noopener noreferrer" class="case-cta-btn">Open live demo</a>
     </div>
+    <section class="chatbot-demo" id="chatbot-demo" aria-labelledby="chatbot-demo-title" hidden>
+      <div class="chatbot-demo-head">
+        <h2 id="chatbot-demo-title">Try DDS Chatbot</h2>
+        <button class="case-cta-btn" id="close-chatbot" type="button">Close demo</button>
+      </div>
+      <p>Ask questions in Thai about aggregate disease-surveillance data. This public demo runs on Hugging Face.</p>
+      <iframe id="chatbot-frame" title="DDS Chatbot public demo in Thai" data-src="https://vpoonyak-ddschatbot.hf.space/embed?c=portfolio" allow="clipboard-write" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+      <p style="margin-top:12px;margin-bottom:0">If the demo is unavailable, <a href="https://vpoonyak-ddschatbot.hf.space/" target="_blank" rel="noopener noreferrer">open it in a new tab</a>.</p>
+    </section>
     <div class="case-media">
       <img src="ddschatbot.png" alt="DDS Chatbot Thai disease surveillance conversational interface" loading="eager" width="2192" height="1502">
     </div>
@@ -302,6 +318,8 @@
     </section>
   </div>
 
+  </main>
+
   <footer class="archive-footer">
     <div class="container-grid">
       <a href="/project/">Back to project archive</a>
@@ -309,10 +327,35 @@
   </footer>
 
   <script>
+    // The deployed app must advertise its restricted embed route first.
+    // Until then, keep the working external demo link instead of a blocked frame.
+    (async function () {
+      const open = document.getElementById('try-chatbot');
+      const panel = document.getElementById('chatbot-demo');
+      const frame = document.getElementById('chatbot-frame');
+      try {
+        const response = await fetch('https://vpoonyak-ddschatbot.hf.space/embed/status', { signal: AbortSignal.timeout(6000), credentials: 'omit' });
+        if (!response.ok || (await response.json()).available !== true) return;
+        open.hidden = false;
+      } catch { return; }
+      open.addEventListener('click', function () {
+        panel.hidden = false;
+        open.setAttribute('aria-expanded', 'true');
+        if (!frame.hasAttribute('src')) frame.src = frame.dataset.src;
+        panel.scrollIntoView({ behavior: 'instant', block: 'start' });
+        document.getElementById('close-chatbot').focus({ preventScroll: true });
+      });
+      document.getElementById('close-chatbot').addEventListener('click', function () {
+        panel.hidden = true;
+        open.setAttribute('aria-expanded', 'false');
+        open.focus({ preventScroll: true });
+      });
+    })();
+
     const htmlEl = document.documentElement;
     const bodyEl = document.body;
     const themeToggle = document.getElementById('themeToggle');
-    const savedTheme = htmlEl.getAttribute('data-theme') || 'dark';
+    const savedTheme = htmlEl.getAttribute('data-theme') || 'light';
     bodyEl.setAttribute('data-theme', savedTheme);
     themeToggle.addEventListener('click', function () {
       const current = htmlEl.getAttribute('data-theme');
@@ -324,11 +367,11 @@
 
     // Follow the OS if the visitor has never used the toggle, so the page
     // tracks a system light/dark switch while they're on it.
-    window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', function (e) {
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function (e) {
       var saved = null;
       try { saved = localStorage.getItem('theme'); } catch (err) {}
       if (saved === 'light' || saved === 'dark') return;
-      var next = e.matches ? 'light' : 'dark';
+      var next = e.matches ? 'dark' : 'light';
       htmlEl.setAttribute('data-theme', next);
       bodyEl.setAttribute('data-theme', next);
     });

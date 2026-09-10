@@ -57,7 +57,7 @@
     }
 
     body {
-      font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
       background-color: var(--bg);
       color: var(--text-primary);
       line-height: 1.6;
@@ -99,7 +99,7 @@
        TYPOGRAPHY
        ═══════════════════════════════════════════════ */
     .t-hero {
-      font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
       font-size: clamp(2rem, 7vw, 7rem);
       font-weight: 900;
       line-height: 0.95;
@@ -1411,7 +1411,7 @@
       border-radius: 6px;
       padding: 10px 14px;
       color: var(--text-primary);
-      font-family: 'Inter', sans-serif;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
       font-size: 0.875rem;
       transition: border-color 0.2s ease, box-shadow 0.2s ease;
       width: 100%;
@@ -1643,7 +1643,7 @@
       background: var(--badge-bg, #1b1f23);
       color: var(--badge-color, #ffffff);
       border: 1px solid var(--badge-border, transparent);
-      font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
       font-size: 0.6875rem;
       font-weight: 700;
       line-height: 1;
@@ -2307,7 +2307,7 @@
     @media (max-width: 768px) { .contact-grid { grid-template-columns: 1fr; gap: 2rem; } }
 
     .contact-cta {
-      font-family: 'Inter', sans-serif;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
       font-size: clamp(1.375rem, 2.5vw, 2.25rem);
       font-weight: 800;
       letter-spacing: -0.025em;

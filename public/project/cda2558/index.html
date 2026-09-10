@@ -18,9 +18,6 @@
   <link rel="icon" href="../../favicon/favicon-32x32.png" sizes="32x32" type="image/png">
   <link rel="icon" href="../../favicon/favicon-16x16.png" sizes="16x16" type="image/png">
   <link rel="apple-touch-icon" href="../../favicon/apple-touch-icon.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     :root, :root[data-theme="dark"] {
       --bg: #14120d; --bg-card: #1c1913; --text-primary: #f0ead9; --text-secondary: #c9c0a8;
@@ -30,15 +27,15 @@
       --selection-bg: rgba(109, 137, 255, 0.35); --cloud-bg: rgba(255, 255, 255, 0.015);
     }
     :root[data-theme="light"] {
-      --bg: #f5f1e8; --bg-card: #fdfbf5; --text-primary: #16140f; --text-secondary: #443e2f;
+      --bg: #faf9f6; --bg-card: #ffffff; --text-primary: #16140f; --text-secondary: #443e2f;
       --text-tertiary: #59523f; --accent: #2244e0; --accent-heading: #2244e0;
       --accent-muted-strong: rgba(34, 68, 224, 0.18); --accent-border: rgba(34, 68, 224, 0.42);
-      --border: #cfc7b4; --border-light: #e3ddcd; --nav-bg: rgba(245, 241, 232, 0.94);
+      --border: #d5d2ca; --border-light: #e7e5df; --nav-bg: rgba(250, 249, 246, 0.94);
       --selection-bg: rgba(34, 68, 224, 0.22); --cloud-bg: rgba(34, 68, 224, 0.02);
     }
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     html, body { width: 100%; overflow-x: hidden; }
-    body { font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: var(--bg); color: var(--text-primary); line-height: 1.6; transition: background-color 0.35s ease, color 0.35s ease; }
+    body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: var(--bg); color: var(--text-primary); line-height: 1.6; transition: background-color 0.35s ease, color 0.35s ease; }
     ::selection { background: var(--selection-bg); color: var(--text-primary); }
     a { color: var(--accent-heading); text-decoration: none; }
     a:hover { text-decoration: underline; }
@@ -92,7 +89,7 @@
       var t;
       try { t = localStorage.getItem('theme'); } catch (e) {}
       if (t !== 'light' && t !== 'dark') {
-        t = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+        t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
       }
       document.documentElement.setAttribute('data-theme', t);
     })();
@@ -119,6 +116,7 @@
   </script>
 </head>
 <body>
+  <a class="skip-link" href="#main">Skip to main content</a>
   <nav class="rd-nav" id="topNav">
     <a href="/#top" class="rd-nav-brand" aria-label="Back to homepage">
       <span class="rd-nav-dot"></span>
@@ -135,6 +133,8 @@
   </nav>
   <div class="rd-nav-spacer"></div>
 
+  <main id="main">
+
   <div class="container-grid case-hero">
     <div class="case-kicker">Thai Legal Reference Tool</div>
     <h1 class="case-title">CDA 2558 App</h1>
@@ -146,7 +146,7 @@
       <span class="case-tag">Unofficial / Educational</span>
     </div>
     <div class="case-cta">
-      <a href="https://thaicda2558.vercel.app/" target="_blank" rel="noopener noreferrer" class="case-cta-btn">Open Live App</a>
+      <a href="https://thaicda2558.vercel.app/" target="_blank" rel="noopener noreferrer" class="case-cta-btn">Open live app</a>
     </div>
     <div class="case-media">
       <img src="cda2558.png" alt="CDA 2558 interactive viewer showing the Thai Communicable Disease Act with search and article index" loading="eager" width="1440" height="900">
@@ -189,6 +189,8 @@
     </section>
   </div>
 
+  </main>
+
   <footer class="archive-footer">
     <div class="container-grid">
       <a href="/project/">Back to project archive</a>
@@ -199,7 +201,7 @@
     const htmlEl = document.documentElement;
     const bodyEl = document.body;
     const themeToggle = document.getElementById('themeToggle');
-    const savedTheme = htmlEl.getAttribute('data-theme') || 'dark';
+    const savedTheme = htmlEl.getAttribute('data-theme') || 'light';
     bodyEl.setAttribute('data-theme', savedTheme);
     themeToggle.addEventListener('click', function () {
       const current = htmlEl.getAttribute('data-theme');
@@ -211,11 +213,11 @@
 
     // Follow the OS if the visitor has never used the toggle, so the page
     // tracks a system light/dark switch while they're on it.
-    window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', function (e) {
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function (e) {
       var saved = null;
       try { saved = localStorage.getItem('theme'); } catch (err) {}
       if (saved === 'light' || saved === 'dark') return;
-      var next = e.matches ? 'light' : 'dark';
+      var next = e.matches ? 'dark' : 'light';
       htmlEl.setAttribute('data-theme', next);
       bodyEl.setAttribute('data-theme', next);
     });

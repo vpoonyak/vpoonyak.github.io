@@ -57,7 +57,7 @@ const posts = allPosts.filter((p) => !hiddenIds.has(p.id));
         <!-- Post list -->
         {posts.length === 0 ? (
           <div style="padding: 4rem 0; text-align: center; border: 1px dashed var(--border); border-radius: 6px;">
-            <p class="t-mono" style="color: var(--text-secondary); margin: 0;">No publications yet. Check back soon!</p>
+            <p class="t-mono" style="color: var(--text-secondary); margin: 0;">No posts yet. Check back soon!</p>
           </div>
         ) : (
           <div style="display: flex; flex-direction: column; gap: 2.5rem;">
@@ -102,7 +102,7 @@ const posts = allPosts.filter((p) => !hiddenIds.has(p.id));
                   <div style="display: flex; flex-direction: column; gap: 0.75rem;">
                     <!-- Date, Lang, Reading Time & Tags -->
                     <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-                      <span style="font-size: 0.6875rem; font-weight: 600; text-transform: uppercase; color: var(--accent); border: 1px solid var(--border); padding: 1px 5px; border-radius: 4px; background: var(--bg-card);">{langBadge}</span>
+                      <span style="font-size: 0.6875rem; font-weight: 600; text-transform: uppercase; color: var(--accent); border: 1px solid var(--border); padding: 1px 5px; border-radius: 999px; background: var(--bg-card);">{langBadge}</span>
                       <span style="color: var(--text-quaternary); font-size: 0.75rem;">•</span>
                       <time datetime={post.data.pubDate.toISOString()} class="t-mono" style="font-size: 0.75rem; color: var(--text-secondary); font-weight: 500;">
                         {formattedDate}
@@ -175,10 +175,11 @@ const posts = allPosts.filter((p) => !hiddenIds.has(p.id));
     background: var(--bg-card);
     border: 1px solid var(--border);
     padding: 6px 12px;
-    border-radius: 4px;
+    border-radius: 999px;
+    min-height: 44px;
     cursor: pointer;
     transition: all 0.15s ease;
-    text-transform: uppercase;
+    text-transform: none;
   }
   .filter-btn:hover {
     color: var(--text-primary);

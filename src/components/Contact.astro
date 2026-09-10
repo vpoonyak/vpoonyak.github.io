@@ -7,12 +7,13 @@ interface Props {
 }
 
 const { standalone = false } = Astro.props;
+const Heading = standalone ? 'h1' : 'h2';
 ---
 
 <section class="rd-section" id="contact">
   <div class="rd-section-head">
     {!standalone && <div class="rd-section-num">07</div>}
-    <h2 class="rd-section-kicker">Contact</h2>
+    <Heading class="rd-section-kicker">Contact</Heading>
   </div>
 
   <div class="rd-split">

@@ -60,22 +60,22 @@
 
 :root[data-theme="light"] {
   /* ── v2 core ── */
-  --bg: #f5f1e8;
+  --bg: #faf9f6;
   --ink: #16140f;
-  --card: #fdfbf5;
+  --card: #ffffff;
   --line: #16140f;
-  --rule: #d9d2c2;
+  --rule: #dedbd4;
   --muted: #59523f;
   --accent: #2244e0;
   --accent-ink: #ffffff;
-  --chip: #ece6d8;
+  --chip: #f0efeb;
   --accent-rgb: 34, 68, 224;
 
   /* ── legacy aliases ── */
-  --bg-elevated: #fdfbf5;
-  --bg-card: #fdfbf5;
-  --bg-card-hover: #f1ece0;
-  --bg-code: #ece6d8;
+  --bg-elevated: #ffffff;
+  --bg-card: #ffffff;
+  --bg-card-hover: #f2f1ed;
+  --bg-code: #f0efeb;
   --text-primary: #16140f;
   --text-secondary: #443e2f;
   --text-tertiary: #59523f;
@@ -85,10 +85,10 @@
   --accent-muted: rgba(34, 68, 224, 0.1);
   --accent-muted-strong: rgba(34, 68, 224, 0.18);
   --accent-border: rgba(34, 68, 224, 0.42);
-  --border: #cfc7b4;
-  --border-light: #e3ddcd;
+  --border: #d5d2ca;
+  --border-light: #e7e5df;
   --dot-color: rgba(22, 20, 15, 0.045);
-  --nav-bg: rgba(245, 241, 232, 0.94);
+  --nav-bg: rgba(250, 249, 246, 0.94);
   --selection-bg: rgba(34, 68, 224, 0.22);
   --success: #1a7f37;
   --success-muted: rgba(26, 127, 55, 0.12);

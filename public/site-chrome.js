@@ -12,6 +12,10 @@
   menu.className = 'rd-mobile-menu';
   menu.inert = true;
   menu.setAttribute('aria-hidden', 'true');
+  var home = document.createElement('a');
+  home.href = '/#top';
+  home.textContent = 'Home';
+  menu.appendChild(home);
   nav.querySelectorAll('.rd-nav-item, .rd-nav-cta').forEach(function (link) {
     var item = link.cloneNode(true);
     item.removeAttribute('class');
