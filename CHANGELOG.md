@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2026-09-10] - Glass Carousel Controls
+
+### Changed
+- **Playback Controls**: Added a theme-aware frosted-glass gradient, blur, saturation, and inset rim highlights to the carousel control pill, with a translucent play/pause hover state.
+- **Overflow Containment**: Moved horizontal clipping from the body to the root and removed section-level clipping from Projects. The carousel track retains its own horizontal scrolling; the section remains in normal page flow.
+
 ## [2026-09-10] - Project Video Carousel and Rounded Navigation
 
 ### Changed
