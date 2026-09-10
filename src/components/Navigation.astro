@@ -58,14 +58,14 @@ const barLinks = [
 ];
 ---
 
-<nav class:list={['rd-nav', compact && 'is-compact']} id="topNav">
+<nav class:list={['rd-nav', compact && 'is-compact', isHome && 'is-home']} id="topNav">
   <a href="/#top" class="rd-nav-brand" aria-label="Back to top">
     <span class="rd-nav-dot"></span>
     <span class="rd-nav-name">Vitchakorn</span>
     <span class="rd-nav-nick">&ldquo;Blue&rdquo;</span>
   </a>
 
-  {compact && <a href={backHref} class="rd-nav-item is-back">← {backLabel}</a>}
+  {compact && <a href={backHref} class="rd-nav-item is-back">{backLabel}</a>}
   {!compact && isHome && barSections.map((s) => (
     <a href={`#${s.id}`} class="rd-nav-item" data-navsec={s.id}>{s.label}</a>
   ))}
@@ -73,10 +73,7 @@ const barLinks = [
     <a href={l.href} class="rd-nav-item">{l.label}</a>
   ))}
 
-  <button type="button" id="menuBtn" class="rd-nav-btn rd-nav-menu" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
-    <span class="rd-menu-icon" aria-hidden="true"><span></span><span></span><span></span></span>
-    <span id="menuBtnLabel">Menu</span>
-  </button>
+
 
   {translationHref && (
     <a href={translationHref} class="rd-nav-btn rd-nav-lang" title={translationTitle}>
@@ -89,8 +86,11 @@ const barLinks = [
     <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
   </button>
 
-  <a href="/project/" class="rd-nav-cta is-secondary">Archive ↗︎</a>
-  <a href="/blog" class="rd-nav-cta">Blog ↗︎</a>
+  <a href="/project/" class="rd-nav-cta is-secondary">Archive</a>
+  <a href="/blog" class="rd-nav-cta">Blog</a>
+  <button type="button" id="menuBtn" class="rd-nav-btn rd-nav-menu" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
+    <span class="rd-menu-icon" aria-hidden="true"><span></span><span></span></span>
+  </button>
 </nav>
 
 <div class="rd-nav-spacer" id="navSpacer"></div>
@@ -113,6 +113,13 @@ const barLinks = [
     display: flex;
     flex-wrap: nowrap;
     overflow-x: auto;
+    transform: translateY(0);
+    opacity: 1;
+    transition: top 320ms cubic-bezier(0.22, 1, 0.36, 1), left 320ms cubic-bezier(0.22, 1, 0.36, 1),
+      right 320ms cubic-bezier(0.22, 1, 0.36, 1), transform 320ms cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 200ms ease, border-radius 220ms ease, box-shadow 220ms ease, background 220ms ease;
+    max-width: 1440px;
+    margin-inline: auto;
     align-items: stretch;
     border-bottom: 1px solid var(--rule);
     background: var(--bg);
@@ -124,6 +131,14 @@ const barLinks = [
     white-space: nowrap;
     scrollbar-width: none;
   }
+  /* On the homepage the flat bar rides fixed over the hero only until the
+     visitor scrolls past its own height, then it slides/fades up out of view
+     (.is-hidden) rather than staying pinned over hero content. It slides back
+     down as the floating pill (.is-scrolled) once About is reached. Every
+     other page has no hero to hide behind, so it just stays put at top:0. */
+  .rd-nav.is-home.is-hidden { transform: translateY(-130%); opacity: 0; pointer-events: none; }
+  .rd-nav.is-scrolled { top: 8px; left: 12px; right: 12px; border: 1px solid var(--rule); border-radius: 999px; background: color-mix(in srgb, var(--bg) 94%, transparent); backdrop-filter: blur(20px); box-shadow: 0 2px 12px rgb(0 0 0 / 0.05); }
+  .rd-nav.is-scrolled + .rd-nav-spacer { pointer-events: none; }
   .rd-nav::-webkit-scrollbar { display: none; }
   .rd-nav a { color: inherit; text-decoration: none; }
 
@@ -174,20 +189,17 @@ const barLinks = [
   .rd-nav-theme { background: transparent; position: relative; min-width: 48px; min-height: 44px; }
   .rd-nav-lang { text-transform: none; font-family: 'JetBrains Mono', monospace; font-size: 12px; }
   .rd-nav-menu { display: none; }
-  .rd-nav-menu { min-height: 44px; gap: 9px; }
-  #menuBtnLabel { min-width: 3em; text-align: left; }
+  .rd-nav-menu { min-height: 44px; min-width: 44px; justify-content: center; margin-left: 4px; background: transparent; }
   .rd-menu-icon { display: block; position: relative; width: 18px; height: 16px; flex: none; }
   .rd-menu-icon span {
     position: absolute; left: 0; width: 18px; height: 2px;
     background: currentColor; border-radius: 2px;
     transition: transform 280ms cubic-bezier(0.22, 1, 0.36, 1), opacity 160ms ease;
   }
-  .rd-menu-icon span:nth-child(1) { top: 1px; }
-  .rd-menu-icon span:nth-child(2) { top: 7px; }
-  .rd-menu-icon span:nth-child(3) { top: 13px; }
-  .rd-nav-menu[aria-expanded="true"] .rd-menu-icon span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
-  .rd-nav-menu[aria-expanded="true"] .rd-menu-icon span:nth-child(2) { transform: scaleX(0); opacity: 0; }
-  .rd-nav-menu[aria-expanded="true"] .rd-menu-icon span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+  .rd-menu-icon span:nth-child(1) { top: 4px; }
+  .rd-menu-icon span:nth-child(2) { top: 12px; }
+  .rd-nav-menu[aria-expanded="true"] .rd-menu-icon span:nth-child(1) { transform: translateY(4px) rotate(45deg); }
+  .rd-nav-menu[aria-expanded="true"] .rd-menu-icon span:nth-child(2) { transform: translateY(-4px) rotate(-45deg); }
 
   .rd-nav-cta {
     flex: none;
@@ -208,7 +220,8 @@ const barLinks = [
 
   .rd-mobile-menu {
     position: fixed;
-    top: var(--nav-h); left: 0; right: 0;
+    top: calc(var(--nav-h) + 16px); left: 12px; right: 12px;
+    border-radius: 24px;
     z-index: 99;
     display: flex;
     opacity: 0;
@@ -220,17 +233,18 @@ const barLinks = [
     background: var(--bg);
     border-bottom: 1px solid var(--rule);
     font-family: inherit;
-    font-size: 14px;
+    font-size: 13px;
+    line-height: 1.35;
     font-weight: 600;
     text-transform: none;
     letter-spacing: 0;
     max-height: calc(100vh - var(--nav-h));
-    max-height: calc(100dvh - var(--nav-h));
+    max-height: calc(100dvh - var(--nav-h) - 28px);
     overflow-y: auto;
     overscroll-behavior: contain;
   }
   .rd-mobile-menu.is-open { opacity: 1; visibility: visible; pointer-events: auto; transform: translateY(0); transition-delay: 0s; }
-  .rd-mobile-menu a { padding: 14px 24px; border-bottom: 1px solid var(--rule); color: inherit; text-decoration: none; }
+  .rd-mobile-menu a { display: flex; align-items: center; min-height: 44px; flex-shrink: 0; padding: 10px 20px; border-bottom: 1px solid var(--rule); color: inherit; text-decoration: none; }
   .rd-mobile-menu a:last-child { border-bottom: none; }
   .rd-mobile-menu a:hover { color: var(--accent); }
 
@@ -245,7 +259,7 @@ const barLinks = [
   :global([data-theme="dark"]) .icon-moon { opacity: 0; transform: translate(-50%, -50%) rotate(40deg) scale(0.7); }
   .rd-nav a, .rd-nav-btn, .rd-mobile-menu a { transition: color 160ms ease, background-color 160ms ease; }
   @media (prefers-reduced-motion: reduce) {
-    .rd-menu-icon span, .rd-mobile-menu, .icon-sun, .icon-moon,
+    .rd-nav, .rd-menu-icon span, .rd-mobile-menu, .icon-sun, .icon-moon,
     .rd-nav a, .rd-nav-btn, .rd-mobile-menu a { transition: none; }
     .rd-mobile-menu { transform: none; }
   }
@@ -283,7 +297,6 @@ const barLinks = [
   const nav = document.getElementById('topNav');
   const spacer = document.getElementById('navSpacer');
   const menuBtn = document.getElementById('menuBtn');
-  const menuBtnLabel = document.getElementById('menuBtnLabel');
   const mobileMenu = document.getElementById('mobileMenu');
 
   // The bar is fixed, so the spacer below it has to track its real height
@@ -294,6 +307,25 @@ const barLinks = [
     document.documentElement.style.setProperty('--nav-h', h + 'px');
     if (spacer) spacer.style.height = h + 'px';
   }
+  // On the homepage the bar stays flat through the hero and only becomes the
+  // floating pill once the visitor reaches About — the hero already has its
+  // own full-height composition, and turning the bar into a pill over it read
+  // as premature. Once scrolled past its own height but before About, it
+  // slides/fades out of view (.is-hidden) instead of riding fixed over hero
+  // content, then slides back down as the pill at the About boundary. Pages
+  // without an #about section (blog, contact) fall back to the plain
+  // scroll-distance check and never go through the hidden state.
+  const about = document.getElementById('about');
+  const fitScroll = () => {
+    if (!nav) return;
+    if (!about) { nav.classList.toggle('is-scrolled', window.scrollY > 24); return; }
+    const aboutNear = about.getBoundingClientRect().top <= 80;
+    nav.classList.toggle('is-scrolled', aboutNear);
+    nav.classList.toggle('is-hidden', !aboutNear && window.scrollY > nav.offsetHeight);
+  };
+  window.addEventListener('scroll', fitScroll, { passive: true });
+  window.addEventListener('resize', fitScroll);
+  fitScroll();
   fitNav();
   window.addEventListener('resize', fitNav);
   window.addEventListener('load', fitNav);
@@ -306,7 +338,6 @@ const barLinks = [
       mobileMenu!.setAttribute('aria-hidden', String(!open));
       menuBtn!.setAttribute('aria-expanded', String(open));
       menuBtn!.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
-      if (menuBtnLabel) menuBtnLabel.textContent = open ? 'Close' : 'Menu';
       if (returnFocus) {
         if (getComputedStyle(menuBtn!).display !== 'none') menuBtn!.focus();
         else nav?.querySelector('a')?.focus();

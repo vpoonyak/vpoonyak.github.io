@@ -8,16 +8,17 @@
 
 <div class="rd-float-cta" id="floatCta">
   <button type="button" class="rd-float-cta-close" id="floatCtaClose" aria-label="Dismiss Summer 2027 internship search invitation">✕</button>
-  <a
+  <div class="cta-copy">
+    <span class="cta-title">Seeking a Summer 2027 internship</span>
+    <span class="cta-meta">Health care analytics · USA · May 11 – Aug 20 · 300+ hours</span>
+  </div>
+  <a class="cta-action"
     href="/host-org-one-pager.pdf"
     target="_blank"
     rel="noopener noreferrer"
     aria-label="Seeking a Summer 2027 health care analytics internship, United States -- view internship brief, PDF"
   >
-    <span class="cta-kicker">Health care analytics · USA</span>
-    <span class="cta-title">Seeking: Summer 2027 internship</span>
-    <span class="cta-meta">May 11 – Aug 20 · 300+ hours</span>
-    <span class="cta-action">View internship brief <span aria-hidden="true">↗︎</span><small>PDF</small></span>
+    View brief
   </a>
 </div>
 
@@ -31,9 +32,19 @@
     cta?.classList.add('is-dismissed');
     try { sessionStorage.setItem('vp-cta-dismissed', '1'); } catch { /* Dismiss for this page. */ }
   });
-  // Keep the card clear of the contact form's controls.
+  // Keep the card clear of the contact form's controls and the footer below
+  // it. Watching #contact alone left a gap: on a short viewport the section
+  // can scroll fully out of view (un-hiding the card) while the footer is
+  // still on screen, right where the card would then land. Hiding on either
+  // intersecting covers both, since nothing follows the footer to scroll to.
   const contact = document.getElementById('contact');
-  if (contact) new IntersectionObserver(([entry]) => {
-    cta?.classList.toggle('is-over-contact', entry.isIntersecting);
-  }).observe(contact);
+  const footer = document.querySelector('.rd-footer');
+  let overContact = false, overFooter = false;
+  const syncOverContact = () => cta?.classList.toggle('is-over-contact', overContact || overFooter);
+  if (contact) new IntersectionObserver(([entry]) => { overContact = entry.isIntersecting; syncOverContact(); }).observe(contact);
+  if (footer) new IntersectionObserver(([entry]) => { overFooter = entry.isIntersecting; syncOverContact(); }).observe(footer);
+  const projects = document.getElementById('projects');
+  if (projects) new IntersectionObserver(([entry]) => {
+    cta?.classList.toggle('is-over-projects', entry.isIntersecting);
+  }).observe(projects);
 </script>
