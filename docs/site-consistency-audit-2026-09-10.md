@@ -63,4 +63,4 @@ but shows its “Try it here” button only after the capability check succeeds.
 Until the backend is deployed, the existing external demo link remains available.
 Production iframe/chat interaction still needs verification after that deployment.
 
-No changes from this audit have been pushed or deployed.
+At audit completion, these changes were local and awaiting deployment approval.
