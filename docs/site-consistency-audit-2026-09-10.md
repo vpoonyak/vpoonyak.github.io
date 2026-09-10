@@ -63,4 +63,10 @@ but shows its “Try it here” button only after the capability check succeeds.
 Until the backend is deployed, the existing external demo link remains available.
 Production iframe/chat interaction still needs verification after that deployment.
 
-At audit completion, these changes were local and awaiting deployment approval.
+Both changes are now deployed and verified live: the website commits landed on
+`origin/main` (GitHub Pages workflow run `34510945713`, succeeded), and the
+backend commit is on `hf/main` at `73fc72e`. `https://vpoonyak-ddschatbot.hf.space/embed/status`
+returns `{"available":true}`, and the space's `Content-Security-Policy` on
+`/embed` lists `frame-ancestors https://vitchakorn.com https://www.vitchakorn.com
+https://vpoonyak.github.io`, so the case-study page's capability check passes
+and the inline iframe is unblocked in production.
