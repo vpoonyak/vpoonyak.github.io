@@ -6,6 +6,8 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 - **Playback Controls**: Added a theme-aware frosted-glass gradient, blur, saturation, and inset rim highlights to the carousel control pill, with a translucent play/pause hover state.
+- **Floating Control Dock**: Separated the progress capsule and play/pause circle. As the project media enters the viewport, the controls float above the viewport's lower edge and settle at the media's bottom as it scrolls fully into view. Their movement stays within the media area, leaving descriptions clear; reduced-motion mode keeps the controls in their resting position.
+- **Interface Typography**: Replaced JetBrains Mono with the site's sans-serif across labels, metadata, buttons, archives, and case studies. Section numbers, section-rail numbers, and 3D role counters use tabular numerals. Code blocks and technical examples retain monospace; Newsreader remains the editorial accent. Removed unused JetBrains font requests from the homepage and standalone portfolio pages.
 - **Overflow Containment**: Moved horizontal clipping from the body to the root and removed section-level clipping from Projects. The carousel track retains its own horizontal scrolling; the section remains in normal page flow.
 
 ## [2026-09-10] - Project Video Carousel and Rounded Navigation

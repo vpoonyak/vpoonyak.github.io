@@ -129,6 +129,32 @@ const projects = [
     let pointer: { id: number; x: number; y: number; scroll: number; mouse: boolean } | null = null;
     let dragged = false;
 
+    // Float only the controls, bounded by the media, without pinning the section.
+    const media = cards[0].querySelector<HTMLElement>('.rd-work-media')!;
+    let dockFrame = 0;
+    function positionControls() {
+      dockFrame = 0;
+      if (reduced.matches) { controls.style.removeProperty('--controls-offset'); return; }
+      const mediaBox = media.getBoundingClientRect();
+      const height = controls.offsetHeight;
+      const viewport = window.visualViewport;
+      const bottom = viewport ? viewport.offsetTop + viewport.height : window.innerHeight;
+      const top = Math.max(mediaBox.top + 12, Math.min(mediaBox.bottom - height - 12, bottom - height - 24));
+      const restingTop = carousel!.getBoundingClientRect().top + controls.offsetTop;
+      controls.style.setProperty('--controls-offset', `${top - restingTop}px`);
+    }
+    function queueControls() {
+      if (!dockFrame) dockFrame = requestAnimationFrame(positionControls);
+    }
+    window.addEventListener('scroll', queueControls, { passive: true });
+    window.addEventListener('resize', queueControls, { passive: true });
+    window.visualViewport?.addEventListener('resize', queueControls, { passive: true });
+    window.visualViewport?.addEventListener('scroll', queueControls, { passive: true });
+    const dockResize = new ResizeObserver(queueControls);
+    dockResize.observe(media);
+    dockResize.observe(controls);
+    reduced.addEventListener('change', queueControls);
+
     const position = (i: number) => cards[i].offsetLeft - (track.clientWidth - cards[i].offsetWidth) / 2;
     const canPlay = () => wantsPlay && visible && !document.hidden && !hovered && !focused && !scrolling && !pointer;
     function syncPlayback() {
@@ -271,6 +297,7 @@ const projects = [
     new ResizeObserver(() => go(selected, true)).observe(track);
     controls.hidden = false;
     carousel.classList.add('is-enhanced');
+    positionControls();
     syncPlayback();
   }
 </script>

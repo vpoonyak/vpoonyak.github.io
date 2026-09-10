@@ -31,7 +31,6 @@
      limited to the small monospace labels; headings use the system sans serif.
      No italic. -->
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <script type="importmap">
 {
   "imports": {
@@ -88,12 +87,12 @@
   .hero-center .copy { max-width: 780px; }
   .copy { pointer-events: auto; max-width: 560px; padding: 44px clamp(28px, 6vw, 100px); opacity: 0; transform: translateY(24px); will-change: opacity, transform; background: radial-gradient(ellipse 105% 100% at center, rgba(20, 18, 13, 0.72) 30%, rgba(20, 18, 13, 0) 78%); }
   html.light .copy { background: radial-gradient(ellipse 105% 100% at center, rgba(245, 241, 232, 0.8) 30%, rgba(245, 241, 232, 0) 78%); }
-  .kicker { font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: #5ea0ff; margin-bottom: 18px; }
+  .kicker { font-family: inherit; font-variant-numeric: tabular-nums; font-weight: 500; font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: #5ea0ff; margin-bottom: 18px; }
   h1 { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-weight: 900; font-size: clamp(44px, 6.5vw, 88px); line-height: 0.98; letter-spacing: -0.02em; text-transform: uppercase; }
   h2 { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-weight: 900; font-size: clamp(34px, 4.5vw, 60px); line-height: 1; letter-spacing: -0.02em; text-transform: uppercase; margin-bottom: 16px; }
   .sub { font-size: clamp(16px, 1.6vw, 20px); line-height: 1.55; color: #b9b9c2; font-weight: 400; }
-  .num { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #5c5c66; margin-top: 22px; letter-spacing: 0.14em; }
-  .scrollhint { position: fixed; left: 50%; bottom: 26px; transform: translateX(-50%); z-index: 2; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.2em; color: #5c5c66; text-transform: uppercase; transition: opacity 0.4s; }
+  .num { font-family: inherit; font-variant-numeric: tabular-nums; font-weight: 500; font-size: 12px; color: #5c5c66; margin-top: 22px; letter-spacing: 0.06em; }
+  .scrollhint { position: fixed; left: 50%; bottom: 26px; transform: translateX(-50%); z-index: 2; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 11px; letter-spacing: 0.2em; color: #5c5c66; text-transform: uppercase; transition: opacity 0.4s; }
   /* ── Embed mode: the whole proposition on one screen ──────────────────────
      The host gives this stage a single 100vh section with no scroll runway,
      so there is no beat-by-beat walk through the roles: the camera parks on
@@ -124,7 +123,7 @@
     align-items: center;
   }
   .gcell { max-width: none; padding-left: 44%; }
-  .gk { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: #5ea0ff; }
+  .gk { font-family: inherit; font-variant-numeric: tabular-nums; font-weight: 500; font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: #5ea0ff; }
   .gt { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-weight: 600; font-size: clamp(17px, 2vw, 26px); line-height: 1.15; letter-spacing: -0.02em; margin: 8px 0; }
   .gs { font-size: clamp(11.5px, 1vw, 14px); line-height: 1.45; color: #b9b9c2; }
   html.light .gk { color: #2244e0; }
@@ -139,7 +138,7 @@
     position: fixed; left: 50%; top: clamp(14px, 2.4vw, 34px);
     transform: translateX(-50%);
     z-index: 2; text-align: center; pointer-events: none;
-    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 11px;
     letter-spacing: 0.2em; text-transform: uppercase; color: #5c5c66;
   }
   body.embed.cols .gmid { display: block; }

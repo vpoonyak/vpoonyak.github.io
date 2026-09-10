@@ -33,7 +33,7 @@
       left: 12px;
       z-index: 1100;
       padding: 0.6rem 1rem;
-      font-family: 'JetBrains Mono', monospace;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
       font-size: 0.8125rem;
       font-weight: 600;
       color: var(--bg);
@@ -108,7 +108,7 @@
     }
 
     .t-section-number {
-      font-family: 'JetBrains Mono', monospace;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
       font-size: clamp(3.5rem, 8vw, 7rem);
       font-weight: 900;
       line-height: 0.85;
@@ -126,7 +126,7 @@
     }
 
     .t-label {
-      font-family: 'JetBrains Mono', monospace;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
       font-size: 0.6875rem;
       font-weight: 600;
       letter-spacing: 0.16em;
@@ -180,7 +180,7 @@
     @media (max-width: 768px) { .nav-inner { padding: 0 20px; } }
 
     .nav-logo {
-      font-family: 'JetBrains Mono', monospace;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
       font-weight: 700;
       font-size: 1rem;
       letter-spacing: 0.08em;
@@ -209,7 +209,7 @@
     }
 
     .nav-links a {
-      font-family: 'JetBrains Mono', monospace;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
       font-size: 0.6875rem;
       font-weight: 500;
       letter-spacing: 0.06em;
@@ -242,7 +242,7 @@
       overflow-y: hidden;
       align-items: center;
       gap: 6px;
-      font-family: 'JetBrains Mono', monospace;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
       white-space: nowrap;
       -webkit-overflow-scrolling: touch;
       scrollbar-width: none;
@@ -293,7 +293,7 @@
     .nav-actions { display: flex; align-items: center; gap: 8px; }
 
     .nav-action-link {
-      font-family: 'JetBrains Mono', monospace;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
       font-size: 0.75rem;
       font-weight: 600;
       color: var(--text-secondary);
@@ -781,7 +781,7 @@
       background: var(--accent-muted);
       border: 1px solid var(--accent-border);
       border-radius: 4px;
-      font-family: 'JetBrains Mono', monospace;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
       font-size: 0.75rem;
       font-weight: 600;
       color: var(--accent-heading);
@@ -819,7 +819,7 @@
     }
 
     .stat-number {
-      font-family: 'JetBrains Mono', monospace;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
       font-size: 2rem;
       font-weight: 700;
       line-height: 1;
@@ -830,7 +830,7 @@
     .stat-item:hover .stat-number { color: var(--accent-heading); }
 
     .stat-label {
-      font-family: 'JetBrains Mono', monospace;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
       font-size: 0.625rem;
       font-weight: 600;
       letter-spacing: 0.1em;
@@ -845,7 +845,7 @@
     }
 
     .about-contact-email {
-      font-family: 'JetBrains Mono', monospace;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
       font-size: 0.8125rem;
       color: var(--accent-heading);
       text-decoration: none;
@@ -890,7 +890,7 @@
     }
 
     .exp-category-label {
-      font-family: 'JetBrains Mono', monospace;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
       font-size: 0.6875rem;
       font-weight: 700;
       letter-spacing: 0.15em;
@@ -929,7 +929,7 @@
     .timeline-item:hover::before { background: var(--accent-heading); }
 
     .timeline-year {
-      font-family: 'JetBrains Mono', monospace;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
       font-size: 0.6875rem;
       font-weight: 700;
       color: var(--accent-heading);
@@ -944,7 +944,7 @@
       border-radius: 999px;
       background: var(--stress-muted);
       color: var(--stress);
-      font-family: 'JetBrains Mono', monospace;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
       font-size: 0.5625rem;
       font-weight: 700;
       letter-spacing: 0.08em;
@@ -989,7 +989,7 @@
     }
 
     .timeline-location {
-      font-family: 'JetBrains Mono', monospace;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
       font-size: 0.6875rem;
       color: var(--text-tertiary);
       margin-top: 2px;
@@ -1054,7 +1054,7 @@
     }
 
     .expertise-title {
-      font-family: 'JetBrains Mono', monospace;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
       font-size: 1.0625rem;
       font-weight: 700;
       color: var(--accent-heading);
@@ -1192,7 +1192,7 @@
     }
 
     .featured-project-kicker {
-      font-family: 'JetBrains Mono', monospace;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
       font-size: 0.6875rem;
       font-weight: 700;
       letter-spacing: 0.14em;
@@ -1397,7 +1397,7 @@
     }
 
     .form-label {
-      font-family: 'JetBrains Mono', monospace;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
       font-size: 0.6875rem;
       font-weight: 600;
       color: var(--text-tertiary);
@@ -1442,7 +1442,7 @@
       border: 1px solid var(--accent-border);
       background: var(--accent-muted);
       color: var(--accent-heading);
-      font-family: 'JetBrains Mono', monospace;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
       font-size: 0.75rem;
       font-weight: 700;
       letter-spacing: 0.06em;
@@ -1481,7 +1481,7 @@
     }
 
     .project-tag {
-      font-family: 'JetBrains Mono', monospace;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
       font-size: 0.625rem;
       font-weight: 600;
       padding: 2px 8px;
@@ -1503,7 +1503,7 @@
     .pub-item:first-child { border-top: 1px solid var(--border-light); }
 
     .pub-number {
-      font-family: 'JetBrains Mono', monospace;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
       font-size: 0.6875rem;
       font-weight: 700;
       color: var(--text-tertiary);
@@ -1518,14 +1518,14 @@
     }
 
     .pub-journal {
-      font-family: 'JetBrains Mono', monospace;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
       font-size: 0.75rem;
       color: var(--text-tertiary);
       margin-top: 6px;
     }
 
     .pub-doi {
-      font-family: 'JetBrains Mono', monospace;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
       font-size: 0.6875rem;
       margin-top: 4px;
     }
@@ -1542,7 +1542,7 @@
 
     summary {
       cursor: pointer;
-      font-family: 'JetBrains Mono', monospace;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
       font-size: 0.75rem;
       color: var(--accent-heading);
       list-style: none;
@@ -1586,7 +1586,7 @@
     }
 
     .column-kicker {
-      font-family: 'JetBrains Mono', monospace;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
       font-size: 0.6875rem;
       font-weight: 700;
       letter-spacing: 0.15em;
@@ -1615,7 +1615,7 @@
     .skills-category:first-child { border-top: 1px solid var(--border-light); }
 
     .skills-category-title {
-      font-family: 'JetBrains Mono', monospace;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
       font-size: 0.75rem;
       font-weight: 600;
       color: var(--accent-heading);
@@ -1727,7 +1727,7 @@
       border-radius: 999px;
       background: var(--stress-muted);
       color: var(--stress);
-      font-family: 'JetBrains Mono', monospace;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
       font-size: 0.5625rem;
       font-weight: 700;
       letter-spacing: 0.06em;
@@ -1736,7 +1736,7 @@
     }
 
     .training-meta {
-      font-family: 'JetBrains Mono', monospace;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
       font-size: 0.6875rem;
       color: var(--text-tertiary);
       margin-top: 4px;
@@ -1773,7 +1773,7 @@
     }
 
     .training-row-label {
-      font-family: 'JetBrains Mono', monospace;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
       font-size: 0.6875rem;
       font-weight: 700;
       letter-spacing: 0.12em;
@@ -1832,7 +1832,7 @@
 
     .training-row-meta {
       color: var(--text-tertiary);
-      font-family: 'JetBrains Mono', monospace;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
       font-size: 0.625rem;
     }
 
@@ -1869,7 +1869,7 @@
     }
 
     .training-detail-label {
-      font-family: 'JetBrains Mono', monospace;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
       font-size: 0.625rem;
       font-weight: 700;
       letter-spacing: 0.1em;
@@ -1879,7 +1879,7 @@
 
     .training-rank {
       color: var(--text-tertiary);
-      font-family: 'JetBrains Mono', monospace;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
       font-size: 0.625rem;
       font-weight: 700;
       white-space: nowrap;
@@ -1908,7 +1908,7 @@
     }
 
     .cert-archive-link {
-      font-family: 'JetBrains Mono', monospace;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
       font-size: 0.6875rem;
       font-weight: 600;
       letter-spacing: 0.08em;
@@ -1919,7 +1919,7 @@
     .cert-archive-link:hover { text-decoration: none; opacity: 0.8; }
 
     .cert-category-title {
-      font-family: 'JetBrains Mono', monospace;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
       font-size: 0.75rem;
       font-weight: 600;
       color: var(--accent-heading);
@@ -1983,7 +1983,7 @@
     }
 
     .cert-meta {
-      font-family: 'JetBrains Mono', monospace;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
       font-size: 0.625rem;
       color: var(--text-tertiary);
       margin-top: 2px;
@@ -1993,7 +1993,7 @@
       display: inline-flex;
       align-items: center;
       margin-top: 4px;
-      font-family: 'JetBrains Mono', monospace;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
       font-size: 0.6875rem;
       font-weight: 700;
       padding: 5px 10px;
@@ -2118,7 +2118,7 @@
     }
 
     .app-name {
-      font-family: 'JetBrains Mono', monospace;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
       font-size: 0.6875rem;
       font-weight: 700;
       color: var(--accent-heading);
@@ -2176,7 +2176,7 @@
     }
 
     .lang-level {
-      font-family: 'JetBrains Mono', monospace;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
       font-size: 0.6875rem;
       color: var(--accent-heading);
       font-weight: 600;
@@ -2184,7 +2184,7 @@
     }
 
     .lang-code {
-      font-family: 'JetBrains Mono', monospace;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
       font-size: 0.625rem;
       font-weight: 700;
       color: var(--text-tertiary);
@@ -2226,7 +2226,7 @@
       border-radius: 6px;
       background: var(--bg-card);
       color: var(--text-secondary);
-      font-family: 'JetBrains Mono', monospace;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
       font-size: 0.625rem;
       font-weight: 800;
       letter-spacing: 0.02em;
@@ -2269,13 +2269,13 @@
 
     .lang-proof-date {
       margin-top: 2px;
-      font-family: 'JetBrains Mono', monospace;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
       font-size: 0.625rem;
       color: var(--text-tertiary);
     }
 
     .lang-proof-score {
-      font-family: 'JetBrains Mono', monospace;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
       font-size: 0.6875rem;
       font-weight: 700;
       color: var(--text-secondary);
@@ -2326,7 +2326,7 @@
       border: 1px solid var(--accent-border);
       background: var(--accent-muted);
       color: var(--accent-heading);
-      font-family: 'JetBrains Mono', monospace;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
       font-size: 0.75rem;
       font-weight: 600;
       letter-spacing: 0.06em;
@@ -2360,7 +2360,7 @@
     .contact-link:hover { padding-left: 8px; color: var(--accent-heading); text-decoration: none; }
 
     .contact-link-label {
-      font-family: 'JetBrains Mono', monospace;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
       font-size: 0.8125rem;
       font-weight: 600;
     }
@@ -2377,7 +2377,7 @@
     .contact-formal-review {
       margin-top: 1rem;
       color: var(--text-secondary);
-      font-family: 'JetBrains Mono', monospace;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
       font-size: 0.8125rem;
       line-height: 1.7;
     }
@@ -2414,7 +2414,7 @@
     }
 
     .footer-links a {
-      font-family: 'JetBrains Mono', monospace;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
       font-size: 0.6875rem;
       font-weight: 600;
       letter-spacing: 0.05em;
@@ -2446,7 +2446,7 @@
     }
 
     .footer-copy {
-      font-family: 'JetBrains Mono', monospace;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
       font-size: 0.6875rem;
       color: var(--text-tertiary);
     }
@@ -2455,7 +2455,7 @@
       display: flex;
       align-items: center;
       gap: 6px;
-      font-family: 'JetBrains Mono', monospace;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
       font-size: 0.6875rem;
       color: var(--text-tertiary);
     }
