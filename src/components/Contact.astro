@@ -31,21 +31,142 @@ const Heading = standalone ? 'h1' : 'h2';
     </div>
 
     <div>
-      <form action="https://formspree.io/f/myklppap" method="POST" class="rd-form">
+      <form action="https://formspree.io/f/myklppap" method="POST" class="rd-form" id="contactForm">
         <label>
           Name
-          <input type="text" name="name" required placeholder="Your full name">
+          <input type="text" name="name" id="contactFieldName" required placeholder="Your full name" autocomplete="name">
         </label>
         <label>
           Email
-          <input type="email" name="_replyto" required placeholder="Your email address">
+          <input type="email" name="_replyto" id="contactFieldEmail" required placeholder="Your email address" autocomplete="email">
         </label>
         <label>
           Message
-          <textarea name="message" required placeholder="How can I help you?" rows="4"></textarea>
+          <textarea name="message" id="contactFieldMessage" required placeholder="How can I help you?" rows="4" autocomplete="off"></textarea>
         </label>
         <button type="submit">Send message</button>
+        <p class="rd-form-status" id="contactStatus" role="status" aria-live="polite"></p>
       </form>
     </div>
   </div>
 </section>
+
+<script>
+  // Progressive enhancement over the form's own action/method: if this
+  // never runs (JS disabled or failed to load), the browser still does a
+  // plain HTML POST to the same Formspree endpoint. This same component
+  // renders on both Home and /contact, so one implementation covers both.
+  const form = document.getElementById('contactForm') as HTMLFormElement | null;
+  if (form) {
+    const status = document.getElementById('contactStatus')!;
+    const submitBtn = form.querySelector('button[type="submit"]') as HTMLButtonElement;
+    const idleLabel = submitBtn.textContent || 'Send message';
+
+    // One inline error slot per field, keyed by the form field `name` --
+    // Formspree's JSON error objects identify the offending field that way.
+    const fields = new Map<string, { input: HTMLInputElement | HTMLTextAreaElement; error: HTMLElement }>();
+    form.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('input, textarea').forEach((input) => {
+      const error = document.createElement('span');
+      error.className = 'rd-form-field-error';
+      error.id = `${input.id}-error`;
+      error.hidden = true;
+      input.insertAdjacentElement('afterend', error);
+      fields.set(input.name, { input, error });
+    });
+
+    function clearFieldErrors() {
+      fields.forEach(({ input, error }) => {
+        input.removeAttribute('aria-invalid');
+        input.removeAttribute('aria-describedby');
+        error.hidden = true;
+        error.textContent = '';
+      });
+    }
+
+    function showFieldError(name: string, message: string) {
+      const field = fields.get(name);
+      if (!field) return;
+      field.input.setAttribute('aria-invalid', 'true');
+      field.input.setAttribute('aria-describedby', field.error.id);
+      field.error.hidden = false;
+      field.error.textContent = message;
+    }
+
+    function setStatus(text: string, tone: 'success' | 'error' | null) {
+      status.textContent = text;
+      status.classList.toggle('is-success', tone === 'success');
+      status.classList.toggle('is-error', tone === 'error');
+    }
+
+    let pending = false;
+    form.addEventListener('submit', async (event) => {
+      // Native required/email validation already ran before this event
+      // fires at all (the browser cancels submit on an invalid form unless
+      // novalidate is set, which this form does not use), so reaching here
+      // means the fields already pass those constraints.
+      event.preventDefault();
+      if (pending) return;
+      pending = true;
+      clearFieldErrors();
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sending…';
+      setStatus('Sending your message…', null);
+
+      const controller = new AbortController();
+      // 20s: long enough for a slow connection, short enough that a
+      // visitor isn't left staring at "Sending…" indefinitely if Formspree
+      // or the network never answers at all.
+      const timeoutId = setTimeout(() => controller.abort(), 20000);
+
+      try {
+        const response = await fetch(form.action, {
+          method: form.method,
+          body: new FormData(form),
+          headers: { Accept: 'application/json' },
+          signal: controller.signal,
+        });
+        clearTimeout(timeoutId);
+
+        if (response.ok) {
+          form.reset();
+          setStatus('Message sent — thanks, I’ll get back to you soon.', 'success');
+        } else {
+          let errors: Array<{ field?: string; message?: string }> = [];
+          try {
+            const data = await response.json();
+            if (Array.isArray(data?.errors)) errors = data.errors;
+          } catch {
+            // Non-JSON error body -- fall through to the generic message.
+          }
+          let shown = false;
+          errors.forEach((err) => {
+            if (err.field && err.message) {
+              showFieldError(err.field, err.message);
+              shown = true;
+            }
+          });
+          const summary = errors.map((e) => e.message).filter(Boolean).join(' ');
+          setStatus(
+            summary || 'Something went wrong sending your message. Please check the form and try again.',
+            'error'
+          );
+          if (!shown) submitBtn.focus();
+        }
+      } catch (err) {
+        clearTimeout(timeoutId);
+        const timedOut = err instanceof DOMException && err.name === 'AbortError';
+        setStatus(
+          (timedOut
+            ? 'This is taking longer than expected, so your message may not have sent.'
+            : 'Could not reach the server, so your message was not sent.') +
+            ' Try again, or email vk.poonyakanok@gmail.com directly.',
+          'error'
+        );
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = idleLabel;
+        pending = false;
+      }
+    });
+  }
+</script>

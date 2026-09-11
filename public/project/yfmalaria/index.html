@@ -46,6 +46,14 @@
     a:hover { text-decoration: underline; }
     .container-grid { max-width: 860px; margin: 0 auto; padding: 0 48px; }
     @media (max-width: 768px) { .container-grid { padding: 0 24px; } }
+    /* The dashboard is deliberately wider than the reading column above it --
+       860px badly cramped two side-by-side maps plus a detail panel. */
+    .dashboard-shell { max-width: 1440px; margin: 2rem auto 0; padding: 0 48px; }
+    @media (max-width: 768px) { .dashboard-shell { padding: 0 24px; } }
+    .visually-hidden {
+      position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+      overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+    }
     .page-header { position: sticky; top: 0; z-index: 10; background: var(--nav-bg); backdrop-filter: blur(20px) saturate(1.2); -webkit-backdrop-filter: blur(20px) saturate(1.2); border-bottom: 1px solid var(--border); }
     .page-header-inner { max-width: 860px; margin: 0 auto; padding: 0 48px; height: 56px; display: flex; align-items: center; justify-content: space-between; }
     @media (max-width: 768px) { .page-header-inner { padding: 0 24px; } }
@@ -72,7 +80,6 @@
     .case-cta-btn { display: inline-flex; align-items: center; gap: 6px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 0.75rem; font-weight: 700; padding: 10px 18px; border-radius: 8px; border: 1px solid var(--accent-border); color: var(--accent-heading); background: var(--accent-muted-strong); transition: background 0.2s ease, border-color 0.2s ease; }
     .case-cta-btn:hover { background: var(--accent-border); text-decoration: none; }
     .dashboard-wrapper {
-      margin-top: 2rem;
       border: 1px solid var(--border-light);
       border-radius: 14px;
       overflow: hidden;
@@ -116,6 +123,8 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
+      min-height: 44px;
+      box-sizing: border-box;
       font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
       font-size: 0.6875rem;
       font-weight: 600;
@@ -159,13 +168,16 @@
     .search-container input {
       width: 100%;
       font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-      font-size: 0.8125rem;
-      padding: 8px 12px;
+      /* 16px is a floor, not a style choice -- anything smaller triggers
+         iOS Safari's zoom-on-focus, which doesn't zoom back out after. */
+      font-size: 1rem;
+      padding: 10px 12px;
+      min-height: 44px;
       border-radius: 6px;
       border: 1px solid var(--border);
       background: var(--bg);
       color: var(--text-primary);
-      outline: none;
+      box-sizing: border-box;
       transition: border-color 0.2s ease;
     }
     .search-container input:focus {
@@ -180,22 +192,69 @@
       border: 1px solid var(--border);
       border-top: none;
       border-radius: 0 0 6px 6px;
-      max-height: 200px;
+      max-height: 240px;
       overflow-y: auto;
       z-index: 1000;
       display: none;
       box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }
     .suggestion-item {
-      padding: 8px 12px;
+      padding: 10px 12px;
+      min-height: 44px;
+      box-sizing: border-box;
+      display: flex;
+      align-items: center;
       font-size: 0.8125rem;
       color: var(--text-secondary);
       cursor: pointer;
       transition: background 0.2s ease;
     }
-    .suggestion-item:hover {
+    .suggestion-item:hover,
+    .suggestion-item.is-active {
       background: var(--border-light);
       color: var(--text-primary);
+    }
+    .suggestion-empty {
+      padding: 10px 12px;
+      font-size: 0.8125rem;
+      color: var(--text-tertiary);
+    }
+
+    /* Filters disclosure -- native <details>, so it comes with expand/
+       collapse keyboard and AT semantics for free. */
+    .filters-disclosure {
+      position: relative;
+    }
+    .filters-disclosure > summary {
+      list-style: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .filters-disclosure > summary::-webkit-details-marker { display: none; }
+    .filters-disclosure > summary::after {
+      content: '';
+      width: 6px; height: 6px;
+      border-right: 1.5px solid currentColor;
+      border-bottom: 1.5px solid currentColor;
+      transform: rotate(45deg);
+      transition: transform 0.2s ease;
+    }
+    .filters-disclosure[open] > summary::after { transform: rotate(-135deg); }
+    .filters-panel {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      margin-top: 4px;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding: 10px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--bg-card);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }
 
     .dashboard-body {
@@ -347,94 +406,97 @@
       align-items: center;
       justify-content: center;
     }
+    /* 44px targets on every zoom-stack control (zoom in/out, home,
+       fullscreen-this-map) -- Leaflet's own default is 26x26. Flex
+       centering replaces Leaflet's line-height centering, which only
+       suits a text glyph, not the inline SVGs used throughout this stack. */
+    .leaflet-bar a {
+      width: 44px !important;
+      height: 44px !important;
+      line-height: 44px !important;
+      display: flex !important;
+      align-items: center;
+      justify-content: center;
+    }
 
-    /* Custom Leaflet Popup Styling */
-    .leaflet-popup-content-wrapper {
-      background: var(--bg-card) !important;
-      color: var(--text-primary) !important;
-      border: 1px solid var(--border) !important;
-      border-radius: 8px !important;
-      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif !important;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.2) !important;
-    }
-    .leaflet-popup-tip {
-      background: var(--bg-card) !important;
-      border: 1px solid var(--border) !important;
-    }
-    .leaflet-popup-content {
-      margin: 0 !important;
-      line-height: 1.5 !important;
-      font-size: 0.8125rem !important;
-    }
-    .popup-card {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      width: 280px;
-      max-height: 220px;
+    /* Hover preview (pointer-hover only, gated in JS by supportsHoverDetail):
+       a quick-glance badge + guidance box that follows the cursor, so a
+       desktop visitor with a mouse or trackpad doesn't have to click and
+       scroll down to the detail panel just to check one country. Decorative
+       -- see the aria-hidden note on the element itself. */
+    .hover-detail-panel {
+      position: fixed;
+      z-index: 100000;
+      display: none;
+      pointer-events: none;
+      width: max-content;
+      max-width: 320px;
+      max-height: 70vh;
       overflow-y: auto;
-      overflow-x: hidden;
-      padding: 14px;
-      box-sizing: border-box;
-      word-wrap: break-word;
-      word-break: break-word;
-    }
-    .popup-card::-webkit-scrollbar {
-      width: 4px;
-    }
-    .popup-card::-webkit-scrollbar-track {
-      background: transparent;
-    }
-    .popup-card::-webkit-scrollbar-thumb {
-      background: var(--border-light);
-      border-radius: 4px;
-    }
-    .popup-header {
-      border-bottom: 1px solid var(--border-light);
-      padding-bottom: 6px;
-      margin-bottom: 2px;
-    }
-    .popup-title {
-      font-size: 1rem;
-      font-weight: 700;
+      background: var(--bg-card);
       color: var(--text-primary);
-    }
-    .popup-subtitle {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.35);
       font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-      font-size: 0.625rem;
+      padding: 14px;
+    }
+    .hover-detail-panel.visible { display: block; }
+    .hover-detail-panel .panel-guidance:first-child { margin-top: 0; padding-top: 0; border-top: none; }
+    .hover-preview-title { font-size: 1rem; font-weight: 700; color: var(--text-primary); padding-right: 24px; }
+    .hover-preview-subtitle {
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: 0.6875rem;
       color: var(--text-tertiary);
       text-transform: uppercase;
       margin-top: 1px;
+      margin-bottom: 4px;
     }
-    .popup-group {
+    /* Touch tap (see handleCountryClick): a box following the fingertip
+       can land half under the hand or hard against a screen edge, and
+       there's no "pointer leaves" to make tap-elsewhere-to-dismiss obvious.
+       A fixed bottom sheet with its own close button sidesteps both --
+       position is always predictable, and pointer-events go back to auto
+       just for this variant so the close button is actually reachable
+       (the cursor-following desktop version stays click-through). */
+    .hover-detail-panel.is-sheet {
+      position: fixed;
+      left: 16px !important;
+      right: 16px;
+      bottom: 16px;
+      top: auto !important;
+      width: auto;
+      max-width: none;
+      max-height: 45vh;
+      pointer-events: auto;
+    }
+    .hover-detail-panel.is-sheet::before {
+      content: '';
+      display: block;
+      width: 36px;
+      height: 4px;
+      border-radius: 999px;
+      background: var(--border-light);
+      margin: 0 auto 10px;
+    }
+    .hover-preview-close {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 32px;
+      height: 32px;
       display: flex;
-      flex-direction: column;
-      gap: 3px;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      border-radius: 6px;
+      background: transparent;
+      color: var(--text-tertiary);
+      font-size: 1.25rem;
+      line-height: 1;
+      cursor: pointer;
     }
-    .popup-label {
-      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-      font-size: 0.6875rem;
-      font-weight: 700;
-      color: var(--accent-heading);
-      text-transform: uppercase;
-      margin-top: 4px;
-      border-bottom: 1px solid var(--border-light);
-      padding-bottom: 2px;
-    }
-    .popup-desc {
-      color: var(--text-secondary);
-      font-size: 0.75rem;
-    }
-    .popup-desc strong {
-      color: var(--text-primary);
-    }
-    .popup-desc ul, .popup-desc ol {
-      margin-left: 12px;
-      margin-top: 2px;
-    }
-    .popup-desc li {
-      margin-bottom: 2px;
-    }
+    .hover-preview-close:hover { color: var(--text-primary); background: var(--border-light); }
 
     /* Fullscreen Mode Styling */
     body.fullscreen-lock {
@@ -453,6 +515,14 @@
       z-index: 99999 !important;
       display: flex;
       flex-direction: column;
+      /* A short landscape screen genuinely cannot fit toolbar + two maps +
+         detail panel without something shrinking past usable size - let the
+         wrapper itself scroll rather than squeeze the maps into a sliver. */
+      overflow-y: auto;
+    }
+    .dashboard-wrapper.is-fullscreen .dashboard-main {
+      flex: 1;
+      min-height: 0;
     }
     .dashboard-wrapper.is-fullscreen .dashboard-body {
       flex: 1;
@@ -460,36 +530,47 @@
     }
     .dashboard-wrapper.is-fullscreen .map-section {
       flex: 1;
-      min-height: 0;
+      min-height: 240px;
       display: flex;
       flex-direction: column;
     }
     .dashboard-wrapper.is-fullscreen .map-container {
       flex: 1;
-      height: 100%;
+      min-height: 240px;
     }
-    /* Fullscreen is for the map; the itinerary is a below-the-fold summary
-       of what's already pinned, and its cards run long (full requirements/
-       prophylaxis text per country) - on a phone it was pushing the map
-       itself down below the fold once anything was pinned, defeating the
-       point of fullscreen. It's still one tap away via Exit Full. */
-    .dashboard-wrapper.is-fullscreen #tripSummaryPanel {
+    /* Collapsed by default in fullscreen (behind the "Trip (n)" toggle in
+       its header) so the itinerary never competes with the map for space;
+       expanding it opens an overlay anchored to the bottom edge rather than
+       pushing the maps or detail panel around. Normal (non-fullscreen) view
+       is untouched -- the panel already sits inline there. */
+    .dashboard-wrapper.is-fullscreen .trip-summary-panel {
+      position: absolute;
+      left: 0; right: 0; bottom: 0;
+      z-index: 500;
+      max-height: 40vh;
+      overflow-y: auto;
+      box-shadow: 0 -8px 20px rgba(0,0,0,0.15);
+    }
+    .trip-summary-panel.is-collapsed .trip-summary-list,
+    .trip-summary-panel.is-collapsed #tripClearBtn {
       display: none;
     }
 
     .filter-group {
       display: flex;
+      flex-direction: column;
       gap: 6px;
     }
     .filter-select {
       font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-      font-size: 0.75rem;
+      font-size: 0.8125rem;
+      min-height: 44px;
+      box-sizing: border-box;
       padding: 6px 10px;
       border-radius: 6px;
       border: 1px solid var(--border);
       background: var(--bg-card);
       color: var(--text-secondary);
-      outline: none;
       cursor: pointer;
       transition: all 0.2s ease;
     }
@@ -530,31 +611,6 @@
       }
     }
 
-    /* Custom scrollable map popups */
-    .custom-map-popup .leaflet-popup-content-wrapper {
-      background: var(--bg-card) !important;
-      color: var(--text-primary) !important;
-      border: 1px solid var(--border) !important;
-      border-radius: 10px !important;
-      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3) !important;
-      padding: 0 !important;
-    }
-    .custom-map-popup .leaflet-popup-content {
-      margin: 0 !important;
-      padding: 0 !important;
-      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif !important;
-    }
-    .custom-map-popup .leaflet-popup-tip-container {
-      display: none !important;
-    }
-    .custom-map-popup .leaflet-popup-close-button {
-      color: var(--text-tertiary) !important;
-      padding: 6px 6px 0 0 !important;
-    }
-    .custom-map-popup .leaflet-popup-close-button:hover {
-      color: var(--text-primary) !important;
-    }
-
     @media (max-width: 1024px) {
       .dashboard-body.layout-split {
         flex-direction: column;
@@ -563,28 +619,13 @@
         border-left: none;
         border-top: 1px solid var(--border-light);
       }
-      /* Below this width Split is forced back to a column above anyway (the
-         override two rules up), so the toggle offers a choice that doesn't
-         actually do anything - confirmed by direct testing: Split still
-         applies its state correctly (the button shows active, the class is
-         set), it just becomes visually identical to Stack, reading as
-         "broken" rather than "no-op." Hide it outright, matching how this
-         same group already hides entirely in single-map view for the same
-         reason (no meaningful choice to offer). !important because JS sets
-         this group's display inline (to inline-flex/none) when switching
-         view modes - a plain rule here would lose to that inline style.
-         Scoped to the id, NOT the shared .layout-toggle-group class - that
-         class also matches #viewModeGroup (Both/YF Only/Malaria Only),
-         which very much still does something at any width and must stay
-         visible; an earlier version of this rule used the class and
-         silently took the whole view switcher down below 1024px too,
-         which is exactly what made "switch maps without leaving
-         fullscreen" look broken - the control was there, just invisible. */
-      #layoutToggleGroup {
-        display: none !important;
-      }
-      /* .dashboard-controls wraps its three top-level children (title,
-         control-groups, search) as whole units. control-groups forcing
+      /* #layoutToggleGroup's own visibility is no longer a fixed viewport
+         breakpoint -- a ResizeObserver on the actual map area (which the
+         detail panel now shares width with) toggles it at a real ≥768px
+         map-area threshold in JS, matching the doc's "offer Stack/Split
+         only when the remaining map area is wide enough" rule. */
+      /* .dashboard-controls wraps its top-level children (title, search,
+         control-groups, filters) as whole units. control-groups forcing
          width:100% claimed the entire row for itself the moment it
          wrapped onto its own line, leaving zero room for search to share
          that line even when there was visibly space left over - measured
@@ -630,47 +671,91 @@
     .archive-footer a { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 0.75rem; color: var(--text-tertiary); }
     .archive-footer a:hover { color: var(--accent-heading); }
 
-    /* Hover Detail Panel (single floating panel, escapes map clipping) */
-    .hover-detail-panel {
-      position: fixed;
-      z-index: 100000;
-      display: none;
-      pointer-events: none;
-      width: max-content;
-      max-width: 320px;
-      background: var(--bg-card);
-      color: var(--text-primary);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.35);
-      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    }
-    .hover-detail-panel.visible {
-      display: block;
-    }
-    .tooltip-card {
+    /* Dashboard main: maps, then the one shared country-detail panel below
+       them, full width, always -- a side column here forced a choice
+       between clipping a long country's guidance (India's YF requirements
+       alone run to several nested sub-bullets) or capping the panel with
+       its own inner scrollbar, and a scrollbar nested inside the page's
+       own scroll read as confusing rather than helpful. Full width below
+       means the panel is just more page to scroll through, like the rest
+       of the case study -- no separate scroll region, nothing clipped. */
+    .dashboard-main {
       display: flex;
       flex-direction: column;
-      gap: 8px;
-      width: 300px;
-      padding: 14px;
-      box-sizing: border-box;
-      word-wrap: break-word;
-      word-break: break-word;
+      width: 100%;
     }
-    /* Fullscreen has far more room, so let the hover panel widen with it
-       instead of staying pinned to the small embedded-card size. */
-    .dashboard-wrapper.is-fullscreen .hover-detail-panel {
-      max-width: clamp(320px, 34vw, 560px);
+    .country-detail-panel {
+      border-top: 1px solid var(--border-light);
+      background: var(--bg-card);
+      padding: 16px;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     }
-    .dashboard-wrapper.is-fullscreen .tooltip-card {
-      width: clamp(300px, 34vw, 540px);
+    .panel-empty {
+      margin: 0;
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      line-height: 1.6;
     }
+    .panel-back {
+      display: inline-block;
+      margin-bottom: 10px;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-tertiary);
+      background: transparent;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+    }
+    .panel-back:hover { color: var(--accent-heading); }
+    .panel-title {
+      font-size: 1.125rem; /* 18px */
+      font-weight: 700;
+      color: var(--text-primary);
+      /* Focused programmatically after selection -- no visible ring needed
+         since it's not a keyboard-tabbable stop, but keep one for the rare
+         case a browser does show it. */
+      outline: none;
+    }
+    .panel-title:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+    .panel-subtitle {
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: 0.75rem;
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+    .panel-guidance {
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border-light);
+    }
+    .panel-guidance-title {
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: 0.8125rem;
+      font-weight: 700;
+      color: var(--accent-heading);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .panel-desc {
+      margin-top: 8px;
+      color: var(--text-secondary);
+      font-size: 0.9375rem; /* 15px */
+      line-height: 1.6;
+    }
+    .panel-desc strong { color: var(--text-primary); }
+    .panel-desc ul, .panel-desc ol { margin-left: 16px; margin-top: 4px; }
+    .panel-desc li { margin-bottom: 3px; }
     .detail-badge {
       display: inline-flex;
       align-items: center;
       font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-      font-size: 0.6875rem;
+      font-size: 0.75rem;
       font-weight: 700;
       padding: 3px 8px;
       border-radius: 999px;
@@ -682,17 +767,22 @@
       display: flex;
       flex-wrap: wrap;
       gap: 6px;
-      margin-top: 6px;
+      margin-top: 8px;
     }
 
-    /* Pin-to-trip button, its own line below the country name in popup-header */
-    .pin-country-btn {
-      display: inline-block;
-      margin-top: 4px;
+    /* Single trip-action button in the detail panel (Add to trip / Remove
+       from trip), replacing the old per-popup pin button. */
+    .trip-action-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      box-sizing: border-box;
+      margin-top: 10px;
       font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-      font-size: 0.6875rem;
+      font-size: 0.75rem;
       font-weight: 600;
-      padding: 5px 10px;
+      padding: 8px 14px;
       border-radius: 6px;
       border: 1px solid var(--border);
       background: var(--bg);
@@ -700,11 +790,11 @@
       cursor: pointer;
       transition: all 0.2s ease;
     }
-    .pin-country-btn:hover {
+    .trip-action-btn:hover {
       border-color: var(--accent);
       color: var(--accent-heading);
     }
-    .pin-country-btn.pinned {
+    .trip-action-btn.pinned {
       border-color: var(--accent-border);
       background: var(--accent-muted-strong);
       color: var(--accent-heading);
@@ -723,14 +813,22 @@
       margin-bottom: 10px;
       gap: 8px;
     }
-    .trip-summary-title {
+    .trip-toggle-btn {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
       font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
       font-size: 0.75rem;
       font-weight: 700;
       letter-spacing: 0.05em;
       text-transform: uppercase;
       color: var(--text-primary);
+      background: transparent;
+      border: none;
+      padding: 0;
+      cursor: pointer;
     }
+    .trip-toggle-btn:hover { color: var(--accent-heading); }
     .trip-summary-list {
       display: flex;
       flex-wrap: wrap;
@@ -771,13 +869,18 @@
       color: var(--text-primary);
     }
     .trip-card-remove {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 44px;
+      min-height: 44px;
+      margin: -10px -8px -10px 0;
       border: none;
       background: transparent;
       color: var(--text-tertiary);
       font-size: 1.1rem;
       line-height: 1;
       cursor: pointer;
-      padding: 2px 4px;
     }
     .trip-card-remove:hover {
       color: var(--accent-heading);
@@ -858,7 +961,8 @@
       <span class="rd-nav-name">Vitchakorn</span>
       <span class="rd-nav-nick">&ldquo;Blue&rdquo;</span>
     </a>
-    <a href="/#projects" class="rd-nav-item is-back">Portfolio</a>
+    <a href="/#top" class="rd-nav-item">Home</a>
+    <a href="/contact/" class="rd-nav-item">Contact</a>
     <button class="rd-nav-btn rd-nav-theme" id="themeToggle" aria-label="Toggle theme">
       <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
       <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
@@ -884,23 +988,32 @@
     <div class="case-cta">
       <a href="https://public.tableau.com/app/profile/vitchakorn.poonyakanok/viz/yf_malaria/CDC" target="_blank" rel="noopener noreferrer" class="case-cta-btn">Open on Tableau Public</a>
     </div>
+  </div>
+
+  <div class="dashboard-shell">
     <div class="case-media dashboard-wrapper">
       <div class="dashboard-controls">
         <div class="dashboard-title-bar desktop-only">
           <span class="t-label">Interactive Travel Health Map</span>
         </div>
+        <div class="search-container">
+          <label for="countrySearch" class="visually-hidden">Search for a country</label>
+          <input type="text" id="countrySearch" placeholder="Search country..." autocomplete="off"
+            role="combobox" aria-expanded="false" aria-autocomplete="list" aria-controls="searchSuggestions">
+          <div id="searchSuggestions" class="search-suggestions" role="listbox" aria-label="Country suggestions"></div>
+        </div>
         <div class="control-groups">
           <div class="layout-toggle-group" id="viewModeGroup">
-            <button class="control-btn active" id="viewBothBtn" title="Show both maps side-by-side or stacked">Both</button>
-            <button class="control-btn" id="viewYFBtn" title="Show only Yellow Fever map">YF Only</button>
-            <button class="control-btn" id="viewMalariaBtn" title="Show only Malaria map">Malaria Only</button>
+            <button class="control-btn active" id="viewBothBtn" title="Show both maps side-by-side or stacked" aria-pressed="true">Both</button>
+            <button class="control-btn" id="viewYFBtn" title="Show only Yellow Fever map" aria-pressed="false">YF Only</button>
+            <button class="control-btn" id="viewMalariaBtn" title="Show only Malaria map" aria-pressed="false">Malaria Only</button>
           </div>
           <div class="layout-toggle-group" id="layoutToggleGroup">
-            <button class="control-btn active" id="layoutStackBtn" title="Stack maps vertically">
+            <button class="control-btn active" id="layoutStackBtn" title="Stack maps vertically" aria-pressed="true">
               <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="7" rx="2"/><rect x="3" y="14" width="18" height="7" rx="2"/></svg>
               <span>Stack</span>
             </button>
-            <button class="control-btn" id="layoutSplitBtn" title="Place maps side-by-side">
+            <button class="control-btn" id="layoutSplitBtn" title="Place maps side-by-side" aria-pressed="false">
               <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="18" rx="2"/><rect x="14" y="3" width="7" height="18" rx="2"/></svg>
               <span>Split</span>
             </button>
@@ -909,80 +1022,98 @@
             <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
             <span>Fullscreen</span>
           </button>
-          <div class="filter-group">
-            <select id="continentFilter" class="filter-select" aria-label="Filter by Continent">
-              <option value="all">All Continents</option>
-            </select>
-            <select id="subregionFilter" class="filter-select" aria-label="Filter by Subregion">
-              <option value="all">All Subregions</option>
-            </select>
+        </div>
+        <details class="filters-disclosure">
+          <summary class="control-btn">Filters</summary>
+          <div class="filters-panel">
+            <div class="filter-group">
+              <select id="continentFilter" class="filter-select" aria-label="Filter by Continent">
+                <option value="all">All Continents</option>
+              </select>
+              <select id="subregionFilter" class="filter-select" aria-label="Filter by Subregion">
+                <option value="all">All Subregions</option>
+              </select>
+            </div>
           </div>
-        </div>
-        <div class="search-container">
-          <input type="text" id="countrySearch" placeholder="Search country..." autocomplete="off">
-          <div id="searchSuggestions" class="search-suggestions"></div>
-        </div>
+        </details>
       </div>
 
-      <div class="dashboard-body" id="dashboardBody">
-        <!-- Yellow Fever Map Section -->
-        <div class="map-section" id="sectionYF">
-          <div class="map-section-header yf-header">Yellow Fever Vaccine Guidance</div>
-          <div id="map-yf" class="map-container">
-            <div class="map-loading-state" id="mapYfLoadingState">
-              <div class="map-loading-spinner" aria-hidden="true"></div>
-              <span>Loading map data…</span>
+      <p class="visually-hidden" id="mapStatus" role="status" aria-live="polite"></p>
+
+      <div class="dashboard-main" id="dashboardMain">
+        <div class="dashboard-body" id="dashboardBody">
+          <!-- Yellow Fever Map Section -->
+          <div class="map-section" id="sectionYF">
+            <div class="map-section-header yf-header">Yellow Fever Vaccine Guidance</div>
+            <div id="map-yf" class="map-container">
+              <div class="map-loading-state" id="mapYfLoadingState">
+                <div class="map-loading-spinner" aria-hidden="true"></div>
+                <span>Loading map data…</span>
+              </div>
+            </div>
+            <div class="map-legend">
+              <div class="legend-title">Entry Category:</div>
+              <div class="legend-item"><span class="legend-color" style="background: #afafaf;"></span>Vaccine is not required</div>
+              <div class="legend-item"><span class="legend-color" style="background: #eba0b0;"></span>Other</div>
+              <div class="legend-item"><span class="legend-color" style="background: #f5d061;"></span>Arriving from some countries</div>
+              <div class="legend-item"><span class="legend-color" style="background: #f5964f;"></span>Travel from countries with risk</div>
+              <div class="legend-item"><span class="legend-color" style="background: #d95362;"></span>Vaccine is required</div>
             </div>
           </div>
-          <div class="map-legend">
-            <div class="legend-title">Entry Category:</div>
-            <div class="legend-item"><span class="legend-color" style="background: #afafaf;"></span>Vaccine is not required</div>
-            <div class="legend-item"><span class="legend-color" style="background: #eba0b0;"></span>Other</div>
-            <div class="legend-item"><span class="legend-color" style="background: #f5d061;"></span>Arriving from some countries</div>
-            <div class="legend-item"><span class="legend-color" style="background: #f5964f;"></span>Travel from countries with risk</div>
-            <div class="legend-item"><span class="legend-color" style="background: #d95362;"></span>Vaccine is required</div>
+
+          <!-- Malaria Map Section -->
+          <div class="map-section border-top" id="sectionMalaria">
+            <div class="map-section-header malaria-header">Malaria Prophylaxis Guidance</div>
+            <div id="map-malaria" class="map-container">
+              <div class="map-loading-state" id="mapMalariaLoadingState">
+                <div class="map-loading-spinner" aria-hidden="true"></div>
+                <span>Loading map data…</span>
+              </div>
+            </div>
+            <div class="map-legend">
+              <div class="legend-title">Resistance Type:</div>
+              <div class="legend-item"><span class="legend-color" style="background: #afafaf;"></span>No Malaria</div>
+              <div class="legend-item"><span class="legend-color" style="background: #6aa8a8;"></span>Other</div>
+              <div class="legend-item"><span class="legend-color" style="background: #68a368;"></span>No Resist</div>
+              <div class="legend-item"><span class="legend-color" style="background: #9bc3eb;"></span>Previous CQ</div>
+              <div class="legend-item"><span class="legend-color" style="background: #c39bcb;"></span>CQ Resist</div>
+              <div class="legend-item"><span class="legend-color" style="background: #7878a8;"></span>CQ&MQ Resist</div>
+            </div>
           </div>
         </div>
 
-        <!-- Malaria Map Section -->
-        <div class="map-section border-top" id="sectionMalaria">
-          <div class="map-section-header malaria-header">Malaria Prophylaxis Guidance</div>
-          <div id="map-malaria" class="map-container">
-            <div class="map-loading-state" id="mapMalariaLoadingState">
-              <div class="map-loading-spinner" aria-hidden="true"></div>
-              <span>Loading map data…</span>
-            </div>
-          </div>
-          <div class="map-legend">
-            <div class="legend-title">Resistance Type:</div>
-            <div class="legend-item"><span class="legend-color" style="background: #afafaf;"></span>No Malaria</div>
-            <div class="legend-item"><span class="legend-color" style="background: #6aa8a8;"></span>Other</div>
-            <div class="legend-item"><span class="legend-color" style="background: #68a368;"></span>No Resist</div>
-            <div class="legend-item"><span class="legend-color" style="background: #9bc3eb;"></span>Previous CQ</div>
-            <div class="legend-item"><span class="legend-color" style="background: #c39bcb;"></span>CQ Resist</div>
-            <div class="legend-item"><span class="legend-color" style="background: #7878a8;"></span>CQ&MQ Resist</div>
-          </div>
-        </div>
+        <!-- Single shared country-detail panel: replaces the old dual
+             Leaflet popups and the custom floating hover panel. -->
+        <aside class="country-detail-panel" id="countryDetailPanel">
+          <p class="panel-empty" id="panelEmpty">Select a country on the map or search above.</p>
+        </aside>
       </div>
 
       <div class="data-source-note">Data extracted from the <a href="https://www.cdc.gov/yellow-book/hcp/preparing-international-travelers/yellow-fever-vaccine-and-malaria-prevention-information-by-country.html" target="_blank" rel="noopener noreferrer">CDC Yellow Book 2026</a> — Yellow Fever Vaccine &amp; Malaria Prevention Information by Country.</div>
 
       <div class="trip-summary-panel" id="tripSummaryPanel">
         <div class="trip-summary-header">
-          <span class="trip-summary-title">Trip Itinerary</span>
-          <button class="control-btn" id="tripClearBtn" hidden>Clear All</button>
+          <button type="button" class="trip-toggle-btn" id="tripToggleBtn" aria-expanded="true">Trip itinerary</button>
+          <button class="control-btn" id="tripClearBtn" hidden>Clear trip</button>
         </div>
         <!-- Visible by default (not display:none) so the trip-planning
              feature - the page's own headline differentiator per the hero
              copy above - has some presence before a first-time visitor has
-             already discovered "Add to Trip" inside a country popup.
+             already discovered "Add to trip" in the detail panel.
              renderTripSummary() below swaps this same element between this
              empty-state hint and the actual pinned-country cards. -->
         <div class="trip-summary-list" id="tripSummaryList">
-          <p class="trip-empty-state">No countries pinned yet. Click a country on either map, then <strong>Add to Trip</strong>, to start comparing destinations.</p>
+          <p class="trip-empty-state">No countries pinned yet. Select a country on either map, then <strong>Add to trip</strong>, to start comparing destinations.</p>
         </div>
       </div>
-      <div class="hover-detail-panel" id="hoverDetailPanel"></div>
+      <!-- Mouse/trackpad-only quick-glance preview (see supportsHoverDetail):
+           a click still selects the country into the accessible panel below
+           regardless of pointer type, so this is a convenience layered on
+           top, not a replacement path. Hidden from the accessibility tree
+           entirely rather than given its own heading ids/labelling, since
+           it never receives focus and the same content already has an
+           accessible route through that click. -->
+      <div class="hover-detail-panel" id="hoverDetailPanel" aria-hidden="true"></div>
     </div>
   </div>
 
@@ -1023,7 +1154,7 @@
 
   <footer class="archive-footer">
     <div class="container-grid">
-      <a href="/project/">Back to project archive</a>
+      <a href="/project/">Back to projects</a>
     </div>
   </footer>
 
@@ -1070,13 +1201,16 @@
       const yfRenderer = L.canvas({ padding: 1 });
       const malariaRenderer = L.canvas({ padding: 1 });
 
-      // Initialize mapYF
+      // Initialize mapYF (zoomControl added explicitly below, with custom
+      // SVG glyphs, rather than through the map option -- Leaflet's default
+      // zoom control has no zoomInText/zoomOutText override hook when
+      // auto-created that way).
       const mapYF = L.map('map-yf', {
         center: [15, 0],
         zoom: 2,
         minZoom: 1.5,
         maxZoom: 7,
-        zoomControl: true,
+        zoomControl: false,
         attributionControl: false,
         worldCopyJump: true,
         renderer: yfRenderer,
@@ -1090,13 +1224,23 @@
         zoom: 2,
         minZoom: 1.5,
         maxZoom: 7,
-        zoomControl: true,
+        zoomControl: false,
         attributionControl: false,
         worldCopyJump: true,
         renderer: malariaRenderer,
         maxBounds: poleBounds,
         maxBoundsViscosity: 1.0
       });
+
+      // Consistent SVG zoom glyphs at a real 44px target, replacing
+      // Leaflet's default text-glyph +/- buttons. map.zoomControl is set
+      // manually since addControl() doesn't special-case zoom the way the
+      // zoomControl:true map option does -- addHomeButtonToZoomControl and
+      // addFullscreenButtonToZoomControl below both read it.
+      const ZOOM_IN_ICON = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>';
+      const ZOOM_OUT_ICON = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>';
+      mapYF.zoomControl = L.control.zoom({ zoomInText: ZOOM_IN_ICON, zoomInTitle: 'Zoom in', zoomOutText: ZOOM_OUT_ICON, zoomOutTitle: 'Zoom out' }).addTo(mapYF);
+      mapMalaria.zoomControl = L.control.zoom({ zoomInText: ZOOM_IN_ICON, zoomInTitle: 'Zoom in', zoomOutText: ZOOM_OUT_ICON, zoomOutTitle: 'Zoom out' }).addTo(mapMalaria);
 
       // Cross-sync views (rAF-throttled so a drag doesn't queue a setView
       // on the other map every mousemove/touchmove tick)
@@ -1141,8 +1285,27 @@
       fixWorldWrapBlank(mapYF, yfRenderer);
       fixWorldWrapBlank(mapMalaria, malariaRenderer);
 
-      // Suppress hover-panel work (canvas hit-testing + a forced reflow on
-      // every mousemove) while a drag is in progress - see showHoverDetail.
+      // GeoJSON layer stores
+      let yfLayer, malariaLayer;
+      let mapData = null;
+      let selectedFeatureId = null;
+      let selectedProperties = null;
+      let tinyMarkers = [];
+      let pinnedCountries = new Map();
+      const detailPanel = document.getElementById('countryDetailPanel');
+      const mapStatus = document.getElementById('mapStatus');
+      function announceStatus(text) { mapStatus.textContent = text; }
+
+      // Hover only makes sense for devices that actually have hover -- a
+      // touch tap fires a synthetic mouseover just before click (Leaflet's
+      // tap-to-click shim), with no real mouseout ever following, which
+      // would otherwise leave a stray preview box on screen after every tap.
+      const supportsHoverDetail = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+      const hoverPanel = document.getElementById('hoverDetailPanel');
+
+      // Suppress hover-preview work (a forced reflow from
+      // getBoundingClientRect on every mousemove) while a drag is in
+      // progress -- it competed with the pan itself for the frame budget.
       let isMapDragging = false;
       function markDragging() { isMapDragging = true; hideHoverDetail(); }
       function markDragEnd() { isMapDragging = false; }
@@ -1151,37 +1314,54 @@
       mapYF.on('dragend', markDragEnd);
       mapMalaria.on('dragend', markDragEnd);
 
-      // GeoJSON layer stores
-      let yfLayer, malariaLayer;
-      let mapData = null;
-      let selectedFeatureId = null;
-      let tinyMarkers = [];
-      let pinnedCountries = new Map();
-      const hoverPanel = document.getElementById('hoverDetailPanel');
+      // Gating (supportsHoverDetail vs. not) happens at each call site, not
+      // in here -- the mouseover/mousemove/mouseout handlers use this on
+      // hover-capable devices (sheet:false, follows the cursor), while a
+      // tap on a touch device calls it from the click handler instead
+      // (sheet:true, fixed bottom sheet -- see handleCountryClick).
+      function showHoverDetail(mapType, feature, originalEvent, sheet) {
+        if (isMapDragging) return;
+        const content = mapType === 'yf' ? renderYFSection(feature.properties) : renderMalariaSection(feature.properties);
+        hoverPanel.classList.toggle('is-sheet', !!sheet);
+        hoverPanel.innerHTML = `
+          ${sheet ? '<button type="button" class="hover-preview-close" aria-label="Close preview">&times;</button>' : ''}
+          <div class="hover-preview-title">${feature.properties.countryName}</div>
+          <div class="hover-preview-subtitle">${feature.properties.subregion || ''}, ${feature.properties.continent || ''}</div>
+          ${content}
+        `;
+        hoverPanel.classList.add('visible');
+        if (!sheet) positionHoverDetail(originalEvent);
+      }
 
-      // Tracks whichever popup is currently open per map, so a resize can
-      // refresh it - see the mapResizeObserver comment further down for why
-      // that's needed at all.
-      let currentPopupYF = null;
-      let currentPopupMalaria = null;
+      function positionHoverDetail(originalEvent) {
+        if (!originalEvent || isMapDragging) return;
+        const padding = 16;
+        const rect = hoverPanel.getBoundingClientRect();
+        let left = originalEvent.clientX + 18;
+        let top = originalEvent.clientY + 18;
+        if (left + rect.width + padding > window.innerWidth) left = originalEvent.clientX - rect.width - 18;
+        if (top + rect.height + padding > window.innerHeight) top = window.innerHeight - rect.height - padding;
+        if (top < padding) top = padding;
+        if (left < padding) left = padding;
+        hoverPanel.style.left = left + 'px';
+        hoverPanel.style.top = top + 'px';
+      }
 
-      // Touch taps fire a synthetic mouseover just before click (Leaflet's
-      // tap-to-click shim), with no real mouseout ever following - so on
-      // touch devices the floating hover panel would open and then stay
-      // stuck on screen underneath the click popup - a third info box next
-      // to the two real ones. Hover detail only makes sense for devices
-      // that actually have hover, so gate it.
-      const supportsHoverDetail = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+      function hideHoverDetail() {
+        hoverPanel.classList.remove('visible');
+      }
 
-      // The matchMedia gate above is not enough on its own: iOS/iPadOS
-      // permanently reports hover:hover/pointer:fine once *any* mouse or
-      // trackpad has ever been paired (incl. AssistiveTouch), even for
-      // later plain finger taps - so the gate stays "open" while the
-      // interaction is still a touch tap. Track real touch activity
-      // directly and treat any mouseover within this window of a touch as
-      // part of that tap's synthetic event stream, not a genuine hover.
-      let lastTouchAt = 0;
-      document.addEventListener('touchstart', () => { lastTouchAt = Date.now(); }, { passive: true, capture: true });
+      // Touch has no "pointer leaves" to naturally close the preview the
+      // way a mouseout does, so a tap opens it (see the click handlers
+      // below) and any OTHER tap dismisses it. justOpenedPreview survives
+      // exactly one document-level click -- the same physical tap that
+      // opens the preview also bubbles up to this listener, and without
+      // the flag it would immediately close the box it just opened.
+      let justOpenedPreview = false;
+      document.addEventListener('click', function() {
+        if (justOpenedPreview) { justOpenedPreview = false; return; }
+        hideHoverDetail();
+      });
 
       // Colors matching Tableau reference
       const colorsYF = {
@@ -1535,78 +1715,149 @@
         return `<ul>${items.map(item => `<li>${item.text}${item.children.length ? `<ul>${item.children.map(c => `<li>${c}</li>`).join('')}</ul>` : ''}</li>`).join('')}</ul>`;
       }
 
-      function buildYFDetailContent(props, headerExtra) {
+      // Badge text colors: the category swatch stays the badge *background*
+      // tint (identical to the legend swatches); the *text* uses a
+      // separately verified, per-theme darker/lighter variant of the same
+      // hue so it clears 4.5:1 against that background -- the raw swatch
+      // hex as text (the old behavior) measured ~2.07:1 for the orange
+      // category. These were generated and contrast-checked (against both
+      // the plain card and the actual ~10%-alpha badge background) with a
+      // small script, not picked by eye.
+      const yfBadgeText = {
+        light: {
+          'Vaccine is not required': '#717171',
+          'Other': '#db1f47',
+          'Arriving from some countries': '#916d00',
+          'Travel from countries with risk for YF virus transmission': '#ba5000',
+          'Vaccine is required for all arriving travelers': '#d42135'
+        },
+        dark: {
+          'Vaccine is not required': '#8f8f8f',
+          'Other': '#e9637f',
+          'Arriving from some countries': '#ffbf00',
+          'Travel from countries with risk for YF virus transmission': '#ff6d00',
+          'Vaccine is required for all arriving travelers': '#e65b6b'
+        }
+      };
+      const malariaBadgeText = {
+        light: {
+          'No Malaria': '#717171',
+          'Other': '#417979',
+          'No Resist': '#467c46',
+          'Previous CQ': '#1b73cb',
+          'CQ Resist': '#9e51ae',
+          'CQ&MQ Resist': '#60609f'
+        },
+        dark: {
+          'No Malaria': '#8f8f8f',
+          'Other': '#59a6a6',
+          'No Resist': '#5ca35c',
+          'Previous CQ': '#4294e6',
+          'CQ Resist': '#b579c0',
+          'CQ&MQ Resist': '#8686b6'
+        }
+      };
+      function getBadgeTextColor(map, category) {
+        const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+        return (map[theme] && map[theme][category]) || map[theme].Other;
+      }
+
+      // headingId is omitted for the hover preview (see showHoverDetail) --
+      // that box is aria-hidden as a whole (a mouse-only convenience; the
+      // same content is reachable via click through the accessible flow
+      // below), so it doesn't need a unique id to link a heading to, and
+      // reusing "panelYfHeading" there while the persistent panel is also
+      // open would create a duplicate id.
+      function renderYFSection(props, headingId) {
         const cat = props.entryCategory || 'Vaccine is not required';
         const badgeColor = colorsYF[cat] || '#afafaf';
+        const textColor = getBadgeTextColor(yfBadgeText, cat);
         const label = getYFShortLabel(props);
-        const yfBadge = `<span class="detail-badge" style="background: ${badgeColor}1a; color: ${badgeColor}; border-color: ${badgeColor}4d">YF: ${label}</span>`;
-
+        const heading = headingId
+          ? `<h3 class="panel-guidance-title" id="${headingId}">Yellow fever</h3>`
+          : `<div class="panel-guidance-title">Yellow fever</div>`;
         return `
-            <div class="popup-header">
-              <div class="popup-title">${props.countryName}</div>
-              ${headerExtra || ''}
-              <div class="popup-subtitle">${props.subregion || ''}, ${props.continent || ''}</div>
-              <div class="detail-badge-group">
-                ${yfBadge}
-              </div>
+          <section class="panel-guidance"${headingId ? ` aria-labelledby="${headingId}"` : ''}>
+            ${heading}
+            <div class="detail-badge-group">
+              <span class="detail-badge" style="background: ${badgeColor}1a; color: ${textColor}; border-color: ${badgeColor}4d">YF: ${label}</span>
             </div>
-            <div class="popup-group">
-              <div class="popup-label">Yellow Fever Vaccine Guidance</div>
-              <div class="popup-desc"><strong>Requirements:</strong> ${formatDashList(props.yfEntryRequirements) || 'No data'}</div>
-              <div class="popup-desc" style="margin-top: 2px;"><strong>Recommendations:</strong> ${formatDashList(props.yfRecommendations) || 'No data'}</div>
-            </div>
+            <div class="panel-desc"><strong>Requirements:</strong> ${formatDashList(props.yfEntryRequirements) || 'No data'}</div>
+            <div class="panel-desc"><strong>Recommendations:</strong> ${formatDashList(props.yfRecommendations) || 'No data'}</div>
+          </section>
         `;
       }
 
-      function buildMalariaDetailContent(props, headerExtra) {
-        let malariaBadge = `<span class="detail-badge badge-malaria-no" style="background: rgba(175,175,175,0.12); color: #888; border-color: rgba(175,175,175,0.3)">Malaria: No Risk</span>`;
+      function renderMalariaSection(props, headingId) {
+        let category = 'No Malaria';
+        let badgeColor = colorsMalaria[category];
         if (props.malariaHasTransmission) {
-          const resType = props.resistanceType || 'No Resist';
-          const badgeColor = colorsMalaria[resType] || '#68a368';
-          malariaBadge = `<span class="detail-badge" style="background: ${badgeColor}1a; color: ${badgeColor}; border-color: ${badgeColor}4d">Malaria: ${resType}</span>`;
+          category = props.resistanceType || 'No Resist';
+          badgeColor = colorsMalaria[category] || '#68a368';
         }
-
+        const textColor = getBadgeTextColor(malariaBadgeText, category);
+        const label = props.malariaHasTransmission ? category : 'No risk';
+        const heading = headingId
+          ? `<h3 class="panel-guidance-title" id="${headingId}">Malaria</h3>`
+          : `<div class="panel-guidance-title">Malaria</div>`;
         return `
-            <div class="popup-header">
-              <div class="popup-title">${props.countryName}</div>
-              ${headerExtra || ''}
-              <div class="popup-subtitle">${props.subregion || ''}, ${props.continent || ''}</div>
-              <div class="detail-badge-group">
-                ${malariaBadge}
-              </div>
+          <section class="panel-guidance"${headingId ? ` aria-labelledby="${headingId}"` : ''}>
+            ${heading}
+            <div class="detail-badge-group">
+              <span class="detail-badge" style="background: ${badgeColor}1a; color: ${textColor}; border-color: ${badgeColor}4d">Malaria: ${label}</span>
             </div>
-            <div class="popup-group">
-              <div class="popup-label">Malaria Prophylaxis Guidance</div>
-              ${props.malariaHasTransmission ? `
-                <div class="popup-desc"><strong>Risk Areas:</strong> ${formatDashList(props.malariaAreasOfRisk)}</div>
-                <div class="popup-desc" style="margin-top: 2px;"><strong>Prophylaxis:</strong> ${formatDashList(props.malariaRecommendedChemoprophylaxis)}</div>
-                <div class="popup-desc" style="margin-top: 2px;"><strong>Species:</strong> ${formatDashList(props.malariaSpecies)}</div>
-                <div class="popup-desc" style="margin-top: 2px;"><strong>Seasonality:</strong> ${props.malariaSeasonRange}</div>
-                ${props.malariaPeakMonths ? `<div class="popup-desc" style="margin-top: 2px;"><strong>Peaks:</strong> ${props.malariaPeakMonths}</div>` : ''}
-              ` : `
-                <div class="popup-desc">No active malaria transmission. Prophylaxis not recommended.</div>
-              `}
-            </div>
+            ${props.malariaHasTransmission ? `
+              <div class="panel-desc"><strong>Risk areas:</strong> ${formatDashList(props.malariaAreasOfRisk)}</div>
+              <div class="panel-desc"><strong>Prophylaxis:</strong> ${formatDashList(props.malariaRecommendedChemoprophylaxis)}</div>
+              <div class="panel-desc"><strong>Species:</strong> ${formatDashList(props.malariaSpecies)}</div>
+              <div class="panel-desc"><strong>Seasonality:</strong> ${props.malariaSeasonRange}</div>
+              ${props.malariaPeakMonths ? `<div class="panel-desc"><strong>Peaks:</strong> ${props.malariaPeakMonths}</div>` : ''}
+            ` : `
+              <div class="panel-desc">No active malaria transmission. Prophylaxis not recommended.</div>
+            `}
+          </section>
         `;
       }
 
-      function pinButtonHTML(props) {
-        const pinned = pinnedCountries.has(props.vkpCode);
-        return `<button class="pin-country-btn${pinned ? ' pinned' : ''}" data-vkp="${props.vkpCode}">${pinned ? '★ Remove from Trip' : '☆ Add to Trip'}</button>`;
+      function tripActionButtonHTML(vkpCode) {
+        const pinned = pinnedCountries.has(vkpCode);
+        return `<button type="button" class="trip-action-btn${pinned ? ' pinned' : ''}" id="panelTripBtn" data-vkp="${vkpCode}">${pinned ? 'Remove from trip' : 'Add to trip'}</button>`;
       }
 
-      function createYFPopupHTML(props) {
-        return `<div class="popup-card">${buildYFDetailContent(props, pinButtonHTML(props))}</div>`;
-      }
-
-      function createMalariaPopupHTML(props) {
-        return `<div class="popup-card">${buildMalariaDetailContent(props, pinButtonHTML(props))}</div>`;
+      // Renders the single shared detail panel -- replaces the old dual
+      // Leaflet popups (createYFPopupHTML/createMalariaPopupHTML). Called
+      // with null to restore the pre-selection placeholder.
+      // focusHeading is false on a plain re-render (theme change, trip
+      // toggle from elsewhere) so it doesn't steal focus from whatever the
+      // visitor was actually doing -- only a fresh selection focuses it.
+      function renderCountryDetailPanel(properties, focusHeading = false) {
+        if (!properties) {
+          detailPanel.innerHTML = '<p class="panel-empty" id="panelEmpty">Select a country on the map or search above.</p>';
+          return;
+        }
+        detailPanel.innerHTML = `
+          <button type="button" class="panel-back" id="panelBackBtn">&larr; Back to map</button>
+          <h2 class="panel-title" id="panelHeading" tabindex="-1">${properties.countryName}</h2>
+          <div class="panel-subtitle">${properties.subregion || ''}, ${properties.continent || ''}</div>
+          ${tripActionButtonHTML(properties.vkpCode)}
+          ${renderYFSection(properties, 'panelYfHeading')}
+          ${renderMalariaSection(properties, 'panelMalariaHeading')}
+        `;
+        if (focusHeading) {
+          // preventScroll: the panel is already on-screen in both the
+          // beside and below layouts, so focusing it shouldn't also jump
+          // the viewport the way a plain .focus() would.
+          const heading = document.getElementById('panelHeading');
+          if (heading) heading.focus({ preventScroll: true });
+        }
       }
 
       // Multi-country trip pinning: lets a clinician build up a combined
       // itinerary summary instead of looking up one country at a time.
       function togglePinCountry(vkpCode) {
+        let countryName = '';
         if (pinnedCountries.has(vkpCode)) {
+          countryName = pinnedCountries.get(vkpCode).countryName;
           pinnedCountries.delete(vkpCode);
         } else {
           let properties = null;
@@ -1619,17 +1870,31 @@
           });
           properties = properties || fallback;
           if (!properties) return;
+          countryName = properties.countryName;
           pinnedCountries.set(vkpCode, properties);
         }
 
-        document.querySelectorAll(`.pin-country-btn[data-vkp="${vkpCode}"]`).forEach(btn => {
-          const pinned = pinnedCountries.has(vkpCode);
-          btn.textContent = pinned ? '★ Remove from Trip' : '☆ Add to Trip';
-          btn.classList.toggle('pinned', pinned);
-        });
+        const pinned = pinnedCountries.has(vkpCode);
+        if (selectedFeatureId === vkpCode) {
+          const btn = document.getElementById('panelTripBtn');
+          if (btn) {
+            btn.textContent = pinned ? 'Remove from trip' : 'Add to trip';
+            btn.classList.toggle('pinned', pinned);
+          }
+        }
 
         renderTripSummary();
         syncStateToURL();
+        announceStatus(`${countryName} ${pinned ? 'added to' : 'removed from'} trip.`);
+      }
+
+      function updateTripToggleLabel() {
+        const panel = document.getElementById('tripSummaryPanel');
+        const btn = document.getElementById('tripToggleBtn');
+        if (!panel || !btn) return;
+        const collapsed = panel.classList.contains('is-collapsed');
+        btn.textContent = collapsed ? `Trip (${pinnedCountries.size})` : 'Trip itinerary';
+        btn.setAttribute('aria-expanded', String(!collapsed));
       }
 
       function renderTripSummary() {
@@ -1638,16 +1903,20 @@
         if (!list) return;
 
         clearBtn.hidden = pinnedCountries.size === 0;
+        updateTripToggleLabel();
 
         if (pinnedCountries.size === 0) {
-          list.innerHTML = '<p class="trip-empty-state">No countries pinned yet. Click a country on either map, then <strong>Add to Trip</strong>, to start comparing destinations.</p>';
+          list.innerHTML = '<p class="trip-empty-state">No countries pinned yet. Select a country on either map, then <strong>Add to trip</strong>, to start comparing destinations.</p>';
           return;
         }
 
         list.innerHTML = Array.from(pinnedCountries.values()).map(props => {
           const yfCat = props.entryCategory || 'Vaccine is not required';
           const yfBadgeColor = colorsYF[yfCat] || '#afafaf';
-          const malariaBadgeColor = props.malariaHasTransmission ? (colorsMalaria[props.resistanceType] || '#68a368') : '#afafaf';
+          const yfTextColor = getBadgeTextColor(yfBadgeText, yfCat);
+          const malariaCat = props.malariaHasTransmission ? (props.resistanceType || 'No Resist') : 'No Malaria';
+          const malariaBadgeColor = props.malariaHasTransmission ? (colorsMalaria[malariaCat] || '#68a368') : '#afafaf';
+          const malariaTextColor = getBadgeTextColor(malariaBadgeText, malariaCat);
 
           return `
             <div class="trip-card">
@@ -1656,9 +1925,9 @@
                 <button class="trip-card-remove" data-vkp="${props.vkpCode}" aria-label="Remove ${props.countryName} from trip">&times;</button>
               </div>
               <div class="trip-card-body">
-                <span class="detail-badge" style="background: ${yfBadgeColor}1a; color: ${yfBadgeColor}; border-color: ${yfBadgeColor}4d">YF: ${getYFShortLabel(props)}</span>
+                <span class="detail-badge" style="background: ${yfBadgeColor}1a; color: ${yfTextColor}; border-color: ${yfBadgeColor}4d">YF: ${getYFShortLabel(props)}</span>
                 <div class="trip-card-desc"><strong>Requirements:</strong> ${props.yfEntryRequirements || 'No data'}</div>
-                <span class="detail-badge" style="background: ${malariaBadgeColor}1a; color: ${malariaBadgeColor}; border-color: ${malariaBadgeColor}4d">Malaria: ${getMalariaShortLabel(props)}</span>
+                <span class="detail-badge" style="background: ${malariaBadgeColor}1a; color: ${malariaTextColor}; border-color: ${malariaBadgeColor}4d">Malaria: ${getMalariaShortLabel(props)}</span>
                 ${props.malariaHasTransmission
                   ? `<div class="trip-card-desc"><strong>Prophylaxis:</strong> ${props.malariaRecommendedChemoprophylaxis}</div>`
                   : `<div class="trip-card-desc">No active malaria transmission.</div>`}
@@ -1668,12 +1937,18 @@
         }).join('');
       }
 
-      // Delegated click handling for pin/unpin buttons rendered inside
-      // dynamically-created popup and trip-card markup.
+      // Delegated click handling for the panel's trip-action button, its
+      // "Back to map" action, and trip-card remove buttons -- all
+      // dynamically rendered, so a single listener on the document catches
+      // every instance rather than rebinding after each re-render.
       document.addEventListener('click', function(e) {
-        const btn = e.target.closest('.pin-country-btn, .trip-card-remove');
-        if (btn) {
-          togglePinCountry(btn.dataset.vkp);
+        const pinBtn = e.target.closest('#panelTripBtn, .trip-card-remove');
+        if (pinBtn) {
+          togglePinCountry(pinBtn.dataset.vkp);
+          return;
+        }
+        if (e.target.closest('#panelBackBtn')) {
+          deselectCountry();
         }
       });
 
@@ -1764,64 +2039,28 @@
         }).addTo(mapMalaria);
       }
 
-      // Single shared floating detail panel (position: fixed, so it escapes
-      // the map's overflow:hidden and is never clipped or truncated). Only
-      // one instance exists, so only one hover detail can ever be visible.
-      function showHoverDetail(mapType, feature, originalEvent) {
-        // Skip on touch devices - see supportsHoverDetail above.
-        if (!supportsHoverDetail) return;
-        // Skip a touch tap's synthetic mouseover - see lastTouchAt above.
-        if (Date.now() - lastTouchAt < 700) return;
-        // Skip while actively dragging: Leaflet's canvas hit-testing plus
-        // the getBoundingClientRect() reflow below competes with the pan
-        // itself, visibly stuttering the pane under the cursor.
-        if (isMapDragging) return;
-        hoverPanel.innerHTML = `<div class="tooltip-card">${mapType === 'yf' ? buildYFDetailContent(feature.properties) : buildMalariaDetailContent(feature.properties)}</div>`;
-        hoverPanel.classList.add('visible');
-        positionHoverDetail(originalEvent);
-      }
-
-      function positionHoverDetail(originalEvent) {
-        if (!originalEvent || isMapDragging) return;
-        const padding = 16;
-        const rect = hoverPanel.getBoundingClientRect();
-        let left = originalEvent.clientX + 18;
-        let top = originalEvent.clientY + 18;
-
-        if (left + rect.width + padding > window.innerWidth) {
-          left = originalEvent.clientX - rect.width - 18;
+      // Pointer-hover feedback: a border highlight on both maps plus the
+      // quick-glance preview box: shown on mouseover for a desktop mouse/
+      // trackpad, or on tap for a touch device (there's no hover to show it
+      // on first, so the tap itself does -- see the document click
+      // listener above for how it gets dismissed again). Click/tap always
+      // also selects the country into the persistent, accessible panel
+      // below the maps, regardless of pointer type.
+      function handleCountryClick(vkpCode, mapType, feature, e) {
+        selectCountry(vkpCode, e.latlng);
+        if (!supportsHoverDetail) {
+          justOpenedPreview = true;
+          showHoverDetail(mapType, feature, e.originalEvent, true);
         }
-        if (top + rect.height + padding > window.innerHeight) {
-          top = window.innerHeight - rect.height - padding;
-        }
-        if (top < padding) top = padding;
-        if (left < padding) left = padding;
-
-        hoverPanel.style.left = left + 'px';
-        hoverPanel.style.top = top + 'px';
-      }
-
-      function hideHoverDetail() {
-        hoverPanel.classList.remove('visible');
       }
 
       function bindInteractions(layer, feature, mapType, currentMap) {
         const vkpCode = feature.properties.vkpCode;
         layer.on({
-          mouseover: function(e) {
-            highlightFeature(vkpCode);
-            showHoverDetail(mapType, feature, e.originalEvent);
-          },
-          mousemove: function(e) {
-            positionHoverDetail(e.originalEvent);
-          },
-          mouseout: function(e) {
-            resetFeatureHighlight();
-            hideHoverDetail();
-          },
-          click: function(e) {
-            selectCountry(vkpCode, e.latlng);
-          }
+          mouseover: function(e) { highlightFeature(vkpCode); if (supportsHoverDetail) showHoverDetail(mapType, feature, e.originalEvent); },
+          mousemove: function(e) { if (supportsHoverDetail) positionHoverDetail(e.originalEvent); },
+          mouseout: function() { resetFeatureHighlight(); if (supportsHoverDetail) hideHoverDetail(); },
+          click: function(e) { handleCountryClick(vkpCode, mapType, feature, e); }
         });
       }
 
@@ -1854,20 +2093,10 @@
           });
 
           marker.on({
-            mouseover: function(e) {
-              highlightFeature(vkpCode);
-              showHoverDetail(mapType, feature, e.originalEvent);
-            },
-            mousemove: function(e) {
-              positionHoverDetail(e.originalEvent);
-            },
-            mouseout: function(e) {
-              resetFeatureHighlight();
-              hideHoverDetail();
-            },
-            click: function(e) {
-              selectCountry(vkpCode, e.latlng);
-            }
+            mouseover: function(e) { highlightFeature(vkpCode); if (supportsHoverDetail) showHoverDetail(mapType, feature, e.originalEvent); },
+            mousemove: function(e) { if (supportsHoverDetail) positionHoverDetail(e.originalEvent); },
+            mouseout: function() { resetFeatureHighlight(); if (supportsHoverDetail) hideHoverDetail(); },
+            click: function(e) { handleCountryClick(vkpCode, mapType, feature, e); }
           });
 
           marker.addTo(currentMap);
@@ -1925,35 +2154,21 @@
         }
       }
 
-      // A horizontally-centered popup this wide can undercut the zoom-
-      // control stack in the map's top-left corner on narrow phones -
-      // confirmed by measurement: a centered 280px-wide popup on a 375px
-      // viewport leaves ~46px margin per side, but the zoom-control stack
-      // (now four buttons tall: zoom in/out, home, fullscreen) reaches
-      // ~67px in from the left edge - a real ~21px overlap that clips the
-      // popup's own title/subregion text behind the controls, not just a
-      // visual near-miss. Reserve that corner's width on both sides rather
-      // than hand-tuning one width for one device.
-      function popupMaxWidth() {
-        return Math.max(200, Math.min(280, window.innerWidth - 150));
-      }
-
-      function selectCountry(vkpCode, latlng = null) {
-        // Belt-and-suspenders: a click popup should never coexist with the
-        // floating hover panel (see lastTouchAt above for the known cause).
+      function selectCountry(vkpCode) {
+        // Belt-and-suspenders: a fast click can register before the
+        // preceding mouseout fires, which would otherwise leave the hover
+        // preview floating on top of the freshly-updated persistent panel.
         hideHoverDetail();
 
         selectedFeatureId = vkpCode;
         updateMapStyle();
 
         // Find matching feature properties - prefer the primary (non-shadow)
-        // copy for centering/popup placement, so search or programmatic
-        // selection always lands on the real location, not a dateline shadow.
+        // copy, so search or programmatic selection always lands on the
+        // real location, not a dateline shadow.
         let properties = null;
         let targetLayerYF = null;
-        let targetLayerMalaria = null;
         let fallbackLayerYF = null;
-        let fallbackLayerMalaria = null;
 
         yfLayer.eachLayer(l => {
           if (l.feature.properties.vkpCode === vkpCode) {
@@ -1970,128 +2185,142 @@
           properties = fallbackLayerYF.feature.properties;
         }
 
-        malariaLayer.eachLayer(l => {
-          if (l.feature.properties.vkpCode === vkpCode) {
-            if (!l.feature.properties._isDateLineCopy) {
-              targetLayerMalaria = l;
-            } else if (!fallbackLayerMalaria) {
-              fallbackLayerMalaria = l;
-            }
-          }
-        });
-        if (!targetLayerMalaria && fallbackLayerMalaria) {
-          targetLayerMalaria = fallbackLayerMalaria;
-        }
+        if (!properties) return;
+        selectedProperties = properties;
 
-        if (properties) {
-          const popupLatLng = latlng || targetLayerYF.getBounds().getCenter();
+        // No popup to center against anymore -- just fit the country's own
+        // bounds. mapMalaria follows via the existing cross-map sync().
+        mapYF.fitBounds(targetLayerYF.getBounds(), { padding: [40, 40], maxZoom: 6, animate: false });
 
-          // Close existing popups first. Guarded so the popupclose handler
-          // below (which deselects on a real user-initiated close) doesn't
-          // fire and immediately undo the selection we just set above.
-          isSwitchingSelection = true;
-          mapYF.closePopup();
-          mapMalaria.closePopup();
-
-          // Open YF popup on Map YF
-          currentPopupYF = L.popup({
-            maxWidth: popupMaxWidth(),
-            className: 'custom-map-popup',
-            autoPan: false
-          })
-            .setLatLng(popupLatLng)
-            .setContent(createYFPopupHTML(properties))
-            .openOn(mapYF);
-
-          // Open Malaria popup on Map Malaria
-          currentPopupMalaria = L.popup({
-            maxWidth: popupMaxWidth(),
-            className: 'custom-map-popup',
-            autoPan: false
-          })
-            .setLatLng(popupLatLng)
-            .setContent(createMalariaPopupHTML(properties))
-            .openOn(mapMalaria);
-          isSwitchingSelection = false;
-
-          // Calculate center offset so the popup is centered in the map container
-          const zoom = Math.max(mapYF.getZoom(), 4);
-          const offsetLat = 120 / Math.pow(2, zoom);
-          const centerLatLng = L.latLng(popupLatLng.lat + offsetLat, popupLatLng.lng);
-
-          // Center maps on the offset center (tooltip center) instantly
-          mapYF.setView(centerLatLng, zoom, { animate: false });
-          mapMalaria.setView(centerLatLng, zoom, { animate: false });
-        }
+        renderCountryDetailPanel(properties, true);
+        announceStatus(`Selected ${properties.countryName}.`);
       }
 
-      // A popup closing on one map (via its × button, clicking elsewhere on
-      // that map, or Escape) should close/unselect on the other map too,
-      // rather than leaving it selected and the other popup still open.
-      let isSwitchingSelection = false;
       function deselectCountry() {
         if (selectedFeatureId === null) return;
         selectedFeatureId = null;
+        selectedProperties = null;
         updateMapStyle();
-        isSwitchingSelection = true;
-        mapYF.closePopup();
-        mapMalaria.closePopup();
-        isSwitchingSelection = false;
-        currentPopupYF = null;
-        currentPopupMalaria = null;
+        renderCountryDetailPanel(null);
       }
-      mapYF.on('popupclose', () => { if (!isSwitchingSelection) deselectCountry(); });
-      mapMalaria.on('popupclose', () => { if (!isSwitchingSelection) deselectCountry(); });
 
-      // Autocomplete Search Engine
+      // Autocomplete search, rebuilt as a labeled ARIA 1.2 combobox: the
+      // input carries role="combobox"/aria-activedescendant, the list
+      // carries role="listbox"/role="option" (see the input/list markup
+      // above), and Up/Down/Enter/Escape all work without a mouse.
       function initSearchAutocomplete() {
         const input = document.getElementById('countrySearch');
         const suggestionsContainer = document.getElementById('searchSuggestions');
+        let activeIndex = -1;
+        let currentMatches = [];
 
-        // Compile search list
+        // Compile search list -- deliberately the full country list, not
+        // filtered by the active continent/subregion selects, so search
+        // always finds a country regardless of the current filter state.
         const countriesList = mapData.features.map(f => ({
           name: f.properties.countryName,
           code: f.properties.vkpCode
         })).filter((v, i, a) => a.findIndex(t => t.code === v.code) === i) // Unique
            .sort((a, b) => a.name.localeCompare(b.name));
 
-        input.addEventListener('input', function() {
-          const val = this.value.toLowerCase().trim();
+        function closeList() {
+          suggestionsContainer.style.display = 'none';
           suggestionsContainer.innerHTML = '';
+          input.setAttribute('aria-expanded', 'false');
+          input.removeAttribute('aria-activedescendant');
+          activeIndex = -1;
+          currentMatches = [];
+        }
 
-          if (!val) {
-            suggestionsContainer.style.display = 'none';
+        function setActive(index) {
+          const items = Array.from(suggestionsContainer.querySelectorAll('.suggestion-item'));
+          items.forEach((el, i) => el.classList.toggle('is-active', i === index));
+          activeIndex = index;
+          if (index >= 0 && items[index]) {
+            input.setAttribute('aria-activedescendant', items[index].id);
+            items[index].scrollIntoView({ block: 'nearest' });
+          } else {
+            input.removeAttribute('aria-activedescendant');
+          }
+        }
+
+        // A result excluded by the active continent/subregion filters would
+        // otherwise select a country that's invisible on the (filtered) map
+        // -- clear the conflicting filters first so the selection is always
+        // actually visible.
+        function chooseCountry(code, name) {
+          const feature = mapData.features.find(f => f.properties.vkpCode === code && !f.properties._isDateLineCopy);
+          if (feature && !matchesFilters(feature)) {
+            const continentSelect = document.getElementById('continentFilter');
+            const subregionSelect = document.getElementById('subregionFilter');
+            continentSelect.value = 'all';
+            subregionSelect.innerHTML = '<option value="all">All Subregions</option>';
+            subregionSelect.value = 'all';
+            updateFilter();
+          }
+          input.value = name;
+          closeList();
+          selectCountry(code);
+        }
+
+        function renderMatches(matches, query) {
+          suggestionsContainer.innerHTML = '';
+          if (matches.length === 0) {
+            const empty = document.createElement('div');
+            empty.className = 'suggestion-empty';
+            empty.textContent = `No countries found for "${query}".`;
+            suggestionsContainer.appendChild(empty);
+            suggestionsContainer.style.display = 'block';
+            input.setAttribute('aria-expanded', 'true');
+            input.removeAttribute('aria-activedescendant');
             return;
           }
-
-          const filtered = countriesList.filter(c =>
-            c.name.toLowerCase().includes(val) || c.code.toLowerCase().includes(val)
-          ).slice(0, 8);
-
-          if (filtered.length === 0) {
-            suggestionsContainer.style.display = 'none';
-            return;
-          }
-
-          filtered.forEach(c => {
+          matches.forEach((c, i) => {
             const div = document.createElement('div');
             div.className = 'suggestion-item';
+            div.id = `suggestion-${c.code}`;
+            div.setAttribute('role', 'option');
+            div.setAttribute('aria-selected', 'false');
             div.textContent = `${c.name} (${c.code})`;
-            div.addEventListener('click', function() {
-              input.value = c.name;
-              suggestionsContainer.style.display = 'none';
-              selectCountry(c.code);
-            });
+            div.addEventListener('click', () => chooseCountry(c.code, c.name));
             suggestionsContainer.appendChild(div);
           });
-
           suggestionsContainer.style.display = 'block';
+          input.setAttribute('aria-expanded', 'true');
+        }
+
+        input.addEventListener('input', function() {
+          const val = this.value.toLowerCase().trim();
+          if (!val) { closeList(); return; }
+
+          currentMatches = countriesList.filter(c =>
+            c.name.toLowerCase().includes(val) || c.code.toLowerCase().includes(val)
+          ).slice(0, 8);
+          renderMatches(currentMatches, this.value.trim());
+          setActive(-1);
+        });
+
+        input.addEventListener('keydown', function(e) {
+          if (suggestionsContainer.style.display !== 'block' || currentMatches.length === 0) return;
+          if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            setActive(Math.min(activeIndex + 1, currentMatches.length - 1));
+          } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            setActive(Math.max(activeIndex - 1, 0));
+          } else if (e.key === 'Enter') {
+            e.preventDefault();
+            const pick = currentMatches[activeIndex >= 0 ? activeIndex : 0];
+            if (pick) chooseCountry(pick.code, pick.name);
+          } else if (e.key === 'Escape') {
+            closeList();
+          }
         });
 
         // Hide suggestions when clicking outside
         document.addEventListener('click', function(e) {
-          if (e.target !== input && e.target !== suggestionsContainer) {
-            suggestionsContainer.style.display = 'none';
+          if (e.target !== input && !suggestionsContainer.contains(e.target)) {
+            closeList();
           }
         });
       }
@@ -2103,6 +2332,14 @@
       const layoutToggleGroup = document.getElementById('layoutToggleGroup');
       const wrapper = document.querySelector('.dashboard-wrapper');
 
+      // Reflects .active on aria-pressed for all three view buttons at
+      // once, so a screen reader hears which view is current.
+      function setViewPressed(activeBtn) {
+        [viewBothBtn, viewYFBtn, viewMalariaBtn].forEach(btn => {
+          btn.setAttribute('aria-pressed', String(btn === activeBtn));
+        });
+      }
+
       viewBothBtn.addEventListener('click', () => {
         // A deliberate toolbar click always overrides any pending restore
         // from the per-map fullscreen button (see tempViewSwitch below) -
@@ -2111,9 +2348,10 @@
         viewBothBtn.classList.add('active');
         viewYFBtn.classList.remove('active');
         viewMalariaBtn.classList.remove('active');
+        setViewPressed(viewBothBtn);
 
         wrapper.classList.remove('view-yf-only', 'view-malaria-only');
-        layoutToggleGroup.style.display = 'inline-flex';
+        updateLayoutToggleVisibility();
 
         setTimeout(() => {
           mapYF.invalidateSize();
@@ -2132,6 +2370,7 @@
         viewYFBtn.classList.add('active');
         viewBothBtn.classList.remove('active');
         viewMalariaBtn.classList.remove('active');
+        setViewPressed(viewYFBtn);
 
         wrapper.classList.add('view-yf-only');
         wrapper.classList.remove('view-malaria-only');
@@ -2149,6 +2388,7 @@
         viewMalariaBtn.classList.add('active');
         viewBothBtn.classList.remove('active');
         viewYFBtn.classList.remove('active');
+        setViewPressed(viewMalariaBtn);
 
         wrapper.classList.add('view-malaria-only');
         wrapper.classList.remove('view-yf-only');
@@ -2166,12 +2406,19 @@
       const dashboardBody = document.getElementById('dashboardBody');
       const sectionMalaria = document.getElementById('sectionMalaria');
 
+      function setLayoutPressed(activeBtn) {
+        [layoutStackBtn, layoutSplitBtn].forEach(btn => {
+          btn.setAttribute('aria-pressed', String(btn === activeBtn));
+        });
+      }
+
       layoutStackBtn.addEventListener('click', () => {
         // See the matching comment on layoutSplitBtn below, and the
         // tempViewSwitch comments further down - same pattern, same reason.
         tempLayoutSwitch = null;
         layoutStackBtn.classList.add('active');
         layoutSplitBtn.classList.remove('active');
+        setLayoutPressed(layoutStackBtn);
         dashboardBody.classList.remove('layout-split');
         sectionMalaria.classList.remove('border-left');
         sectionMalaria.classList.add('border-top');
@@ -2196,6 +2443,7 @@
         tempLayoutSwitch = null;
         layoutSplitBtn.classList.add('active');
         layoutStackBtn.classList.remove('active');
+        setLayoutPressed(layoutSplitBtn);
         dashboardBody.classList.add('layout-split');
         sectionMalaria.classList.remove('border-top');
         sectionMalaria.classList.add('border-left');
@@ -2209,22 +2457,28 @@
       // Fullscreen Controls
       // Trip Itinerary clear-all
       const tripClearBtn = document.getElementById('tripClearBtn');
+      const tripToggleBtn = document.getElementById('tripToggleBtn');
       tripClearBtn.addEventListener('click', () => {
         pinnedCountries.clear();
-        document.querySelectorAll('.pin-country-btn.pinned').forEach(btn => {
-          btn.textContent = '☆ Add to Trip';
-          btn.classList.remove('pinned');
-        });
+        const panelBtn = document.getElementById('panelTripBtn');
+        if (panelBtn) {
+          panelBtn.textContent = 'Add to trip';
+          panelBtn.classList.remove('pinned');
+        }
         renderTripSummary();
         syncStateToURL();
+        announceStatus('Trip cleared.');
+      });
+      tripToggleBtn.addEventListener('click', () => {
+        document.getElementById('tripSummaryPanel').classList.toggle('is-collapsed');
+        updateTripToggleLabel();
       });
 
       // Reset view (Home) - attached into each map's own zoom control
       // stack, right below +/-, matching the Tableau reference layout
       // rather than a separate labeled toolbar button.
       function resetMapsView() {
-        mapYF.closePopup();
-        mapMalaria.closePopup();
+        deselectCountry();
         mapYF.setView([15, 0], 2, { animate: false });
         mapMalaria.setView([15, 0], 2, { animate: false });
       }
@@ -2249,34 +2503,38 @@
       // oversized-looking <canvas> buffer for a stale resize and chased it
       // as a bug - it's actually the documented padding:1 renderer buffer,
       // exactly 3x the container in each dimension by design, confirmed by
-      // measurement, not a bug). But a fixed delay can't cover every case,
-      // and there's a real second problem invalidateSize() never touches
-      // at all: a popup already open on a map whose container was
-      // display:none (hidden by single-map view mode - see the per-map
-      // fullscreen button below) gets its width computed from that
-      // zero-size container at open time, and nothing about
-      // invalidateSize() ever tells an *already-open* popup to recompute
-      // once its container is visible and correctly sized again -
-      // confirmed by measurement, the popup's own wrapper stayed stuck at
-      // a ~53px width, with its text spilling past that narrow background
-      // via the popup's own overflow:visible. A ResizeObserver catches the
-      // exact moment a container's real box changes for any reason (view
-      // switch, fullscreen, layout switch, window resize), so it's the one
-      // place both fixes belong: refit the map, and refresh whichever
-      // popup is currently open on it.
+      // measurement, not a bug), but a fixed delay can't cover every case.
+      // A ResizeObserver catches the exact moment a container's real box
+      // changes for any reason (view switch, fullscreen, layout switch,
+      // window resize) and refits immediately.
       const mapResizeObserver = new ResizeObserver((entries) => {
         for (const entry of entries) {
           if (entry.target === mapYFEl) {
             mapYF.invalidateSize();
-            if (currentPopupYF) currentPopupYF.update();
           } else if (entry.target === mapMalariaEl) {
             mapMalaria.invalidateSize();
-            if (currentPopupMalaria) currentPopupMalaria.update();
           }
         }
       });
       mapResizeObserver.observe(mapYFEl);
       mapResizeObserver.observe(mapMalariaEl);
+
+      // Stack/Split availability keys off the actual map-area width, not a
+      // fixed viewport breakpoint.
+      const dashboardMain = document.getElementById('dashboardMain');
+      function updateLayoutToggleVisibility() {
+        if (wrapper.classList.contains('view-yf-only') || wrapper.classList.contains('view-malaria-only')) {
+          layoutToggleGroup.style.display = 'none';
+          return;
+        }
+        const isSplitAvailable = dashboardMain.getBoundingClientRect().width >= 768;
+        layoutToggleGroup.style.display = isSplitAvailable ? 'inline-flex' : 'none';
+        if (!isSplitAvailable && layoutSplitBtn.classList.contains('active')) {
+          layoutStackBtn.click();
+        }
+      }
+      const dashboardMainObserver = new ResizeObserver(() => updateLayoutToggleVisibility());
+      dashboardMainObserver.observe(dashboardMain);
 
       const fullscreenBtn = document.getElementById('fullscreenBtn');
 
@@ -2298,8 +2556,8 @@
       // Set by the per-map fullscreen button to whichever view button was
       // active right before it switched to a single map - restored
       // automatically on exit below, regardless of which control was used
-      // to exit (this same icon, the toolbar's Exit Full, Escape, or the
-      // browser's own native fullscreen chrome). Tapping "fullscreen this
+      // to exit (this same icon, the toolbar's Exit fullscreen, Escape, or
+      // the browser's own native fullscreen chrome). Tapping "fullscreen this
       // map" reads as "give me a closer look for a second," not "narrow
       // what I'm browsing to just this map from now on" - only the
       // toolbar's own YF Only/Malaria Only buttons make that persistent,
@@ -2324,7 +2582,13 @@
         wrapper.classList.toggle('is-fullscreen', active);
         bodyEl.classList.toggle('fullscreen-lock', active);
         fullscreenBtn.classList.toggle('active', active);
-        fullscreenBtn.querySelector('span').textContent = active ? 'Exit Full' : 'Fullscreen';
+        fullscreenBtn.querySelector('span').textContent = active ? 'Exit fullscreen' : 'Fullscreen';
+        // Collapsed by default behind the "Trip (n)" toggle on entry (see
+        // .dashboard-wrapper.is-fullscreen .trip-summary-panel), expanded
+        // again on exit -- normal view keeps it inline/expanded throughout.
+        const tripPanel = document.getElementById('tripSummaryPanel');
+        tripPanel.classList.toggle('is-collapsed', active);
+        updateTripToggleLabel();
         perMapFsLinks.forEach(link => {
           link.innerHTML = active ? COMPRESS_ICON : EXPAND_ICON;
           const label = active ? 'Exit fullscreen' : 'Fullscreen this map';
@@ -2386,7 +2650,7 @@
           // Already fullscreen (on this map, the other one, or Both): this
           // button doubles as the exit control, matching the toolbar one -
           // a user who fullscreened via this icon shouldn't need to hunt
-          // for the separate "Exit Full" button to back out.
+          // for the separate "Exit fullscreen" button to back out.
           if (wrapper.classList.contains('is-fullscreen')) {
             fullscreenBtn.click();
           } else {
@@ -2405,9 +2669,14 @@
       addFullscreenButtonToZoomControl(mapYF, viewYFBtn);
       addFullscreenButtonToZoomControl(mapMalaria, viewMalariaBtn);
 
-      // Listen for theme toggle events to adjust map layers dynamically
+      // Listen for theme toggle events to adjust map layers, badge text
+      // colors (both per-theme lookups above), and the trip summary.
       themeToggle.addEventListener('click', function() {
-        setTimeout(updateMapStyle, 50);
+        setTimeout(() => {
+          updateMapStyle();
+          if (selectedProperties) renderCountryDetailPanel(selectedProperties);
+          renderTripSummary();
+        }, 50);
       });
     });
   </script>

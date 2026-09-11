@@ -100,8 +100,25 @@
 :target { scroll-margin-top: calc(var(--nav-h, 51px) + 2px); }
 
 .rd-nav svg { width: 16px; height: 16px; display: block; }
-/* Each page's own stylesheet drives which of the two icons is shown via
-   [data-theme] on <html>; this only has to make them the right size. */
+/* Centralized here (not left to each page's own stylesheet) so a page that
+   forgets to declare these never ends up showing both icons at once --
+   that was a real bug on /credentials/, which carries no copy of its own.
+   A page that still has its own identical copy just gets a harmless
+   duplicate rule. */
+[data-theme="dark"] .icon-sun { display: block; }
+[data-theme="dark"] .icon-moon { display: none; }
+[data-theme="light"] .icon-sun { display: none; }
+[data-theme="light"] .icon-moon { display: block; }
+
+/* Shared focus-visible ring for the standalone pages, matching the Astro
+   side's --accent outline. Individual pages may still add :focus-visible
+   rules for controls with their own bespoke focus treatment (e.g. a card
+   that lifts on focus); this is the floor every interactive element gets. */
+a:focus-visible, button:focus-visible, input:focus-visible,
+select:focus-visible, textarea:focus-visible, summary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
 
 @media (max-width: 860px) {
   /* Decorative, and the first thing to go when space is tight. */

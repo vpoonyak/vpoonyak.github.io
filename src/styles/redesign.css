@@ -666,6 +666,11 @@ img { max-width: 100%; }
 .rd-work-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .rd-work-title { font-weight: 600; font-size: clamp(22px, 2.6vw, 32px); line-height: 1.15; letter-spacing: -0.025em; }
 .rd-work-desc { font-size: 15px; color: var(--muted); margin-top: 10px; line-height: 1.55; max-width: 88ch; }
+/* Plain text, not a nested link -- .rd-work-copy is already the click
+   target for the whole card; this just makes that destination explicit.
+   No decorative arrow glyph, matching the site's removal of those
+   elsewhere (see the Blog "Read article" action). */
+.rd-work-action { display: block; margin-top: 12px; font-size: 13px; font-weight: 600; color: var(--accent); }
 .rd-work-controls {
   /* Apple-product-page style: a fixed strip below the whole carousel, clear
      of every card's media, so it never overlaps whatever a project's video
@@ -894,7 +899,9 @@ a:is(:hover, :focus-visible) > .rd-link-action { text-decoration: underline; tex
 }
 .rd-form textarea { resize: vertical; }
 .rd-form input:focus,
-.rd-form textarea:focus { outline: none; border-color: var(--accent); }
+.rd-form textarea:focus { border-color: var(--accent); }
+.rd-form input:focus-visible,
+.rd-form textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .rd-form button {
   border: 2px solid var(--line);
   background: var(--ink);
@@ -906,6 +913,14 @@ a:is(:hover, :focus-visible) > .rd-link-action { text-decoration: underline; tex
   align-self: flex-start;
 }
 .rd-form button:hover { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.rd-form button:disabled { opacity: 0.6; cursor: not-allowed; }
+.rd-form input[aria-invalid="true"],
+.rd-form textarea[aria-invalid="true"] { border-color: var(--stress-border); }
+.rd-form-field-error { font-size: 12px; color: var(--stress); margin-top: -2px; }
+.rd-form-status { font-size: 13px; line-height: 1.5; margin: 0; }
+.rd-form-status.is-error { color: var(--stress); }
+.rd-form-status.is-success { color: var(--success); }
+.rd-form-status:empty { display: none; }
 
 /* ═══ SCROLL REVEAL ═════════════════════════════════════════ */
 .rd-reveal { opacity: 0; transform: translateY(26px); transition: opacity 0.7s ease, transform 0.7s ease; }

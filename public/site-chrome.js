@@ -12,10 +12,11 @@
   menu.className = 'rd-mobile-menu';
   menu.inert = true;
   menu.setAttribute('aria-hidden', 'true');
-  var home = document.createElement('a');
-  home.href = '/#top';
-  home.textContent = 'Home';
-  menu.appendChild(home);
+  // Every page linking this script now carries its own explicit Home
+  // .rd-nav-item in the bar (matching Navigation.astro's non-home layout),
+  // so it's picked up by this clone -- no need to prepend one by hand
+  // (that used to be the only source of a Home link, before every page had
+  // its own; keeping both would show Home twice in this dropdown).
   nav.querySelectorAll('.rd-nav-item, .rd-nav-cta').forEach(function (link) {
     var item = link.cloneNode(true);
     item.removeAttribute('class');

@@ -2,6 +2,72 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2026-09-11] - Design Consistency Pass: Map Dashboard Rebuild, Archive/Blog Alignment, Contact Feedback
+
+Implements `docs/design-consistency-implementation-plan.md`, itself written from
+`docs/design-interaction-audit-2026-09-11.md`.
+
+### Added
+- **YF/Malaria Dashboard Redesign**: Replaced the dual floating Leaflet popups
+  with one shared, always-visible country-detail panel, full width directly
+  below both maps — fixing stale trip-button labels after resize/fullscreen
+  and headings clipped in fullscreen. An earlier pass placed this panel
+  beside the maps as a 320px column on wide screens, capped to 80vh with its
+  own scrollbar so a long country's guidance (India's YF requirements alone
+  run to several nested sub-bullets) wouldn't balloon the page; that read as
+  an unintuitive nested scroll region, so the panel is full width and part
+  of normal page scroll instead, and desktop/trackpad users get a hover
+  preview (badges + guidance, gated to hover-capable pointers) as a
+  quick-glance alternative to clicking.
+
+  Country search is now a labeled ARIA combobox with
+  Up/Down/Enter/Escape keyboard support, active-option tracking, and a
+  visible "No countries found" state; selecting a result outside the active
+  continent/subregion filters now clears them automatically. Added
+  `aria-pressed` to the view/layout toggle buttons, a polite live region for
+  selection/trip announcements, a "Filters" disclosure for the continent/
+  subregion selects, and a collapsed "Trip (n)" summary toggle in fullscreen
+  (expands as a bottom overlay rather than pushing the maps around). Badge
+  text now uses separately verified, per-theme, per-category colors instead
+  of the raw swatch hex (previously ~2.07:1 contrast for the orange
+  category); Leaflet's default zoom glyphs are replaced with the same
+  inline-SVG icon pattern already used for the home/fullscreen controls, at
+  44×44px. The dashboard itself now runs up to 1440px wide instead of being
+  boxed into the case study's 860px reading column.
+- **Contact form feedback** (`src/components/Contact.astro`, shared by `/`
+  and `/contact/`): submits via `fetch`/`FormData` with a 20s timeout,
+  showing sending/success/error states through a live status region;
+  field-level validation errors from Formspree are associated with their
+  inputs via `aria-invalid`/`aria-describedby`; entered values are kept on
+  any failure and cleared only on confirmed success; a network failure or
+  timeout offers a manual retry plus the existing email fallback. The
+  form's plain `action`/`method` POST fallback is unchanged for
+  JS-disabled visitors.
+- **`Projects.astro`**: added a "View case study" text affordance inside
+  each existing card-copy link (not a new nested anchor).
+
+### Changed
+- **Navigation consistency**: all 13 case-study pages, `credentials/`, and
+  `project/` now show the same Home/Contact bar items as the rest of the
+  standalone pages (previously case studies showed a single "Portfolio"
+  item, and the two archive pages were missing "Home"); their footers now
+  read "Back to projects" instead of "Back to project archive".
+  `site-chrome.js`'s mobile-menu builder no longer hardcodes a duplicate
+  "Home" link now that every page's bar carries its own.
+- **Credential archive**: card corners now match the homepage's 12px
+  (were 4px); the three compound records (TPQI×Huawei, Huawei HCCDA, ISC2
+  CC) show their certificate links as distinct bordered action chips with
+  descriptive labels ("View Tech certificate", "View AI certificate", …)
+  instead of bare inline text mixed into the meta line.
+- **Blog**: "Read Article"/its decorative SVG arrow → "Read article" as
+  plain sentence-case text; the language filter buttons now carry
+  `aria-pressed`.
+- **Shared chrome** (`site-chrome.css`): centralized the theme-icon
+  visibility rules (fixes `/credentials/` showing both sun and moon at
+  once) and added a shared `:focus-visible` ring; removed the `outline:
+  none` overrides on the project-archive cards and the contact form fields
+  that were suppressing it.
+
 ## [2026-09-10] - Project Carousel Controls and Autoplay Reliability
 
 ### Changed

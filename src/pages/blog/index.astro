@@ -48,9 +48,9 @@ const posts = allPosts.filter((p) => !hiddenIds.has(p.id));
         <!-- Language Filter Buttons -->
         {posts.length > 0 && (
           <div style="display: flex; gap: 8px; margin-bottom: 2.5rem;" class="blog-filters">
-            <button class="filter-btn active" data-lang="all">All</button>
-            <button class="filter-btn" data-lang="en">English</button>
-            <button class="filter-btn" data-lang="th">ภาษาไทย</button>
+            <button class="filter-btn active" data-lang="all" aria-pressed="true">All</button>
+            <button class="filter-btn" data-lang="en" aria-pressed="false">English</button>
+            <button class="filter-btn" data-lang="th" aria-pressed="false">ภาษาไทย</button>
           </div>
         )}
 
@@ -137,9 +137,8 @@ const posts = allPosts.filter((p) => !hiddenIds.has(p.id));
 
                     <!-- Read More Link -->
                     <div>
-                      <a href={postUrl} class="t-mono blog-item-readmore" style="font-size: 0.75rem; color: var(--accent); text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 4px; text-transform: uppercase;">
-                        <span class="blog-item-readmore-label">Read Article</span>
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                      <a href={postUrl} class="t-mono blog-item-readmore" style="font-size: 0.8125rem; color: var(--accent); text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;">
+                        <span class="blog-item-readmore-label">Read article</span>
                       </a>
                     </div>
                   </div>
@@ -216,15 +215,16 @@ const posts = allPosts.filter((p) => !hiddenIds.has(p.id));
     if (titleEl && title) { titleEl.textContent = title; if (url) titleEl.href = url; }
     if (descEl && desc) descEl.textContent = desc;
     if (readMoreEl && url) readMoreEl.href = url;
-    if (readMoreLabelEl) readMoreLabelEl.textContent = useThai ? 'อ่านบทความ' : 'Read Article';
+    if (readMoreLabelEl) readMoreLabelEl.textContent = useThai ? 'อ่านบทความ' : 'Read article';
     if (readingTimeEl && readingTime) readingTimeEl.textContent = `${readingTime} min read`;
   }
 
   buttons.forEach(btn => {
     btn.addEventListener('click', () => {
-      // Toggle active class
-      buttons.forEach(b => b.classList.remove('active'));
+      // Toggle active class and its accessible equivalent together
+      buttons.forEach(b => { b.classList.remove('active'); b.setAttribute('aria-pressed', 'false'); });
       btn.classList.add('active');
+      btn.setAttribute('aria-pressed', 'true');
 
       const filterLang = btn.getAttribute('data-lang');
 
