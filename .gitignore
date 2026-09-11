@@ -7,3 +7,7 @@ docs/superpowers/
 node_modules/
 /dist/
 /.astro/
+
+# Retired/orphaned assets and raw source material kept locally, out of the
+# deployed public/ tree -- see docs/ or ask before reintroducing any of these.
+/nonuse/
