@@ -126,7 +126,12 @@ const projects = [
     let selected = 0, destination = 0, elapsed = 0, lastFrame = 0, frame = 0;
     let settling: ReturnType<typeof setTimeout>;
     let resuming: ReturnType<typeof setTimeout>;
-    const RESUME_DELAY = 4500;
+    // 0, not "no delay at all": manual() still needs to run on the next
+    // task so wantsPlay's false→true flip doesn't collapse into a no-op
+    // within the same call. The other canPlay() gates (scrolling, pointer)
+    // already keep playback off for the actual duration of a drag — this
+    // was a real, felt wait on top of that, not a deliberate pause.
+    const RESUME_DELAY = 0;
     let announce = false;
     let pointer: { id: number; x: number; y: number; scroll: number; mouse: boolean } | null = null;
     let dragged = false;
