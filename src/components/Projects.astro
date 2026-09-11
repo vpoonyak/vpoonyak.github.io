@@ -122,7 +122,7 @@ const projects = [
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
     const connection = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
     let wantsPlay = !reduced.matches && !connection?.saveData;
-    let visible = false, hovered = false, focused = false, scrolling = false;
+    let visible = false, focused = false, scrolling = false;
     let selected = 0, destination = 0, elapsed = 0, lastFrame = 0, frame = 0;
     let settling: ReturnType<typeof setTimeout>;
     let announce = false;
@@ -130,7 +130,9 @@ const projects = [
     let dragged = false;
 
     const position = (i: number) => cards[i].offsetLeft - (track.clientWidth - cards[i].offsetWidth) / 2;
-    const canPlay = () => wantsPlay && visible && !document.hidden && !hovered && !focused && !scrolling && !pointer;
+    // Hovering the media no longer pauses rotation — only an explicit pause,
+    // keyboard focus, or an active drag/scroll should stop it.
+    const canPlay = () => wantsPlay && visible && !document.hidden && !focused && !scrolling && !pointer;
     function syncPlayback() {
       cancelAnimationFrame(frame);
       lastFrame = 0;
@@ -234,8 +236,6 @@ const projects = [
     carousel.addEventListener('focusout', event => {
       if (!carousel.contains(event.relatedTarget as Node | null)) { focused = false; syncPlayback(); }
     });
-    track.addEventListener('pointerenter', event => { if (event.pointerType === 'mouse') { hovered = true; syncPlayback(); } });
-    track.addEventListener('pointerleave', () => { hovered = false; syncPlayback(); });
     track.addEventListener('pointerdown', event => {
       if (event.button !== 0) return;
       manual(); dragged = false;
