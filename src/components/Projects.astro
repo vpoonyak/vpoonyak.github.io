@@ -244,13 +244,15 @@ const projects = [
     track.addEventListener('pointermove', event => {
       if (!pointer || pointer.id !== event.pointerId) return;
       const dx = event.clientX - pointer.x;
-      if (!dragged && Math.hypot(dx, event.clientY - pointer.y) > 8) {
-        // Only a real swipe/drag counts as taking manual control. A touch that
-        // starts on the carousel but never moves — a tap, or a finger that
-        // lands there while scrolling the page past it — used to stop
-        // autoplay permanently with nothing to undo it.
-        dragged = true;
-        manual();
+      const dy = event.clientY - pointer.y;
+      if (!dragged && Math.hypot(dx, dy) > 8) {
+        // Only a real swipe/drag counts as taking manual control. A tap that
+        // never moves, or — the common case on touch — a finger that lands on
+        // the carousel while the visitor scrolls the page past it, used to
+        // stop autoplay permanently with nothing to undo it. A mouse drag is
+        // unambiguous, but a touch move is only a deliberate carousel swipe
+        // once it's clearly horizontal rather than the page being scrolled.
+        if (pointer.mouse || Math.abs(dx) > Math.abs(dy)) { dragged = true; manual(); }
       }
       if (pointer.mouse && dragged) {
         track.setPointerCapture(event.pointerId);
