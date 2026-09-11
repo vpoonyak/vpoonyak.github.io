@@ -125,6 +125,8 @@ const projects = [
     let visible = false, focused = false, scrolling = false;
     let selected = 0, destination = 0, elapsed = 0, lastFrame = 0, frame = 0;
     let settling: ReturnType<typeof setTimeout>;
+    let resuming: ReturnType<typeof setTimeout>;
+    const RESUME_DELAY = 4500;
     let announce = false;
     let pointer: { id: number; x: number; y: number; scroll: number; mouse: boolean } | null = null;
     let dragged = false;
@@ -207,7 +209,14 @@ const projects = [
       clearTimeout(settling);
       settling = setTimeout(settle, 180);
     }
-    function manual() { wantsPlay = false; announce = true; syncPlayback(); }
+    function manual() {
+      wantsPlay = false; announce = true; syncPlayback();
+      // A swipe/dot-click/arrow-key is "let me drive," not "stop forever" —
+      // hand control back to autoplay if nothing else happens for a bit.
+      // Repeated manual navigation keeps deferring this while it continues.
+      clearTimeout(resuming);
+      resuming = setTimeout(() => { wantsPlay = true; syncPlayback(); }, RESUME_DELAY);
+    }
     track.addEventListener('scroll', () => {
       if (!scrolling) { scrolling = true; syncPlayback(); }
       clearTimeout(settling);
@@ -218,6 +227,10 @@ const projects = [
       wantsPlay = !wantsPlay;
       // Explicit play is allowed even while this control holds keyboard focus.
       focused = false;
+      // Pressing Play/Pause directly is a final decision, not a "let me
+      // drive for a moment" one — it overrides any pending auto-resume from
+      // an earlier swipe/dot-click rather than being undone a few seconds later.
+      clearTimeout(resuming);
       syncPlayback();
     });
     carousel.addEventListener('keydown', event => {
@@ -272,7 +285,9 @@ const projects = [
     track.addEventListener('click', event => {
       if (dragged && event.detail !== 0) { event.preventDefault(); event.stopPropagation(); }
     }, true);
-    track.addEventListener('wheel', event => { if (Math.abs(event.deltaX) > 0) manual(); }, { passive: true });
+    // A trackpad's vertical scroll commonly carries tiny stray deltaX noise;
+    // only a horizontal-dominant wheel gesture is a deliberate carousel nudge.
+    track.addEventListener('wheel', event => { if (Math.abs(event.deltaX) > Math.abs(event.deltaY)) manual(); }, { passive: true });
     videos.forEach(video => {
       if (!video) return;
       video.muted = true;
