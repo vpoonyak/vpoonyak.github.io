@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2026-09-10] - Project Carousel Controls and Autoplay Reliability
+
+### Changed
+- **Control Placement**: The dots/play pill no longer floats over each card's video — it sits in a plain flow-positioned strip below the whole carousel, Apple-product-page style. The floating glass overlay (docked near the video's bottom edge, re-clamped to stay in the viewport as the page scrolled) sometimes landed on top of a project's own on-screen content, and had nowhere clear to sit at all in the desktop side-by-side layout; this removes the per-frame position-tracking JS entirely and guarantees no overlap regardless of what a given project's media looks like.
+- **Manual Navigation No Longer Pauses Autoplay Forever**: A swipe, dot click, or arrow key used to set the carousel to manual mode permanently, with nothing to undo it besides pressing Play. It now resumes on its own as soon as the interaction settles — a first pass added a 4.5s grace window before resuming, which read as the carousel being stuck rather than a deliberate pause once seen in an actual screen recording, so that artificial wait was removed. Repeated navigation keeps deferring the resume while it continues, and pressing Play/Pause directly is treated as a final decision that cancels any pending auto-resume.
+
+### Fixed
+- **Autoplay Stopping on Any Touch, Not Just Drags**: `pointerdown` called the "take manual control" handler unconditionally, before it was known whether the gesture became an actual drag — so a tap that never moved (or a touch that started on the carousel but immediately became a vertical page-scroll) silently and permanently stopped autoplay. Fixed with a touch axis-lock: movement only counts as a deliberate carousel swipe once it's horizontal-dominant (`|dx| > |dy|`); a real drag still pauses it as before. The wheel handler had the identical bug (`Math.abs(deltaX) > 0` with no comparison to `deltaY`, so a trackpad's vertical scroll — which commonly carries stray `deltaX` noise — could trigger it) and got the same fix.
+- **Hover No Longer Pauses Rotation**: Resting the mouse over the media used to stop autoplay; simply looking at the carousel while it happened to be under the cursor now leaves it running. Only an explicit pause, keyboard focus, or an active drag/scroll stops it.
+- **A Failed Autoplay Attempt No Longer Blacklists a Slide for the Whole Session**: A transient failure (a slow first load, a network hiccup) permanently blocked that slide's video from ever trying again. It now gets a fresh attempt (reloading if it hard-errored) each time its slide is reselected.
+
 ## [2026-09-10] - Site-wide Consistency and Chatbot Demo Preparation
 
 ### Changed
