@@ -238,13 +238,20 @@ const projects = [
     });
     track.addEventListener('pointerdown', event => {
       if (event.button !== 0) return;
-      manual(); dragged = false;
+      dragged = false;
       pointer = { id: event.pointerId, x: event.clientX, y: event.clientY, scroll: track.scrollLeft, mouse: event.pointerType === 'mouse' };
     });
     track.addEventListener('pointermove', event => {
       if (!pointer || pointer.id !== event.pointerId) return;
       const dx = event.clientX - pointer.x;
-      if (Math.hypot(dx, event.clientY - pointer.y) > 8) dragged = true;
+      if (!dragged && Math.hypot(dx, event.clientY - pointer.y) > 8) {
+        // Only a real swipe/drag counts as taking manual control. A touch that
+        // starts on the carousel but never moves — a tap, or a finger that
+        // lands there while scrolling the page past it — used to stop
+        // autoplay permanently with nothing to undo it.
+        dragged = true;
+        manual();
+      }
       if (pointer.mouse && dragged) {
         track.setPointerCapture(event.pointerId);
         track.classList.add('is-dragging');
