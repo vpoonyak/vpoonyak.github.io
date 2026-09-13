@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verifying medical license · Medical Council of Thailand</title>
+  <meta name="robots" content="noindex, follow">
+  <meta name="description" content="Redirects to the Medical Council of Thailand register to verify the medical license of Vitchakorn Poonyakanok.">
+  <link rel="icon" href="/favicon/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/favicon/favicon-32x32.png" sizes="32x32" type="image/png">
+  <link rel="icon" href="/favicon/favicon-16x16.png" sizes="16x16" type="image/png">
+  <link rel="apple-touch-icon" href="/favicon/apple-touch-icon.png">
+  <style>
+    /* Tokens copied from /credentials/ so this page matches in either theme. */
+    :root, :root[data-theme="dark"] {
+      --bg: #14120d; --ink: #f0ead9; --card: #1c1913;
+      --muted: #a89f88; --accent: #6d89ff; --accent-ink: #14120d; --border: #3a352a;
+    }
+    :root[data-theme="light"] {
+      --bg: #faf9f6; --ink: #16140f; --card: #ffffff;
+      --muted: #59523f; --accent: #2244e0; --accent-ink: #ffffff; --border: #d5d2ca;
+    }
+    @media (prefers-color-scheme: light) {
+      :root:not([data-theme="dark"]) {
+        --bg: #faf9f6; --ink: #16140f; --card: #ffffff;
+        --muted: #59523f; --accent: #2244e0; --accent-ink: #ffffff; --border: #d5d2ca;
+      }
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; min-height: 100vh; display: grid; place-items: center;
+      padding: 24px; background: var(--bg); color: var(--ink); line-height: 1.6;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    }
+    main {
+      max-width: 34rem; background: var(--card); border: 1px solid var(--border);
+      border-radius: 14px; padding: clamp(24px, 5vw, 40px);
+    }
+    h1 { margin: 0 0 12px; font-size: 19px; line-height: 1.35; }
+    p { margin: 0 0 14px; font-size: 15px; color: var(--muted); }
+    p.lead { color: var(--ink); }
+    button {
+      font: inherit; font-weight: 600; cursor: pointer; margin: 6px 0 18px;
+      padding: 11px 18px; border-radius: 10px; border: 1px solid transparent;
+      background: var(--accent); color: var(--accent-ink);
+    }
+    button:hover { filter: brightness(1.08); }
+    .small { font-size: 13px; }
+    a { color: var(--accent); }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Opening the Medical Council of Thailand register&hellip;</h1>
+    <p class="lead">Verifying the medical license of <strong>Vitchakorn Poonyakanok, MD</strong>
+      (registered with the Thai Medical Council since 2019).</p>
+
+    <!-- The council's register only answers a POST lookup, so a plain link cannot
+         reach a result page. This form carries the search for the reader. It is
+         submitted automatically on load; the button is the fallback when a browser
+         or extension blocks scripted submission. -->
+    <form id="tmc" action="https://checkmd.tmc.or.th/En/v3/search" method="post">
+      <input type="hidden" name="nm_en" value="VITCHAKORN">
+      <input type="hidden" name="lp_en" value="POONYAKANOK">
+      <input type="hidden" name="checkCode" value="2">
+      <button type="submit">Continue to the official register</button>
+    </form>
+
+    <p class="small">If this page does not move on its own, use the button above &mdash;
+      the council's site accepts the lookup only as a form submission, never as a
+      direct link.</p>
+    <p class="small"><a href="/credentials/">See all credentials</a></p>
+  </main>
+
+  <script>
+    // Respect a saved theme choice, matching the rest of the site.
+    try {
+      var t = localStorage.getItem('theme');
+      if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+    } catch (e) {}
+    // Submit straight away so the reader lands on the result, not on this page.
+    // requestSubmit() keeps native validation semantics; fall back to submit().
+    var f = document.getElementById('tmc');
+    if (f) { try { f.requestSubmit(); } catch (e) { f.submit(); } }
+  </script>
+</body>
+</html>

@@ -2,6 +2,32 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2026-09-13] - Credential Archive: Direct Verification Links and Restored Training Certificates
+
+### Added
+- **Direct license/credential verification**: The Medical & Public Health
+  block now links straight to primary-source verification instead of
+  stopping at "we have a license" text — Authorized Seafarers' Medical
+  Examiner links to its certificate PDF, Tour Leader License links to its
+  official Dept. of Tourism record, and Medical License (Thailand) submits
+  a native POST form to the Medical Council of Thailand's register
+  (name-only lookup; no license number in visible copy, hidden fields, or
+  markup). Added a standalone shareable page at `/verify/medical-license/`
+  that auto-submits the same TMC lookup on load, for sharing the
+  verification link directly without routing through the archive page.
+- **Restored CMU/DDC training certificate links**: Diploma in Clinical
+  Statistics, Diploma in Clinical Epidemiology, and Introductory Course in
+  Epidemiology & Biostatistics are linked to their certificate images again
+  in the homepage Training section, restoring links dropped during the
+  Redesign v2 rewrite. The same three were added to the credential
+  archive's Medical & Public Health block; the two Chiang Mai University
+  diplomas share one compound pill (name + two "View certificate" actions),
+  matching the existing Huawei Cloud HCCDA Certifications pattern, since
+  both come from the same issuer with no external verification link.
+- **Google AI Essentials V1 verification**: Linked via Credly
+  (`credly.com/go/air1QPjp`) after losing direct Coursera access to the
+  credential.
+
 ## [2026-09-11] - Design Consistency Pass: Map Dashboard Rebuild, Archive/Blog Alignment, Contact Feedback
 
 Implements `docs/design-consistency-implementation-plan.md`, itself written from
