@@ -824,7 +824,10 @@ a:is(:hover, :focus-visible) > .rd-link-action { text-decoration: underline; tex
 
 /* ═══ CAPABILITIES ══════════════════════════════════════════ */
 .rd-stack-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 28px 40px; }
-.rd-badges { display: flex; flex-wrap: wrap; gap: 8px; }
+/* align-items: flex-start -- a wider icon (e.g. the PostgreSQL elephant at
+   40px vs the standard 15px) otherwise stretches every sibling badge on its
+   wrapped line to match its height, via flexbox's default item-stretch. */
+.rd-badges { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 8px; }
 .rd-badge {
   display: inline-flex;
   align-items: center;

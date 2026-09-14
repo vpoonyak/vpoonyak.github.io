@@ -11,10 +11,25 @@ const stacks = [
   {
     title: 'Core',
     items: [
-      { label: 'Python', icon: '/logo/si/python.svg' },
-      { label: 'R', icon: '/logo/si/r.svg' },
-      { label: 'SQL', icon: '/logo/si/postgresql.svg' },
-      { label: 'Stata' },
+      // The official two-tone mark (blue + yellow snakes), not Simple
+      // Icons' single-colour silhouette. The yellow snake is weak on the
+      // light card (1.6:1) but this is a genuine two-colour brand identity
+      // where inverting one snake would break the other -- same "accepted
+      // as-is" precedent as Matplotlib/Power BI/LightGBM above.
+      { label: 'Python', img: '/logo/Python-logo.svg' },
+      // The official oval-ring mark (gray ring + blue R), not Simple Icons'
+      // single-colour letterform silhouette.
+      { label: 'R', img: '/logo/R-logo.svg' },
+      // The official elephant artwork (brand blue #336791), not Simple
+      // Icons' flattened silhouette. Kept close to the standard 15px badge
+      // size per user preference (18px) rather than the larger sizes
+      // (24-40px) that read more crisply but made the pill visibly taller
+      // than its row-mates.
+      { label: 'SQL', img: '/logo/PostgreSQL-elephant.svg', size: 18 },
+      // Stata's own favicon is a native 16x16 .ico (no larger source
+      // exists on stata.com), so it renders near 1:1 at this badge size
+      // rather than being upscaled/blurred.
+      { label: 'Stata', img: '/logo/Stata-icon.png' },
       { label: 'Pandas', icon: '/logo/si/pandas.svg', darkFlip: true },
       { label: 'NumPy', icon: '/logo/si/numpy.svg', darkFlip: true },
     ],
@@ -26,7 +41,9 @@ const stacks = [
       { label: 'TensorFlow', icon: '/logo/si/tensorflow.svg' },
       { label: 'Scikit-Learn', icon: '/logo/si/scikitlearn.svg' },
       { label: 'XGBoost' },
-      { label: 'LightGBM' },
+      // LightGBM: cut to just the 4-colour lightning-bolt mark, dropping the
+      // "LightGBM" text portion of the source wordmark.
+      { label: 'LightGBM', icon: '/logo/LightGBM-icon.svg' },
       { label: 'YOLO', icon: '/logo/si/ultralytics.svg', darkFlip: true },
       { label: 'OpenCV', icon: '/logo/si/opencv.svg' },
     ],
@@ -42,7 +59,17 @@ const stacks = [
       { label: 'Gemini', icon: '/logo/si/googlegemini.svg' },
       { label: 'GLM', img: '/logo/Z.ai-logo.svg' },
       { label: 'Grok', img: '/logo/xAI-logo.svg', themeInvert: true },
+      { label: 'Qwen', icon: '/logo/si/qwen.svg' },
       { label: 'ThaiLLM', img: '/logo/ThaiLLM-logo-white.svg', lightInvert: true },
+      { label: 'Typhoon', img: '/logo/Typhoon-icon.png' },
+      // THaLLE's only mark is a wordmark, not a square icon -- cropped from
+      // the user-supplied KBTG asset (dropping the "by KBTG" subline, which
+      // is illegible at badge scale and a second color that fails on the
+      // opposite theme from the teal). The teal is bright enough to vanish
+      // on the light/cream canvas the same way Linux's yellow does, so it
+      // takes the same lightFlip treatment; `wide` widens its box so the
+      // ~5:1 aspect wordmark isn't squeezed into a 15px square.
+      { label: 'THaLLE', icon: '/logo/THaLLE-logo.png', lightFlip: true, wide: 56 },
     ],
   },
   {
@@ -60,7 +87,12 @@ const stacks = [
     title: 'Cloud &amp; Security',
     items: [
       { label: 'Google Cloud', icon: '/logo/si/googlecloud.svg' },
-      { label: 'Firebase', icon: '/logo/si/firebase.svg' },
+      // The real 3-tone flame (yellow/orange/red-orange) cropped from the
+      // user-supplied full wordmark, not Simple Icons' single-colour
+      // silhouette. Yellow/orange are weak on the light card (1.6/2.26)
+      // but the dominant red-orange shape holds up on both -- same
+      // "accepted as-is" multi-colour precedent as Python/LightGBM.
+      { label: 'Firebase', img: '/logo/Firebase-flame.svg' },
       { label: 'Huawei Cloud', icon: '/logo/si/huawei.svg' },
       { label: 'ISC2 CC', icon: '/logo/si/isc2.svg' },
       { label: 'Git', icon: '/logo/si/git.svg' },
@@ -69,11 +101,18 @@ const stacks = [
   {
     title: 'Computing',
     items: [
-      { label: 'LANTA HPC' },
+      // LANTA (the machine) has no standalone mark of its own -- only a
+      // promotional banner photo, not a usable icon -- so this shows
+      // ThaiSC's logo (the NSTDA center that operates it), same
+      // product-vs-operating-org relationship as Grok/xAI and GLM/Z.ai
+      // above. Cropped from thaisc.io's white wordmark; the "NSTDA
+      // Supercomputer Center" subline is dropped, illegible at badge scale.
+      { label: 'LANTA HPC', img: '/logo/ThaiSC-logo-white.png', lightInvert: true, wide: 40 },
       { label: 'Linux', icon: '/logo/si/linux.svg', lightFlip: true },
       { label: 'Anaconda', icon: '/logo/si/anaconda.svg' },
       { label: 'Jupyter', icon: '/logo/si/jupyter.svg' },
       { label: 'Arduino', icon: '/logo/si/arduino.svg' },
+      { label: 'vLLM', icon: '/logo/si/vllm.svg' },
     ],
   },
 ];
@@ -124,8 +163,8 @@ const credentials = [
           <div class="rd-badges">
             {group.items.map((item) => (
               <span class="rd-badge">
-                {item.icon && <img src={item.icon} alt="" width="15" height="15" loading="lazy" data-dark-flip={item.darkFlip ? '1' : undefined} data-light-flip={item.lightFlip ? '1' : undefined}>}
-                {item.img && <img src={item.img} alt="" width="15" height="15" loading="lazy" data-light-invert={item.lightInvert ? '1' : undefined} data-theme-invert={item.themeInvert ? '1' : undefined}>}
+                {item.icon && <img src={item.icon} alt="" width="15" height="15" loading="lazy" style={item.wide ? `width:${item.wide}px` : item.size ? `width:${item.size}px;height:${item.size}px` : undefined} data-dark-flip={item.darkFlip ? '1' : undefined} data-light-flip={item.lightFlip ? '1' : undefined}>}
+                {item.img && <img src={item.img} alt="" width="15" height="15" loading="lazy" style={item.wide ? `width:${item.wide}px` : item.size ? `width:${item.size}px;height:${item.size}px` : undefined} data-light-invert={item.lightInvert ? '1' : undefined} data-theme-invert={item.themeInvert ? '1' : undefined}>}
                 {item.label}
               </span>
             ))}

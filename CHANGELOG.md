@@ -2,6 +2,48 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2026-09-14] - Capabilities: Real Brand Marks, New LLM/Computing Entries
+
+### Added
+- **New Capabilities entries**: Qwen and vLLM (self-hosted from Simple
+  Icons); Typhoon (SCB 10X) and THaLLE (KBTG), both cropped from
+  user-supplied brand assets since neither has a Simple Icons mirror.
+  LANTA HPC now carries ThaiSC's logo (the NSTDA center that operates it)
+  instead of sitting bare-text — same product-vs-operating-org
+  relationship the row already uses for Grok/xAI and GLM/Z.ai. `profile.yaml`
+  in the CV repo updated to match (`llm_apis`, `computing_environments`).
+
+### Changed
+- **Real brand marks over Simple Icons silhouettes**: Python (two-tone
+  blue/yellow snakes), R (gray-ring + blue R), PostgreSQL/SQL (the official
+  elephant), and Firebase (the real 3-tone flame) now use their actual
+  multi-colour artwork, self-hosted from user-supplied source files,
+  instead of Simple Icons' flattened single-colour versions. LightGBM is
+  cut to just its 4-colour lightning-bolt mark (dropping the wordmark
+  text). Some of these (Python's yellow snake, Firebase's yellow/orange,
+  LightGBM's yellow) read weak on the light card in isolation, but each
+  mark's dominant shape holds up on both themes -- accepted as-is, same
+  precedent already set by Matplotlib and Power BI.
+- **Badge icon sizing**: `Capabilities.astro`'s badge template gained
+  `size` (square override) and `wide` (width-only, for wordmark-aspect
+  marks) options. PostgreSQL's elephant blurred into a blob at the
+  standard 15px and needed sizing up; settled at 18px after an earlier
+  40px/24px pass read clearly but made the pill visibly taller than its
+  row-mates. LANTA HPC/ThaiSC's wordmark similarly settled at a 40px-wide
+  box after 56px read too dominant.
+
+### Fixed
+- **Badges silently stretching their row-mates**: `.rd-badges` is a
+  flex-wrap row, and flexbox's default `align-items: stretch` meant a
+  taller badge (e.g. PostgreSQL's enlarged elephant) stretched every other
+  badge sharing its wrapped line to match its height, not just its own
+  pill -- visible as Python/R growing from 34px to 54px tall alongside a
+  40px SQL icon. Fixed with `align-items: flex-start` on the container, so
+  a badge's height only ever affects itself.
+- **XGBoost**: added then reverted an icon (cropped from the user-supplied
+  wordmark to just the bold "X") -- decided the mark didn't represent the
+  library clearly enough at badge scale; XGBoost stays text-only.
+
 ## [2026-09-13] - Credential Archive: Direct Verification Links and Restored Training Certificates
 
 ### Added
